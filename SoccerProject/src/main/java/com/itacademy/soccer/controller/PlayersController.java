@@ -29,7 +29,7 @@ public class PlayersController {
 		return map;
 	}
 	
-	@GetMapping("/players/{id}/id")
+	@GetMapping("/players/{id}/playerid")
 	HashMap<String,Object> getPlayerById(){
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("success", true);
@@ -38,7 +38,7 @@ public class PlayersController {
 		return map;
 	}
 	
-	@GetMapping("/players/{name}/name")
+	@GetMapping("/players/{name}/playername")
 	HashMap<String,Object> getPlayersByName(){
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("success", true);
