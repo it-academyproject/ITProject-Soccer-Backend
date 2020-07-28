@@ -22,6 +22,10 @@ public class SaleServiceImpl implements ISaleService{
 	@Override
 	public Sale createSale(Sale sale) {
 
+		// Player playerIn = sale.getPlayer();
+		// player = iPlayerDAO.findById(player.getId()).get();
+		// sale.setPlayer(player);
+		
 		return iSaleDAO.save(sale);
 		
 	}
@@ -48,9 +52,14 @@ public class SaleServiceImpl implements ISaleService{
 		return new ArrayList<Sale>();
 	}
 
+	// Modify the limit date of the sale with id passed by parameter and saves it into the repository
 	@Override
-	public Sale updateSale(Long idSale, Sale sale) {
+	public Sale updateSale(Long idSale, Sale p_sale) {
 
+		Sale sale = iSaleDAO.findById(idSale).get();
+		
+		sale.setLimitDate(p_sale.getLimitDate());
+		
 		return iSaleDAO.save(sale);
 		
 	}

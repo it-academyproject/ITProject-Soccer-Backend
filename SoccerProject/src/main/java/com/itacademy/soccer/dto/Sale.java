@@ -60,7 +60,7 @@ public class Sale {
 		this.limitDate = limitDate;
 	}
 
-	public double getInitialPrice() {
+	public float getInitialPrice() {
 		return initialPrice;
 	}
 

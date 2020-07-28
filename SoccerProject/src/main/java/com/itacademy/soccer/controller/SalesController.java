@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itacademy.soccer.controller.json.SaleJson;
 import com.itacademy.soccer.dto.Sale;
 import com.itacademy.soccer.service.impl.SaleServiceImpl;
 
@@ -73,8 +74,10 @@ public class SalesController {
 		return map;
 	}
 	
-	@PostMapping("/sales") 
-	public HashMap<String,Object> createSale(@RequestBody Sale p_sale){
+	@PostMapping("/sales") //@RequestBody Sale p_sale
+	public HashMap<String,Object> createSale(@RequestBody SaleJson saleJson){
+		
+		Sale p_sale = saleJson.setJsonToObject();
 		
 		Sale sale = saleServiceImpl.createSale(p_sale);
 		
@@ -88,15 +91,25 @@ public class SalesController {
 	
 	@PutMapping("/sales/{id}") 
 	public HashMap<String,Object> updateSale(@PathVariable(name="id") Long saleId, 
-											 @RequestBody Sale p_sale){
+											 @RequestBody SaleJson saleJson){
 		
-		Sale sale = saleServiceImpl.updateSale(saleId, p_sale);
+		Sale p_sale = saleJson.setJsonToObject();
 		
+		Sale sale = null;
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("saleId", saleId);
-		map.put("sale", sale);
-		map.put("success", true);
-		map.put("message", "Sale updated perfectly");
+
+		try {
+			sale = saleServiceImpl.updateSale(saleId, p_sale);
+		
+			map.put("sale", sale);
+			map.put("success", true);
+			map.put("message", "Sale updated perfectly");
+		}catch(NoSuchElementException e) {
+			map.put("sale", sale);
+			map.put("success", false);
+			map.put("message", "Sale with id "+saleId+" doesn't exist.");
+		}
 		
 		return map;
 	}
