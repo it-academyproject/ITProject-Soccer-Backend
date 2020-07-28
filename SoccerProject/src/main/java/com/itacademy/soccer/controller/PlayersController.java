@@ -11,6 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class PlayersController {
 
+	@GetMapping("/players")
+	HashMap<String,Object> getAllPlayers(){
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("success", true);
+		map.put("message", "get all players");
+		
+		return map;
+	}
+	
 	@GetMapping("/teams/{id}/players")
 	HashMap<String,Object> getPlayersByTeamId(){
 		HashMap<String,Object> map = new HashMap<>();
@@ -20,7 +29,7 @@ public class PlayersController {
 		return map;
 	}
 	
-	@GetMapping("/players/{id}")
+	@GetMapping("/players/{id}/id")
 	HashMap<String,Object> getPlayerById(){
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("success", true);
@@ -29,7 +38,7 @@ public class PlayersController {
 		return map;
 	}
 	
-	@GetMapping("/players/{name}")
+	@GetMapping("/players/{name}/name")
 	HashMap<String,Object> getPlayersByName(){
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("success", true);
