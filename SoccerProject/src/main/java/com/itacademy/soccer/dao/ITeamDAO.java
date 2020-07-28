@@ -13,5 +13,4 @@ import com.itacademy.soccer.dto.Team;
  *
  */
 public interface ITeamDAO extends JpaRepository<Team, Long> {
-
 }

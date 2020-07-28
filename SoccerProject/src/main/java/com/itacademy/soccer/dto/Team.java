@@ -142,7 +142,6 @@ public class Team {
 	}
 
 	/////////////// TOSTRING ///////////////
-
 	@Override
 	public String toString() {
 		return "Team [id=" + id + ", foundation_date=" + foundation_date + ", badge=" + badge + ", budget=" + budget
