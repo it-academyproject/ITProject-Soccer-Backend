@@ -34,6 +34,9 @@ public class Sale {
 //	@OneToMany
 //	@JoinColumn(name="sale_id")
 //	private List<Bid> bids;
+	public Sale() {
+		
+	}
 	
 	public Sale(Long id, Date limitDate, float initialPrice) {
 		this.id = id;
