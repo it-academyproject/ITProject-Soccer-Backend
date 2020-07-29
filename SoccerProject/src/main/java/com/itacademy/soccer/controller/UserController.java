@@ -74,13 +74,13 @@ public class UserController {
 
 // PUT
 
-    @PutMapping("/users/{id}") // USER MODIFY PASSWORD
+    @PutMapping("/users/password/{id}") // USER MODIFY PASSWORD
     public String modifyUserPass()
     {
         return "User modified password";
     }
 
-    @PutMapping("/users/{id}") // MODIFY USERS ADMIN
+    @PutMapping("/users/type/{id}") // MODIFY USERS TO CHANGE TO ADMIN
     public String modifyUser()
     {
         return "I'm an modified User :O";
