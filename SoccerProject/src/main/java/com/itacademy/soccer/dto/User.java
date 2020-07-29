@@ -13,7 +13,6 @@ public class User
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Id User Auto-Generated
 
-    // TESTING //
     @Column(name="type")
     @Enumerated(EnumType.STRING) // IMPORTANT: This converts 0 or 1 to Manager or Admin (INTEGER TO STRING)
     private TypeUser typeUser;
@@ -26,7 +25,7 @@ public class User
 
     /*@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="teamId")
-    private Team team;  // User Team Relation One To One*/
+    private Team team;  // User Team Relation One To One (STANDBY)*/
 
     public User() { } // Constructor
 

@@ -201,7 +201,7 @@ public class UserController {
         {
             for (User userChecker: iUserService.showAllUsers())
             {
-                if(userChecker.getEmail().equals(user.getEmail()))
+                if(userChecker.getEmail().equals(user.getEmail()) && userChecker.getId() == user.getId())
                 {
                     map.put("Email:", user.getEmail());
                     map.put("Id:", userChecker.getId());
@@ -233,5 +233,4 @@ public class UserController {
     {
         iUserService.deleteUser(id);
     }
-
 }
