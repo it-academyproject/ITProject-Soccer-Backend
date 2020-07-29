@@ -1,6 +1,9 @@
 package com.itacademy.soccer.dto;
 
+import com.itacademy.soccer.dto.typeUser.TypeUser;
+
 import javax.persistence.*;
+import java.lang.reflect.Type;
 
 @Entity
 @Table(name="user") // Tab User
@@ -10,8 +13,10 @@ public class User
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Id User Auto-Generated
 
+    // TESTING //
     @Column(name="type")
-    private Enum typeUser; // Type User (Manager/Admin)
+    @Enumerated(EnumType.STRING) // IMPORTANT: This converts 0 or 1 to Manager or Admin (INTEGER TO STRING)
+    private TypeUser typeUser;
 
     @Column(name="email")
     private String email; // User Email = Name User
@@ -19,11 +24,9 @@ public class User
     @Column(name="password")
     private String password; // User Password
 
-    /*
-    @OneToOne //(mappedBy = "team", Cascade = CascadeType.ALl)
+   /* @OneToOne
     @Column(name="teamId")
-    private Team team;  // User Team Relation One To One (STANDBY)
-    */
+    private Team team;  // User Team Relation One To One (STANDBY)*/
 
     public User() { } // Constructor
 
@@ -37,12 +40,12 @@ public class User
         this.id = id;
     }
 
-    public Enum getTypeUser()
+    public TypeUser getTypeUser()
     {
         return typeUser;
     }
 
-    public void setTypeUser(Enum typeUser)
+    public void setTypeUser(TypeUser typeUser)
     {
         this.typeUser = typeUser;
     }
@@ -66,8 +69,8 @@ public class User
     {
         this.password = password;
     }
-/*
-    public Team getTeam() {
+
+   /* public Team getTeam() {
         return team;
     }
 
