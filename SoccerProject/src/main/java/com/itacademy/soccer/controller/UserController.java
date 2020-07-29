@@ -81,7 +81,7 @@ public class UserController {
     }
 
     @PutMapping("/users/type/{id}") // MODIFY USERS TO CHANGE TO ADMIN
-    public String modifyUser()
+    public String modifyTypeUser()
     {
         return "I'm an modified User :O";
     }
