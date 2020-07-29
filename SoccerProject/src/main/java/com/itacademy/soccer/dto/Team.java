@@ -21,17 +21,21 @@ public class Team {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private String name;
 	private Date foundation_date;
 	private String badge;
-	private Double budget;
+	private Float budget;
 	private int wins;
 	private int losses;
 	private int draws;
 
 	/////////////// CONSTRUCTORS ///////////////
-	public Team(Long id, Date foundation_date, String badge, Double budget, int wins, int losses, int draws) {
+	public Team(Long id, String name, Date foundation_date, String badge, Float budget, int wins, int losses,
+			int draws) {
 		this.id = id;
+
 		this.foundation_date = foundation_date;
+		this.name = name;
 		this.badge = badge;
 		this.budget = budget;
 		this.wins = wins;
@@ -55,6 +59,20 @@ public class Team {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -88,14 +106,14 @@ public class Team {
 	/**
 	 * @return the budget
 	 */
-	public Double getBudget() {
+	public Float getBudget() {
 		return budget;
 	}
 
 	/**
 	 * @param budget the budget to set
 	 */
-	public void setBudget(Double budget) {
+	public void setBudget(Float budget) {
 		this.budget = budget;
 	}
 
@@ -144,8 +162,8 @@ public class Team {
 	/////////////// TOSTRING ///////////////
 	@Override
 	public String toString() {
-		return "Team [id=" + id + ", foundation_date=" + foundation_date + ", badge=" + badge + ", budget=" + budget
-				+ ", wins=" + wins + ", losses=" + losses + ", draws=" + draws + "]";
+		return "Team [id=" + id + ", name=" + name + ", foundation_date=" + foundation_date + ", badge=" + badge
+				+ ", budget=" + budget + ", wins=" + wins + ", losses=" + losses + ", draws=" + draws + "]";
 	}
 
 }
