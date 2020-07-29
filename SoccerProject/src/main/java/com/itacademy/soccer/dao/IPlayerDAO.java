@@ -1,0 +1,14 @@
+package com.itacademy.soccer.dao;
+
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.itacademy.soccer.dto.Player;
+
+
+public interface IPlayerDAO extends JpaRepository<Player, Long> {
+	
+	Player findByName(String name);
+	
+	
+}
