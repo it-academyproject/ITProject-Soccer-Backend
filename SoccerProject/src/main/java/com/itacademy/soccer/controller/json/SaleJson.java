@@ -1,7 +1,10 @@
 package com.itacademy.soccer.controller.json;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Sale;
 
 public class SaleJson {
@@ -12,13 +15,13 @@ public class SaleJson {
 	
 	private float initial_price;
 	
-	private int player_id;
+	private Long player_id;
 	
 	public SaleJson(){
 		
 	}
 	
-	public SaleJson(Long id, Date limit_date, float initial_price, int player_id) {
+	public SaleJson(Long id, Date limit_date, float initial_price, Long player_id) {
 		this.id = id;
 		this.limit_date = limit_date;
 		this.initial_price = initial_price;
@@ -33,11 +36,35 @@ public class SaleJson {
 		sale.setLimitDate(this.limit_date);
 		sale.setInitialPrice(this.initial_price);
 		
-		// Player player = new Player();
-		// player.setId(this.player_id);
-		// sale.setPlayer(player);
+		Player player = new Player();
+		player.setId(this.player_id);
+		sale.setPlayer(player);
 		
 		return sale;
+	}
+	
+	public static SaleJson parseObjectToJson(Sale sale) {
+		
+		SaleJson json = new SaleJson();
+		
+		json.setId(sale.getId());
+		json.setInitial_price(sale.getInitialPrice());
+		json.setLimit_date(sale.getLimitDate());
+		json.setPlayer_id(sale.getPlayer().getId());
+		
+		return json;
+	}
+	
+	public static List<SaleJson> parseListToJson(List<Sale> salesList) {
+		
+		List<SaleJson> jsonList = new ArrayList<>();
+		
+		for (Sale s : salesList) {
+			SaleJson json = parseObjectToJson(s);
+			jsonList.add(json);
+		}
+		
+		return jsonList;
 	}
 	
 	public Long getId() {
@@ -64,11 +91,11 @@ public class SaleJson {
 		this.initial_price = initial_price;
 	}
 
-	public int getPlayer_id() {
+	public Long getPlayer_id() {
 		return player_id;
 	}
 
-	public void setPlayer_id(int player_id) {
+	public void setPlayer_id(Long player_id) {
 		this.player_id = player_id;
 	}
 	

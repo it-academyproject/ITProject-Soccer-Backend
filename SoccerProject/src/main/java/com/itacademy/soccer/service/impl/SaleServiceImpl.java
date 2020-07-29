@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dao.ISaleDAO;
+import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Sale;
 import com.itacademy.soccer.service.ISaleService;
 
@@ -16,15 +18,16 @@ public class SaleServiceImpl implements ISaleService{
 	@Autowired
 	private ISaleDAO iSaleDAO;
 	
-//	@Autowired
-//	private IPlayerDAO iPlayerDAO;
+ 	@Autowired
+	private IPlayerDAO iPlayerDAO;
 	
 	@Override
 	public Sale createSale(Sale sale) {
 
-		// Player playerIn = sale.getPlayer();
-		// player = iPlayerDAO.findById(player.getId()).get();
-		// sale.setPlayer(player);
+		Player playerIn = sale.getPlayer();
+		Long playerId = playerIn.getId();
+		Player player = iPlayerDAO.findById(playerId).get();
+		sale.setPlayer(player);
 		
 		return iSaleDAO.save(sale);
 		

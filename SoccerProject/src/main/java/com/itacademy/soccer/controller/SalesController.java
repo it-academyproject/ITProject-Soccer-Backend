@@ -30,9 +30,10 @@ public class SalesController {
 	public HashMap<String,Object> listAllSales(){
 		
 		List<Sale> salesList = saleServiceImpl.listAllSales();
+		List<SaleJson> jsonList = SaleJson.parseListToJson(salesList);
 		
 		HashMap<String,Object> map = new HashMap<>();
-		map.put("sales", salesList);
+		map.put("sales", jsonList);
 		map.put("success", true);
 		map.put("message", "All working perfectly");
 		
@@ -46,7 +47,9 @@ public class SalesController {
 		
 		try {
 			Sale sale = saleServiceImpl.getSaleById(salesId);
-			map.put("sale", sale);
+			SaleJson json = SaleJson.parseObjectToJson(sale);
+
+			map.put("sale", json);
 			map.put("success", true);
 			map.put("message", "All working perfectly");
 			
@@ -64,10 +67,11 @@ public class SalesController {
 	public HashMap<String,Object> getSalesByPlayer(@PathVariable(name="id") Long playerId){
 		
 		List<Sale> listSales = saleServiceImpl.getSalesByPlayer(playerId);
+		List<SaleJson> jsonList = SaleJson.parseListToJson(listSales);
 		
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("playerId", playerId);
-		map.put("sales", listSales);
+		map.put("sales", jsonList);
 		map.put("success", true);
 		map.put("message", "Pendiente de implementar por evitar conflicto con codigo Player");
 		
@@ -80,9 +84,10 @@ public class SalesController {
 		Sale p_sale = saleJson.setJsonToObject();
 		
 		Sale sale = saleServiceImpl.createSale(p_sale);
+		SaleJson json = SaleJson.parseObjectToJson(sale);
 		
 		HashMap<String,Object> map = new HashMap<>();
-		map.put("sale", sale);
+		map.put("sale", json);
 		map.put("success", true);
 		map.put("message", "Sale created perfectly");
 		
@@ -95,18 +100,19 @@ public class SalesController {
 		
 		Sale p_sale = saleJson.setJsonToObject();
 		
-		Sale sale = null;
+		Sale updatedSale = null;
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("saleId", saleId);
 
 		try {
-			sale = saleServiceImpl.updateSale(saleId, p_sale);
-		
-			map.put("sale", sale);
+			updatedSale = saleServiceImpl.updateSale(saleId, p_sale);
+			SaleJson json = SaleJson.parseObjectToJson(updatedSale);
+			
+			map.put("sale", json);
 			map.put("success", true);
 			map.put("message", "Sale updated perfectly");
 		}catch(NoSuchElementException e) {
-			map.put("sale", sale);
+			map.put("sale", null);
 			map.put("success", false);
 			map.put("message", "Sale with id "+saleId+" doesn't exist.");
 		}
