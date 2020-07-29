@@ -21,7 +21,7 @@ public class UserController {
     @GetMapping("/login") // LOGIN ALL USERS (MANAGERS/ADMINS)
     public HashMap <String,Object> loginUser(@RequestBody User user)
     {
-        HashMap<String, Object> map = new HashMap(); // PONER SI ES ADMIN O MANAGER
+        HashMap<String, Object> map = new HashMap();
         try
         {
             for (User userChecker: iUserService.showAllUsers())
@@ -90,8 +90,8 @@ public class UserController {
             else
             {
                 iUserService.saveNewUser(user);
-                map.put("type User:",user.getTypeUser());
                 map.put("message:", "All correct!");
+                map.put("type User:",user.getTypeUser());
                 map.put("success:", true);
             }
         }
@@ -110,15 +110,22 @@ public class UserController {
         {
             if(user.getEmail() == null || user.getPassword() == null)
             {
-                map.put("message", "Please, write  .");
+                map.put("message", "Please, write an email and password.");
                 map.put("success:", false);
+                //throw new Exception();
+            }
+            else if(user.getEmail().equals("") || user.getPassword().equals(""))
+            {
+                map.put("message", "Please, write an email and password.");
+                map.put("success:", false);
+                //throw new Exception();
             }
             else
             {
-                map.put("type User:","Admin");
+                iUserService.saveNewAdmin(user);
                 map.put("message:", "All correct!");
+                map.put("type User:",user.getTypeUser());
                 map.put("success:", true);
-                iUserService.saveNewUser(user);
             }
         }
         catch(Exception e)

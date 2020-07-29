@@ -24,9 +24,9 @@ public class User
     @Column(name="password")
     private String password; // User Password
 
-   /* @OneToOne
-    @Column(name="teamId")
-    private Team team;  // User Team Relation One To One (STANDBY)*/
+    /*@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="teamId")
+    private Team team;  // User Team Relation One To One*/
 
     public User() { } // Constructor
 
@@ -70,7 +70,7 @@ public class User
         this.password = password;
     }
 
-   /* public Team getTeam() {
+   /*public Team getTeam() {
         return team;
     }
 
