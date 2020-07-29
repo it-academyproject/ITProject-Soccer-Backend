@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name="player")
@@ -29,6 +31,7 @@ public class Player {
 	//relation with team
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="team_id")
+	@JsonIgnore
 	private Team team;
 	
 	//Empty constructor

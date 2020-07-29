@@ -12,7 +12,7 @@ public interface IPlayerDAO extends JpaRepository<Player, Long> {
 	
 	Player findByName(String name);
 
-	List<Player> findByteamId(int teamId);
+	List<Player> findByteamId(Long teamId);
 	
 	
 }

@@ -12,31 +12,31 @@ import com.itacademy.soccer.service.IPlayerService;
 @Service
 public class PlayerServiceImpl implements IPlayerService{
 	@Autowired
-	IPlayerDAO playerRepository;
+	IPlayerDAO iPlayerDAO;
 	
 	@Override
 	public List<Player> playerList(){
-		return playerRepository.findAll();
+		return iPlayerDAO.findAll();
 	}
 	
 	@Override
-	public List<Player> playerListByTeam(int teamId){
-		return playerRepository.findByteamId(teamId);
+	public List<Player> playerListByTeam(Long teamId){
+		return iPlayerDAO.findByteamId(teamId);
 	}
 
 	@Override
 	public Player playerByName(String playerName) {
-		return playerRepository.findByName(playerName);
+		return iPlayerDAO.findByName(playerName);
 	}
 	
 	@Override
 	public Player playerById(Long playerId) {
-		return playerRepository.findById(playerId).get();
+		return iPlayerDAO.findById(playerId).get();
 	}
 
 	@Override
 	public Player updatePlayer(Player player) {
-		return playerRepository.save(player);
+		return iPlayerDAO.save(player);
 	}
 
 }

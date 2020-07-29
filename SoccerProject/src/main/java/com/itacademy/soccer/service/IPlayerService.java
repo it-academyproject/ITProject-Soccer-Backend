@@ -8,7 +8,7 @@ public interface IPlayerService {
 	
 	public List<Player> playerList();
 	
-	public List<Player> playerListByTeam(int teamId);
+	public List<Player> playerListByTeam(Long teamId);
 	
 	public Player playerByName(String playerName);
 	
