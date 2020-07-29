@@ -1,14 +1,19 @@
 package com.itacademy.soccer.dto;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name="player")
 public class Player {
+	//Player atributes
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -20,15 +25,18 @@ public class Player {
 	private int defense;
 	private int pass;
 	private int attack;
-		
-	//@ManyToOne
-	//private Team team;
 	
+	//relation with team
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="team_id")
+	private Team team;
+	
+	//Empty constructor
 	public Player() {
-		super();
 		
 	}
 
+	//getters and setters
 	public Long getId() {
 		return id;
 	}
@@ -91,6 +99,20 @@ public class Player {
 
 	public void setAttack(int attack) {
 		this.attack = attack;
+	}
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
+	}
+
+	@Override
+	public String toString() {
+		return "Player [id=" + id + ", name=" + name + ", age=" + age + ", aka=" + aka + ", keeper=" + keeper
+				+ ", defense=" + defense + ", pass=" + pass + ", attack=" + attack + ", team=" + team + "]";
 	}
 	
 }
