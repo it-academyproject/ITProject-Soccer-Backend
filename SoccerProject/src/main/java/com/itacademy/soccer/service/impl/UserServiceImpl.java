@@ -44,7 +44,10 @@ public class UserServiceImpl implements IUserService {
     // PUTS
 
     @Override
-    public User modifyUserPass(Long id, User user) { return iUserDAO.save(user);}
+    public User modifyUserPass(Long id, User user)
+    {
+        return iUserDAO.save(user);
+    }
 
     @Override
     public User modifyTypeUser(Long id, User user) { return iUserDAO.save(user);}

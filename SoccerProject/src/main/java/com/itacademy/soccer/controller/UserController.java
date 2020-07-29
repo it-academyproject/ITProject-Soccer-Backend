@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api")
@@ -32,18 +33,18 @@ public class UserController {
                     {
                         map.put("message", "All correct!");
                         map.put("email:", user.getEmail());
-                        map.put("type User:", user.getTypeUser());
+                        map.put("type User:", userChecker.getTypeUser());
                         map.put("success:", true);
                     }
                     else
                     {
-                        map.put("message", "Mail address or Username or Password not correct");
+                        map.put("message", "Mail address or Password not correct");
                         map.put("success:", false);
                     }
                 }
                 else
                 {
-                    map.put("message", "Mail address or Username not correct");
+                    map.put("message", "Mail address or Password not correct");
                     map.put("success:", false);
                 }
             }
@@ -73,6 +74,7 @@ public class UserController {
     public HashMap <String, Object> createUserManager(@RequestBody User user)
     {
        HashMap<String, Object> map = new HashMap<>();
+
         try
         {
             if(user.getEmail() == null || user.getPassword() == null)
@@ -89,10 +91,21 @@ public class UserController {
             }
             else
             {
-                iUserService.saveNewUser(user);
-                map.put("message:", "All correct!");
-                map.put("type User:",user.getTypeUser());
-                map.put("success:", true);
+                String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z" + "A-Z]{2,7}$";
+                Pattern pat = Pattern.compile(emailRegex);
+
+                if(pat.matcher(user.getEmail()).matches())
+                {
+                    iUserService.saveNewUser(user);
+                    map.put("message:", "All correct!");
+                    map.put("type User:",user.getTypeUser());
+                    map.put("success:", true);
+                }
+                else
+                {
+                    map.put("message", "Please, write a valid email.");
+                    map.put("success:", false);
+                }
             }
         }
         catch(Exception e)
@@ -122,10 +135,21 @@ public class UserController {
             }
             else
             {
-                iUserService.saveNewAdmin(user);
-                map.put("message:", "All correct!");
-                map.put("type User:",user.getTypeUser());
-                map.put("success:", true);
+                String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z" + "A-Z]{2,7}$";
+                Pattern pat = Pattern.compile(emailRegex);
+
+                if(pat.matcher(user.getEmail()).matches())
+                {
+                    iUserService.saveNewAdmin(user);
+                    map.put("message:", "All correct!");
+                    map.put("type User:", user.getTypeUser());
+                    map.put("success:", true);
+                }
+                else
+                {
+                    map.put("message", "Please, write a valid email.");
+                    map.put("success:", false);
+                }
             }
         }
         catch(Exception e)
@@ -138,15 +162,68 @@ public class UserController {
 // PUT
 
     @PutMapping("/users/password/{id}") //  USER MODIFY PASSWORD
-    public User modifyUserPass(@PathVariable Long id, @RequestBody User user)
+    public HashMap <String, Object> modifyUserPass(@PathVariable Long id, @RequestBody User user)
     {
-        return iUserService.modifyUserPass(id, user);
+        HashMap<String, Object> map = new HashMap<>();
+        try
+        {
+            for (User userChecker: iUserService.showAllUsers())
+            {
+                if(userChecker.getEmail().equals(user.getEmail()))
+                {
+                    if(userChecker.getId() == user.getId())
+                    {
+                        map.put("success:", true);
+                        map.put("User:", user.getEmail());
+                        map.put("message:", "change successful");
+                        iUserService.modifyUserPass(id, user);
+                    }
+                    else
+                    {
+                        map.put("success:",false);
+                        map.put("message:", "Wrong email or id.");
+                    }
+               }
+            }
+        }
+        catch(Exception e)
+        {
+            map.put("message", "something went wrong! :" + e.getMessage());
+        }
+        return map;
     }
 
     @PutMapping("/users/type/{id}") // MODIFY USERS TO CHANGE TO  ADMIN
-    public User modifyTypeUser(@PathVariable Long id, @RequestBody User user)
+    public HashMap <String, Object> modifyTypeUser(@PathVariable Long id, @RequestBody User user)
     {
-        return iUserService.modifyTypeUser(id, user);
+        HashMap<String, Object> map = new HashMap<>();
+        try
+        {
+            for (User userChecker: iUserService.showAllUsers())
+            {
+                if(userChecker.getEmail().equals(user.getEmail()))
+                {
+                    map.put("Email:", user.getEmail());
+                    map.put("Id:", userChecker.getId());
+                    if(userChecker.getTypeUser().equals(user.getTypeUser()))
+                    {
+                        map.put("success:", false);
+                        map.put("message:", "User '" + user.getEmail() + "' have same type actually.");
+                    }
+                    else
+                    {
+                        iUserService.modifyTypeUser(id, user);
+                        map.put("Now User type:", user.getTypeUser());
+                        map.put("success:", true);
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            map.put("message", "something went wrong! :" + e.getMessage());
+        }
+        return map;
     }
 
 // DELETE
