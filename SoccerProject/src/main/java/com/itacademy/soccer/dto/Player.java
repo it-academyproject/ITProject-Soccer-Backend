@@ -1,9 +1,13 @@
 package com.itacademy.soccer.dto;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,8 +25,11 @@ public class Player {
 	private int pass;
 	private int attack;
 		
-	//@ManyToOne
-	//private Team team;
+	@ManyToOne
+	private Team team;
+	
+	@OneToMany
+	List<PlayerActions> playerActions;
 	
 	public Player() {
 		super();
@@ -92,5 +99,22 @@ public class Player {
 	public void setAttack(int attack) {
 		this.attack = attack;
 	}
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
+	}
+
+	public List<PlayerActions> getPlayerActions() {
+		return playerActions;
+	}
+
+	public void setPlayerActions(List<PlayerActions> playerActions) {
+		this.playerActions = playerActions;
+	}
+	
 	
 }

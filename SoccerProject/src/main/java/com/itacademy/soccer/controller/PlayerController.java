@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class PlayersController {
+public class PlayerController {
 
 	@GetMapping("/players")
 	HashMap<String,Object> getAllPlayers(){
