@@ -47,6 +47,14 @@ catch(MailException e)
     <version>2.3.2.RELEASE</version>
 </dependency>
 
+IMPORTANT !! ERROR SSL (tested in localhost):
+
+Mail server connection failed; nested exception is javax.mail.MessagingException: Can't send command to SMTP host;
+  nested exception is:
+	javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target. Failed messages: javax.mail.MessagingException: Can't send command to SMTP host;
+  nested exception is:
+	javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+
 */
 
 @Service
@@ -65,7 +73,8 @@ public class MailService {
         mail.setTo(user.getEmail());
         mail.setFrom("example@gmail.com");
         mail.setSubject("Testing for Mail Manager/Admin");
-        mail.setText("Testing text body, maybe you are Manager or Admin, how knows...You know notthing John Admin..., Manager is comming...");
+        mail.setText("Testing text body, maybe you are Manager or Admin. You're new club well be created automatically. Team Name:" + user.getEmail() +" FC. You can change the name in afters patches.");
+
 
         javaMailSender.send(mail);
     }
