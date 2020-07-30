@@ -52,7 +52,6 @@
 		</dependency>
 				
 		    <!-- TOKEN SECURITY-->
-		    <!-- 
 			<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -62,16 +61,13 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 			</dependency>
-			-->
 			
 			<!-- JSON WEB TOKEN -->
-			<!-- 
 			<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.0</version>
 			</dependency>
-			-->
 			
 	</dependencies>
 
