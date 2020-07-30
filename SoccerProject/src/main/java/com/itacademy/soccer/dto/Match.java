@@ -5,11 +5,16 @@
 package com.itacademy.soccer.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author KevHaes
@@ -24,8 +29,16 @@ public class Match {
 	private Date timestamp;
 	private int local_goals;
 	private int visitor_goals;
+
+	@ManyToOne
 	private Long team_local_id;
+
+	@ManyToOne
 	private Long team_visitors_id;
+
+	@OneToMany
+	private List<PlayerActions> playeractions;
+	// waiting B-19
 
 	/////////////// CONSTRUCTORS ///////////////
 	public Match(Long id, Date timestamp, int local_goals, int visitor_goals, Long team_local_id,
@@ -125,6 +138,36 @@ public class Match {
 	 */
 	public void setTeam_visitors_id(Long team_visitors_id) {
 		this.team_visitors_id = team_visitors_id;
+	}
+
+	/**
+	 * @return the visitor_goals
+	 */
+	public int getVisitor_goals() {
+		return visitor_goals;
+	}
+
+	/**
+	 * @param visitor_goals the visitor_goals to set
+	 */
+	public void setVisitor_goals(int visitor_goals) {
+		this.visitor_goals = visitor_goals;
+	}
+
+	/**
+	 * @return the playeractions
+	 */
+	@OneToMany
+	@JsonIgnore
+	public List<PlayerActions> getPlayeractions() {
+		return playeractions;
+	}
+
+	/**
+	 * @param playeractions the playeractions to set
+	 */
+	public void setPlayeractions(List<PlayerActions> playeractions) {
+		this.playeractions = playeractions;
 	}
 
 	/////////////// TOSTRING ///////////////

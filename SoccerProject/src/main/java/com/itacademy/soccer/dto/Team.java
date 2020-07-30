@@ -5,11 +5,18 @@
 package com.itacademy.soccer.dto;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author KevHaes
@@ -27,6 +34,12 @@ public class Team {
 	private int wins;
 	private int losses;
 	private int draws;
+
+	@OneToOne(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+	private User userId;
+
+	@OneToMany
+	private List<Match> matches;
 
 	/////////////// CONSTRUCTORS ///////////////
 	public Team(Long id, Date foundation_date, String badge, Double budget, int wins, int losses, int draws) {
@@ -141,8 +154,37 @@ public class Team {
 		this.draws = draws;
 	}
 
-	/////////////// TOSTRING ///////////////
+	/**
+	 * @return the userId
+	 */
+	public User getUserId() {
+		return userId;
+	}
 
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(User userId) {
+		this.userId = userId;
+	}
+
+	/**
+	 * @return the matches
+	 */
+	@OneToMany
+	@JsonIgnore
+	public List<Match> getMatches() {
+		return matches;
+	}
+
+	/**
+	 * @param matches the matches to set
+	 */
+	public void setMatches(List<Match> matches) {
+		this.matches = matches;
+	}
+
+	/////////////// TOSTRING ///////////////
 	@Override
 	public String toString() {
 		return "Team [id=" + id + ", foundation_date=" + foundation_date + ", badge=" + badge + ", budget=" + budget
