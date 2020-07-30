@@ -25,6 +25,11 @@ spring.mail.properties.mail.smtp.starttls.enable = true // Needed SSL for send e
 
 * IN USER CONTROLLER ADD:
 
+@Autowired
+MailService mailService;
+
+and in POST Register (saveNewManager/saveNewAdmin):
+
 try
 {
     mailService.sendMail(user.getMail());
@@ -33,6 +38,14 @@ catch(MailException e)
 {
     System.out.println(e.getMessage());
 }
+
+* IN POM.XML ADD:
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-mail</artifactId>
+    <version>2.3.2.RELEASE</version>
+</dependency>
 
 */
 
