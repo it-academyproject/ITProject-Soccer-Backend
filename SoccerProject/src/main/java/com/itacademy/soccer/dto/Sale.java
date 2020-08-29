@@ -1,17 +1,22 @@
 package com.itacademy.soccer.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="sale")
@@ -32,9 +37,9 @@ public class Sale {
 	@JoinColumn(name="player_id")
 	private Player player;
 
-	//	@OneToMany
-//	@JoinColumn(name="sale_id")
-//	private List<Bid> bids;
+	@OneToMany
+	@JoinColumn(name="sale_id")
+	private List<Bid> bids;
 	public Sale() {
 		
 	}
@@ -75,6 +80,16 @@ public class Sale {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY)
+	public List<Bid> getBids() {
+		return bids;
+	}
+
+	public void setBids(List<Bid> bids) {
+		this.bids = bids;
 	}
 	
 }
