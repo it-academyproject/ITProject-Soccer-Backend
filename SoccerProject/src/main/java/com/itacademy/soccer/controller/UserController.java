@@ -1,10 +1,13 @@
 package com.itacademy.soccer.controller;
 
+import com.itacademy.soccer.dto.User;
+import com.itacademy.soccer.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api")
@@ -13,79 +16,221 @@ public class UserController {
 
 // GETS
 
+    @Autowired
+    IUserService iUserService;
+
     @GetMapping("/login") // LOGIN ALL USERS (MANAGERS/ADMINS)
-    public String loginUser()
+    public HashMap <String,Object> loginUser(@RequestBody User user)
     {
-        return "Hello World, aiam Login API :D";
+        HashMap<String, Object> map = new HashMap();
+        try
+        {
+            for (User userChecker: iUserService.showAllUsers())
+            {
+                if(userChecker.getEmail().equals(user.getEmail()))
+                {
+                    if(userChecker.getPassword().equals(user.getPassword()))
+                    {
+                        map.put("message", "All correct!");
+                        map.put("email:", user.getEmail());
+                        map.put("type User:", userChecker.getTypeUser());
+                        map.put("success:", true);
+                    }
+                    else
+                    {
+                        map.put("message", "Mail address or Password not correct");
+                        map.put("success:", false);
+                    }
+                }
+                else
+                {
+                    map.put("message", "Mail address or Password not correct");
+                    map.put("success:", false);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            map.put("message", "something went wrong! :" + e.getMessage());
+        }
+        return map;
     }
 
     @GetMapping("/users") // SHOW ALL USERS FOR ADMIN
-    public List<String> showAllUsers()
+    public List<User> showAllUsers()
     {
-        List<String> showAllUsers = new ArrayList<>();
-        showAllUsers.add("Fulanito de tal");
-        showAllUsers.add("Menganito de cual");
-        showAllUsers.add("Reduzca a 20");
-        showAllUsers.add("Bienvenido a Reduzca");
-        showAllUsers.add("Soy una lista de uuusers");
-
-        return showAllUsers;
+        return iUserService.showAllUsers();
     }
 
     @GetMapping("/users/managers/{id}") // SHOW USER UNIQUE TO ADMIN
-    public String showUniqueUser()
+    public User showUserById(@PathVariable Long id)
     {
-        return "Aiam Menganito de tal :)";
+        return iUserService.showUserById(id);
     }
 
 // POSTS
 
     @PostMapping("/users/managers") // CREATE USERS/MANAGERS
-    public HashMap <String, Object> createUserManager()
+    public HashMap <String, Object> createUserManager(@RequestBody User user)
     {
-       HashMap<String, Object> userManagerData = new HashMap<>();
-       userManagerData.put("Hello World, I'm Manager", true);
-       userManagerData.put("Type User:", 0);
-       userManagerData.put("Push to dev?",false);
+       HashMap<String, Object> map = new HashMap<>();
 
-       if(userManagerData.containsValue(0))
-       {
-           userManagerData.put("Type User: Manager", true);
-       }
+        try
+        {
+            if(user.getEmail() == null || user.getPassword() == null)
+            {
+                map.put("message", "Please, write an email and password.");
+                map.put("success:", false);
+                //throw new Exception();
+            }
+            else if(user.getEmail().equals("") || user.getPassword().equals(""))
+            {
+                map.put("message", "Please, write an email and password.");
+                map.put("success:", false);
+                //throw new Exception();
+            }
+            else
+            {
+                String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z" + "A-Z]{2,7}$";
+                Pattern pat = Pattern.compile(emailRegex);
 
-        return userManagerData;
+                if(pat.matcher(user.getEmail()).matches())
+                {
+                    iUserService.saveNewUser(user);
+                    map.put("message:", "All correct!");
+                    map.put("type User:",user.getTypeUser());
+                    map.put("success:", true);
+                }
+                else
+                {
+                    map.put("message", "Please, write a valid email.");
+                    map.put("success:", false);
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            map.put("message", "something went wrong! :" + e.getMessage());
+        }
+        return map;
     }
 
     @PostMapping("/users/admins") // CREATE USERS/ADMINS
-    public HashMap <String, Object> createUserAdmin()
+    public HashMap <String, Object> createUserAdmin(@RequestBody User user)
     {
-        HashMap<String, Object> userAdminData = new HashMap<>();
-        userAdminData.put("Hello World, I'm Admin", false);
-        userAdminData.put("Type User:" , 1);
-        userAdminData.put("Push to dev?", true);
-
-
-        if(userAdminData.containsValue(1))
+        HashMap<String, Object> map = new HashMap<>();
+        try
         {
-            userAdminData.put("Type User: Admin", true);
+            if(user.getEmail() == null || user.getPassword() == null)
+            {
+                map.put("message", "Please, write an email and password.");
+                map.put("success:", false);
+                //throw new Exception();
+            }
+            else if(user.getEmail().equals("") || user.getPassword().equals(""))
+            {
+                map.put("message", "Please, write an email and password.");
+                map.put("success:", false);
+                //throw new Exception();
+            }
+            else
+            {
+                String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z" + "A-Z]{2,7}$";
+                Pattern pat = Pattern.compile(emailRegex);
+
+                if(pat.matcher(user.getEmail()).matches())
+                {
+                    iUserService.saveNewAdmin(user);
+                    map.put("message:", "All correct!");
+                    map.put("type User:", user.getTypeUser());
+                    map.put("success:", true);
+                }
+                else
+                {
+                    map.put("message", "Please, write a valid email.");
+                    map.put("success:", false);
+                }
+            }
         }
-        return userAdminData;
+        catch(Exception e)
+        {
+            map.put("message", "something went wrong! :" + e.getMessage());
+        }
+        return map;
     }
 
 // PUT
 
-    @PutMapping("/users/{id}") // MODIFY USERS ADMIN
-    public String modifyUsers()
+    @PutMapping("/users/password/{id}") //  USER MODIFY PASSWORD
+    public HashMap <String, Object> modifyUserPass(@PathVariable Long id, @RequestBody User user)
     {
-        return "I'm an modified User :O";
+        HashMap<String, Object> map = new HashMap<>();
+        try
+        {
+            for (User userChecker: iUserService.showAllUsers())
+            {
+                if(userChecker.getEmail().equals(user.getEmail()))
+                {
+                    if(userChecker.getId() == user.getId())
+                    {
+                        map.put("success:", true);
+                        map.put("User:", user.getEmail());
+                        map.put("message:", "change successful");
+                        iUserService.modifyUserPass(id, user);
+                    }
+                    else
+                    {
+                        map.put("success:",false);
+                        map.put("message:", "Wrong email or id.");
+                    }
+               }
+            }
+        }
+        catch(Exception e)
+        {
+            map.put("message", "something went wrong! :" + e.getMessage());
+        }
+        return map;
+    }
+
+    @PutMapping("/users/type/{id}") // MODIFY USERS TO CHANGE TO  ADMIN
+    public HashMap <String, Object> modifyTypeUser(@PathVariable Long id, @RequestBody User user)
+    {
+        HashMap<String, Object> map = new HashMap<>();
+        try
+        {
+            for (User userChecker: iUserService.showAllUsers())
+            {
+                if(userChecker.getEmail().equals(user.getEmail()) && userChecker.getId() == user.getId())
+                {
+                    map.put("Email:", user.getEmail());
+                    map.put("Id:", userChecker.getId());
+                    if(userChecker.getTypeUser().equals(user.getTypeUser()))
+                    {
+                        map.put("success:", false);
+                        map.put("message:", "User '" + user.getEmail() + "' have same type actually.");
+                    }
+                    else
+                    {
+                        iUserService.modifyTypeUser(id, user);
+                        map.put("Now User type:", user.getTypeUser());
+                        map.put("success:", true);
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            map.put("message", "something went wrong! :" + e.getMessage());
+        }
+        return map;
     }
 
 // DELETE
 
     @DeleteMapping("/users/managers/{id}") // DELETE USERS ADMIN
-    public String deleteUsers()
+    public void deleteUsers(@PathVariable Long id)
     {
-        return "They gonna delete me! :(";
+        iUserService.deleteUser(id);
     }
-
 }
