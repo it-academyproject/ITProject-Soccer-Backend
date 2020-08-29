@@ -16,10 +16,12 @@ import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 
 @RestController
 @RequestMapping("/api")
-public class PlayersController {
-	
+
+public class PlayerController {
+
 	@Autowired
 	PlayerServiceImpl playerServiceImpl;
+
 
 	//get all players
 	@GetMapping("/players")
