@@ -161,45 +161,8 @@ public class UserController {
 
 // PUT
 
-
-
     @PutMapping("/users/password/{id}") //  USER MODIFY PASSWORD
     public HashMap <String, Object> modifyUserPass(@PathVariable Long id, @RequestBody User user)
-     {
-        HashMap<String, Object> map = new HashMap<>();
-        try
-        {
-            for (User userChecker: iUserService.showAllUsers())
-            {
-                if(userChecker.getEmail().equals(user.getEmail()))
-                {
-                    if(userChecker.getId() == user.getId())
-                    {
-                        map.put("success:", true);
-                        map.put("User:", user.getEmail());
-                        map.put("message:", "change successful");
-                        iUserService.modifyUserPass(id, user);
-                    }
-                    else
-                    {
-                        map.put("success:",false);
-                        map.put("message:", "Wrong email or id.");
-                    }
-               }
-            }
-        }
-        catch(Exception e)
-        {
-            map.put("message", "something went wrong! :" + e.getMessage());
-        }
-        return map;
-    }
-
-  
-
-
-    @PutMapping("/users/type/{id}") // MODIFY USERS TO CHANGE TO ADMIN
-    public String modifyTypeUser()
     {
         HashMap<String, Object> map = new HashMap<>();
         try
@@ -264,7 +227,6 @@ public class UserController {
     }
 
 // DELETE
-
 
     @DeleteMapping("/users/managers/{id}") // DELETE USERS ADMIN
     public void deleteUsers(@PathVariable Long id)

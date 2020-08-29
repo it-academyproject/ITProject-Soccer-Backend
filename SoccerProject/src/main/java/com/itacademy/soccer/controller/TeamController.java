@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(path = "/api/teams")
-public class teamController {
+public class TeamController {
 
 	@PostMapping
 	// public Team createTeam(@RequestBody Team team) {
