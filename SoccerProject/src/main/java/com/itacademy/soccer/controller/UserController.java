@@ -74,16 +74,22 @@ public class UserController {
 
 // PUT
 
-    @PutMapping("/users/{id}") // MODIFY USERS ADMIN
-    public String modifyUsers()
+    @PutMapping("/users/password/{id}") // USER MODIFY PASSWORD
+    public String modifyUserPass()
+    {
+        return "User modified password";
+    }
+
+    @PutMapping("/users/type/{id}") // MODIFY USERS TO CHANGE TO ADMIN
+    public String modifyTypeUser()
     {
         return "I'm an modified User :O";
     }
 
 // DELETE
 
-    @DeleteMapping("/users/managers/{id}") // DELETE USERS ADMIN
-    public String deleteUsers()
+    @DeleteMapping("/users/{id}") // DELETE USERS ADMIN
+    public String deleteUser()
     {
         return "They gonna delete me! :(";
     }
