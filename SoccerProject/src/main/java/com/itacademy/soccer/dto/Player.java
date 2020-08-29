@@ -3,16 +3,23 @@ package com.itacademy.soccer.dto;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name="player")
 public class Player {
+	//Player atributes
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -24,18 +31,27 @@ public class Player {
 	private int defense;
 	private int pass;
 	private int attack;
+
 		
 	@ManyToOne
 	private Team team;
 	
 	@OneToMany
 	List<PlayerActions> playerActions;
+
 	
+	//relation with team
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="team_id")
+	@JsonIgnore
+	private Team team;
+	
+	//Empty constructor
 	public Player() {
-		super();
 		
 	}
 
+	//getters and setters
 	public Long getId() {
 		return id;
 	}
@@ -108,6 +124,7 @@ public class Player {
 		this.team = team;
 	}
 
+
 	public List<PlayerActions> getPlayerActions() {
 		return playerActions;
 	}
@@ -116,5 +133,12 @@ public class Player {
 		this.playerActions = playerActions;
 	}
 	
+
+	@Override
+	public String toString() {
+		return "Player [id=" + id + ", name=" + name + ", age=" + age + ", aka=" + aka + ", keeper=" + keeper
+				+ ", defense=" + defense + ", pass=" + pass + ", attack=" + attack + ", team=" + team + "]";
+	}
+
 	
 }
