@@ -1,58 +1,144 @@
 package com.itacademy.soccer.controller;
 
 import java.util.HashMap;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 
 @RestController
 @RequestMapping("/api")
 public class PlayersController {
+	
+	@Autowired
+	PlayerServiceImpl playerServiceImpl;
 
+	//get all players
 	@GetMapping("/players")
 	HashMap<String,Object> getAllPlayers(){
 		HashMap<String,Object> map = new HashMap<>();
-		map.put("success", true);
-		map.put("message", "get all players");
+		try {
+			List<Player> allPlayers = playerServiceImpl.playerList();
+			
+			if(allPlayers.size() > 0) {
+				map.put("success", true);
+				map.put("all players", allPlayers);
+				map.put("message", "get all players");
+			}else {
+				map.put("success", false);
+				map.put("message", "Error getting all players");
+				
+				//throw new Exception();
+			}
+		}
+		catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
 		
 		return map;
 	}
 	
 	@GetMapping("/teams/{id}/players")
-	HashMap<String,Object> getPlayersByTeamId(){
+	HashMap<String,Object> getPlayersByTeamId(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
-		map.put("success", true);
-		map.put("message", "get all players by team id");
+		try {
+			List<Player> allPlayersByTeamId = playerServiceImpl.playerListByTeam(id);
+			
+			if(allPlayersByTeamId.size() > 0) {
+				map.put("success", true);
+				map.put("all players by team id", allPlayersByTeamId);
+				map.put("message", "get all players by team id");
+			}else {
+				map.put("success", false);
+				map.put("message", "Error getting all players");
+				
+				//throw new Exception();
+			}
+			
+		}
+		catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
 		
 		return map;
 	}
 	
 	@GetMapping("/players/id/{id}")
-	HashMap<String,Object> getPlayerById(){
+	HashMap<String,Object> getPlayerById(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
-		map.put("success", true);
-		map.put("message", "get one players by id");
+		try {
+			Player player = playerServiceImpl.playerById(id);
+			map.put("success", true);
+			map.put("player", player);
+			map.put("message", "get one players by id");
+		}
+		catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
 		
 		return map;
 	}
 	
 	@GetMapping("/players/name/{name}")
-	HashMap<String,Object> getPlayersByName(){
+	HashMap<String,Object> getPlayersByName(@PathVariable String name){
 		HashMap<String,Object> map = new HashMap<>();
-		map.put("success", true);
-		map.put("message", "get one players by name");
+		try {
+			Player player = playerServiceImpl.playerByName(name);
+			if (player != null) {
+				map.put("success", true);
+				map.put("player", player);
+				map.put("message", "get one players by name");
+			}else {
+				map.put("success", false);
+				map.put("message", "Error getting players with name: " + name);
+				
+				//throw new Exception();
+			}
+			
+		}
+		catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
 		
 		return map;
 	}
 	
+	//edit Aka in player
 	@PutMapping("/players/{id}")
-	HashMap<String,Object> putPlayersAka(){
+	HashMap<String,Object> putPlayersAka(@RequestBody Player player, @PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
-		map.put("success", true);
-		map.put("message", "put AKA in players by id");
-		
+		try {
+			Player playerLocalized = playerServiceImpl.playerById(id);
+			
+			if (playerLocalized != null) {
+				playerLocalized.setAka(player.getAka());
+				map.put("success", true);
+				map.put("player with new Aka", playerLocalized);
+				map.put("message", "AKA modified");
+			}else {
+				map.put("success", false);
+				map.put("message", "player with id " + player.getId() + " not found and aka not changed");
+				
+				//throw new Exception();
+			}
+		}
+		catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
+				
 		return map;
 	}
 }
