@@ -33,27 +33,27 @@ public class MatchServiceImpl implements IMatchService {
 	@Override
 	public List<Match> showAllMatches() {
 		
-		return iMatchDAO.findAll();
+		List<Match> matchesList = iMatchDAO.findAll();
+	 
+	 return matchesList;
 		
 	}
 
 	@Override
-	public List<Match> showAllmatchesForTeamByID(Long id) {
+	public List<Match> showAllmatchesForTeamByID(Long id) throws Exception{
 		
 		List<Match> matchesToShow = new ArrayList<>();
-		try {
-			for (Match match : showAllMatches()) {
-				
-				Team localTeam = match.getTeam_local();
-				Team visitorTeam = match.getTeam_visitors();
-				
-				if (localTeam.getId().equals(id) || visitorTeam.getId().equals(id)) {
-					matchesToShow.add(match);
-				}
+	
+		for (Match match : showAllMatches()) {
+			
+			Team localTeam = match.getTeam_local();
+			Team visitorTeam = match.getTeam_visitors();
+			
+			if (localTeam.getId().equals(id) || visitorTeam.getId().equals(id)) {
+				matchesToShow.add(match);
 			}
-		} catch (Exception e) {
-			matchesToShow = null;
 		}
+		 
 		return matchesToShow;
 	}
 

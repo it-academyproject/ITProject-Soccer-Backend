@@ -7,7 +7,7 @@ import com.itacademy.soccer.dto.Team;
 
 public interface IMatchService {
 	
-	public List<Match> showAllmatchesForTeamByID(Long teamId);
+	public List<Match> showAllmatchesForTeamByID(Long teamId) throws Exception;
 	
 	public List<Match> showAllMatches();
 	

@@ -5,45 +5,58 @@
 package com.itacademy.soccer.dto;
 
 import java.util.Date;
-import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @author KevHaes
  *
  */
 @Entity
+@Table(name="`match`")
 public class Match {
 	/////////////// ATRIBUTES ///////////////
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Date timestamp;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="date")
+	private Date date;
+	
+	@Column(name="local_goals")
 	private int local_goals;
+	
+	@Column(name="visitor_goals")
 	private int visitor_goals;
 
 	@ManyToOne
+//	@Column(name="team_local_id")
+	@JoinColumn(name="team_local_id")
 	private Team team_local;
 
 	@ManyToOne
+//	@Column(name="team_visitor_id")
+	@JoinColumn(name="team_visitor_id")
 	private Team team_visitors;
 
-	@OneToMany
-	private List<PlayerActions> playeractions;
+//	@OneToMany
+//	private List<PlayerActions> playeractions;
 	// waiting B-19
 
 	/////////////// CONSTRUCTORS ///////////////
-	public Match(Long id, Date timestamp, int local_goals, int visitor_goals) {
+	public Match(Long id, Date date, int local_goals, int visitor_goals) {
 		this.id = id;
-		this.timestamp = timestamp;
+		this.date = date;
 		this.local_goals = local_goals;
 		this.visitor_goals = visitor_goals;
 	}
@@ -70,15 +83,15 @@ public class Match {
 	/**
 	 * @return the timestamp
 	 */
-	public Date getTimestamp() {
-		return timestamp;
+	public Date getDate() {
+		return date;
 	}
 
 	/**
 	 * @param timestamp the timestamp to set
 	 */
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	/**
@@ -144,23 +157,23 @@ public class Match {
 	/**
 	 * @return the playeractions
 	 */
-	@OneToMany
-	@JsonIgnore
-	public List<PlayerActions> getPlayeractions() {
-		return playeractions;
-	}
-
-	/**
-	 * @param playeractions the playeractions to set
-	 */
-	public void setPlayeractions(List<PlayerActions> playeractions) {
-		this.playeractions = playeractions;
-	}
+//	@OneToMany
+//	@JsonIgnore
+//	public List<PlayerActions> getPlayeractions() {
+//		return playeractions;
+//	}
+//
+//	/**
+//	 * @param playeractions the playeractions to set
+//	 */
+//	public void setPlayeractions(List<PlayerActions> playeractions) {
+//		this.playeractions = playeractions;
+//	}
 
 	/////////////// TOSTRING ///////////////
 	@Override
 	public String toString() {
-		return "Match [id=" + id + ", timestamp=" + timestamp + ", local_goals=" + local_goals + ", visitors_goals="
+		return "Match [id=" + id + ", timestamp=" + date + ", local_goals=" + local_goals + ", visitors_goals="
 				+ visitor_goals + ", team_local_id=" + team_local.getId() + ", team_visitors_id=" + team_visitors.getId() + "]";
 	}
 }
