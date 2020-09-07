@@ -32,9 +32,9 @@ public class Player {
 	private int pass;
 	private int attack;
 
-		
-	@ManyToOne
-	private Team team;
+	//Error! duplicated declaration of team object
+	//@ManyToOne
+	//private Team team;
 	
 	@OneToMany
 	List<PlayerActions> playerActions;
