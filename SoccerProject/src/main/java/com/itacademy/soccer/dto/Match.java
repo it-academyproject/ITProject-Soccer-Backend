@@ -31,24 +31,21 @@ public class Match {
 	private int visitor_goals;
 
 	@ManyToOne
-	private Long team_local_id;
+	private Team team_local;
 
 	@ManyToOne
-	private Long team_visitors_id;
+	private Team team_visitors;
 
 	@OneToMany
 	private List<PlayerActions> playeractions;
 	// waiting B-19
 
 	/////////////// CONSTRUCTORS ///////////////
-	public Match(Long id, Date timestamp, int local_goals, int visitor_goals, Long team_local_id,
-			Long team_visitors_id) {
+	public Match(Long id, Date timestamp, int local_goals, int visitor_goals) {
 		this.id = id;
 		this.timestamp = timestamp;
 		this.local_goals = local_goals;
 		this.visitor_goals = visitor_goals;
-		this.team_local_id = team_local_id;
-		this.team_visitors_id = team_visitors_id;
 	}
 
 	public Match() {
@@ -112,32 +109,22 @@ public class Match {
 		this.visitor_goals = visitors_goals;
 	}
 
-	/**
-	 * @return the team_local_id
-	 */
-	public Long getTeam_local_id() {
-		return team_local_id;
+	
+
+	public Team getTeam_local() {
+		return team_local;
 	}
 
-	/**
-	 * @param team_local_id the team_local_id to set
-	 */
-	public void setTeam_local_id(Long team_local_id) {
-		this.team_local_id = team_local_id;
+	public void setTeam_local(Team team_local) {
+		this.team_local = team_local;
 	}
 
-	/**
-	 * @return the team_visitors_id
-	 */
-	public Long getTeam_visitors_id() {
-		return team_visitors_id;
+	public Team getTeam_visitors() {
+		return team_visitors;
 	}
 
-	/**
-	 * @param team_visitors_id the team_visitors_id to set
-	 */
-	public void setTeam_visitors_id(Long team_visitors_id) {
-		this.team_visitors_id = team_visitors_id;
+	public void setTeam_visitors(Team team_visitors) {
+		this.team_visitors = team_visitors;
 	}
 
 	/**
@@ -174,6 +161,6 @@ public class Match {
 	@Override
 	public String toString() {
 		return "Match [id=" + id + ", timestamp=" + timestamp + ", local_goals=" + local_goals + ", visitors_goals="
-				+ visitor_goals + ", team_local_id=" + team_local_id + ", team_visitors_id=" + team_visitors_id + "]";
+				+ visitor_goals + ", team_local_id=" + team_local.getId() + ", team_visitors_id=" + team_visitors.getId() + "]";
 	}
 }

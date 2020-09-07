@@ -1,12 +1,13 @@
 package com.itacademy.soccer.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dto.PlayerActions;
-import com.itacademy.soccer.dto.serializable.PlayerMatchId;
 import com.itacademy.soccer.service.IPlayerActionsService;
 
+@Service
 public class PlayerActionsServiceImpl implements IPlayerActionsService{
 
 	@Autowired
