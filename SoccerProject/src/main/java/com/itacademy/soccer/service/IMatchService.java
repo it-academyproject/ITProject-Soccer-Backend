@@ -1,9 +1,9 @@
 package com.itacademy.soccer.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.itacademy.soccer.dto.Match;
-import com.itacademy.soccer.dto.Team;
 
 public interface IMatchService {
 	
@@ -11,6 +11,6 @@ public interface IMatchService {
 	
 	public List<Match> showAllMatches();
 	
-	public Match createMatch( Team local_team, Team visitor_team );
+	public Match createMatch( Long localTeamId, Long visitorTeamId, Date date);
 
 }

@@ -40,12 +40,10 @@ public class Match {
 	private int visitor_goals;
 
 	@ManyToOne
-//	@Column(name="team_local_id")
 	@JoinColumn(name="team_local_id")
 	private Team team_local;
 
 	@ManyToOne
-//	@Column(name="team_visitor_id")
 	@JoinColumn(name="team_visitor_id")
 	private Team team_visitors;
 

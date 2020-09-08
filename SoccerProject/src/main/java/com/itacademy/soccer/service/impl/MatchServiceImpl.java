@@ -5,6 +5,7 @@
 package com.itacademy.soccer.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,18 +59,20 @@ public class MatchServiceImpl implements IMatchService {
 	}
 
 	@Override
-	public Match createMatch(Team p_local_team, Team p_visitor_team) {
+	public Match createMatch(Long localTeamId, Long visitorTeamId, Date date) {
 		
 		Match matchToSave = new Match();
 		
-		Team localTeam = iTeamDAO.findById(p_local_team.getId()).get();
-		Team visitorTeam = iTeamDAO.findById(p_visitor_team.getId()).get();
+		Team localTeam = iTeamDAO.findById(localTeamId).get();
+		Team visitorTeam = iTeamDAO.findById(visitorTeamId).get();
 		
 		matchToSave.setTeam_local(localTeam);
 		matchToSave.setTeam_visitors(visitorTeam);
 		
 		matchToSave.setLocal_goals(0);
 		matchToSave.setVisitor_goals(0);
+		
+		matchToSave.setDate(date);
 		
 		return iMatchDAO.save(matchToSave);
 	}
