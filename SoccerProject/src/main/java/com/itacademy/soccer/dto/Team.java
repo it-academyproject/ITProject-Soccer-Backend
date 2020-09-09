@@ -33,7 +33,6 @@ public class Team {
 	@OneToMany(mappedBy="team" )
 	private List<Player> playersList ;
 
-
 	/////////////// CONSTRUCTORS ///////////////
 	public Team(Long id, String name, Date foundation_date, String badge, Float budget, int wins, int losses,
 			int draws) {
