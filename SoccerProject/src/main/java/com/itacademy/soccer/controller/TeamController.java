@@ -37,7 +37,7 @@ public class TeamController {
 	@PostMapping
 	public HashMap<String, Object> createTeam(@RequestBody Team team) {
 		HashMap<String, Object> map = new HashMap<>();
-		verifyDataTeam.createTeamInitial();
+		verifyDataTeam.createTeamInitial(teamServiceImpl);
 		try {
 			Team NewlyCreatedTeam = teamServiceImpl.createTeam(team);
 			map.put("success", true);

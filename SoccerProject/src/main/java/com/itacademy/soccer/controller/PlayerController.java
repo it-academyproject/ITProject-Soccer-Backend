@@ -49,7 +49,6 @@ public class PlayerController {
 
 		HashMap<String, Object> map = new HashMap<>();
 		player = verifyDataPlayer.assignInitialValues(player);
-		System.out.println("................................................... " + player.getTeam_id());
 		try {
 			Player NewlyCreatedPlayer = playerServiceImpl.save(player);
 			map.put("success", true);
