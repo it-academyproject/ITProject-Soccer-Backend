@@ -228,7 +228,8 @@ public class UserController {
 
 // DELETE
 
-    @DeleteMapping("/users/managers/{id}") // DELETE USERS ADMIN
+  //  @DeleteMapping("/users/managers/{id}") // DELETE USERS ADMIN  -- Modificada la url del ENDPOINT USER
+    @DeleteMapping("/users/{id}") // DELETE USERS ADMIN
     public void deleteUsers(@PathVariable Long id)
     {
         iUserService.deleteUser(id);
