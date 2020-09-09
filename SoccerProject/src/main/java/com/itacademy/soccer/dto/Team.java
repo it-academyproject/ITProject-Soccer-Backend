@@ -37,12 +37,9 @@ public class Team {
 	private int draws;
 
 	// Kevin annotations
-	//@OneToOne(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+	// @OneToOne(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+	// private User user;
 	
-	// Ivan annotations
-	@OneToOne(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-	private User user;
-
 	@OneToMany
 	private List<Match> matches;
 
@@ -179,16 +176,16 @@ public class Team {
 	/**
 	 * @return the userId
 	 */
-	public User getUser() {
-		return user;
-	}
-
-	/**
-	 * @param userId the userId to set
-	 */
-	public void setUser(User user) {
-		this.user = user;
-	}
+//	public User getUser() {
+//		return user;
+//	}
+//
+//	/**
+//	 * @param userId the userId to set
+//	 */
+//	public void setUser(User user) {
+//		this.user = user;
+//	}
 
 	/**
 	 * @return the matches
