@@ -10,9 +10,6 @@ import java.util.List;
 
 public class VerifyDataTeam {
 
-//    @Autowired
-//    TeamServiceImpl teamServiceImpl;
-
     public void createTeamInitial(TeamServiceImpl teamService){
         List<Team> teamsToShow = teamService.getAllTeams();
         if ( teamsToShow.size() == 0){

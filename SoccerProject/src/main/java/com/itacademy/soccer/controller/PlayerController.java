@@ -46,7 +46,6 @@ public class PlayerController {
 	}
 	@PostMapping("/insertPlayers")
 	public HashMap<String, Object> createPlayer(@RequestBody Player player) {
-
 		HashMap<String, Object> map = new HashMap<>();
 		player = verifyDataPlayer.assignInitialValues(player);
 		try {
