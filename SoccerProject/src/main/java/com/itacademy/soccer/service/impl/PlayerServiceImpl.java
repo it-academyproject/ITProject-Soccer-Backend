@@ -35,8 +35,16 @@ public class PlayerServiceImpl implements IPlayerService{
 	}
 
 	@Override
+	public Player save(Player player) {
+		return iPlayerDAO.save(player);
+	}
+
+	@Override
 	public Player updatePlayer(Player player) {
 		return iPlayerDAO.save(player);
 	}
+
+	@Override
+	public void deletePlayerById(Long id) { iPlayerDAO.deleteById(id);}
 
 }

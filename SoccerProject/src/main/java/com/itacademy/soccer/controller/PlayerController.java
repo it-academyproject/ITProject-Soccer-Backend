@@ -3,13 +3,9 @@ package com.itacademy.soccer.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import com.itacademy.soccer.game.VerifyDataPlayer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
@@ -21,7 +17,7 @@ public class PlayerController {
 
 	@Autowired
 	PlayerServiceImpl playerServiceImpl;
-
+	VerifyDataPlayer verifyDataPlayer = new VerifyDataPlayer();
 
 	//get all players
 	@GetMapping("/players")
@@ -46,6 +42,23 @@ public class PlayerController {
 			map.put("message", "something went wrong: " + e.getMessage());
 		}
 		
+		return map;
+	}
+	@PostMapping("/insertPlayers")
+	public HashMap<String, Object> createPlayer(@RequestBody Player player) {
+
+		HashMap<String, Object> map = new HashMap<>();
+		player = verifyDataPlayer.assignInitialValues(player);
+		System.out.println("................................................... " + player.getTeam_id());
+		try {
+			Player NewlyCreatedPlayer = playerServiceImpl.save(player);
+			map.put("success", true);
+			map.put("message", "Player Created");
+			map.put("player", NewlyCreatedPlayer);
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "Player NOT Created ! :" + e.getMessage());
+		}
 		return map;
 	}
 	
@@ -143,4 +156,9 @@ public class PlayerController {
 				
 		return map;
 	}
+	@DeleteMapping("/deletePlayer/{id}")
+	public void deleteUser(@PathVariable long id){
+		playerServiceImpl.deletePlayerById(id);
+	}
+
 }

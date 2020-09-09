@@ -15,4 +15,7 @@ public interface IPlayerService {
 	public Player playerById(Long playerId);
 	
 	public Player updatePlayer(Player player);
+	Player save(Player player);
+
+	void deletePlayerById(Long id);
 }

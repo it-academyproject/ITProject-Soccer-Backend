@@ -4,12 +4,12 @@
  */
 package com.itacademy.soccer.dto;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.*;
 
 /**
  * @author KevHaes
@@ -28,6 +28,11 @@ public class Team {
 	private int wins;
 	private int losses;
 	private int draws;
+
+	@JsonIgnore
+	@OneToMany(mappedBy="team" )
+	private List<Player> playersList ;
+
 
 	/////////////// CONSTRUCTORS ///////////////
 	public Team(Long id, String name, Date foundation_date, String badge, Float budget, int wins, int losses,
@@ -157,6 +162,17 @@ public class Team {
 	 */
 	public void setDraws(int draws) {
 		this.draws = draws;
+	}
+
+	/**
+	 * List of players in team
+	 * @return list players
+	 */
+	public List<Player> getPlayersList() {
+		return playersList;
+	}
+	public void setPlayersList(List<Player> playersList) {
+		this.playersList = playersList;
 	}
 
 	/////////////// TOSTRING ///////////////
