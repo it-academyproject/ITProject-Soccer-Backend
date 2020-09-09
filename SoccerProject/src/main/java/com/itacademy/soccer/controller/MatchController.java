@@ -4,6 +4,7 @@
  */
 package com.itacademy.soccer.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itacademy.soccer.controller.json.MatchJson;
 import com.itacademy.soccer.dto.Match;
-import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.impl.MatchServiceImpl;
 
 /**
@@ -67,11 +68,17 @@ public class MatchController {
 
 	// Create a new match between 2 teams
 	@PostMapping(path = "/matches")
-	public HashMap<String, Object> createMatch(@RequestBody Team local_team, Team visitor_team) {
+	//public HashMap<String, Object> createMatch(@RequestBody Team local_team, Team visitor_team) {
+	public HashMap<String, Object> createMatch(@RequestBody MatchJson jsonMatch) {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("success", true);
+		
+		Date date = jsonMatch.getDate();
+		if (date==null) date = new Date();
+		
 		try {
-			Match createdMatch = matchServiceImpl.createMatch(local_team, visitor_team);
+			Match createdMatch = matchServiceImpl.createMatch(jsonMatch.getLocal_team(),
+													jsonMatch.getVisitor_team(),date);
 			map.put("success", true);
 			map.put("message", "createdMatch");
 			map.put("match", createdMatch);

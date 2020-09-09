@@ -6,36 +6,57 @@ package com.itacademy.soccer.dto;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @author KevHaes
  *
  */
 @Entity
+@Table(name="`match`")
 public class Match {
 	/////////////// ATRIBUTES ///////////////
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Date timestamp;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="date")
+	private Date date;
+	
+	@Column(name="local_goals")
 	private int local_goals;
+	
+	@Column(name="visitor_goals")
 	private int visitor_goals;
-	private Long team_local_id;
-	private Long team_visitors_id;
+
+	@ManyToOne
+	@JoinColumn(name="team_local_id")
+	private Team team_local;
+
+	@ManyToOne
+	@JoinColumn(name="team_visitor_id")
+	private Team team_visitors;
+
+//	@OneToMany
+//	private List<PlayerActions> playeractions;
+	// waiting B-19
 
 	/////////////// CONSTRUCTORS ///////////////
-	public Match(Long id, Date timestamp, int local_goals, int visitor_goals, Long team_local_id,
-			Long team_visitors_id) {
+	public Match(Long id, Date date, int local_goals, int visitor_goals) {
 		this.id = id;
-		this.timestamp = timestamp;
+		this.date = date;
 		this.local_goals = local_goals;
 		this.visitor_goals = visitor_goals;
-		this.team_local_id = team_local_id;
-		this.team_visitors_id = team_visitors_id;
 	}
 
 	public Match() {
@@ -60,15 +81,15 @@ public class Match {
 	/**
 	 * @return the timestamp
 	 */
-	public Date getTimestamp() {
-		return timestamp;
+	public Date getDate() {
+		return date;
 	}
 
 	/**
 	 * @param timestamp the timestamp to set
 	 */
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	/**
@@ -99,38 +120,58 @@ public class Match {
 		this.visitor_goals = visitors_goals;
 	}
 
-	/**
-	 * @return the team_local_id
-	 */
-	public Long getTeam_local_id() {
-		return team_local_id;
+	
+
+	public Team getTeam_local() {
+		return team_local;
+	}
+
+	public void setTeam_local(Team team_local) {
+		this.team_local = team_local;
+	}
+
+	public Team getTeam_visitors() {
+		return team_visitors;
+	}
+
+	public void setTeam_visitors(Team team_visitors) {
+		this.team_visitors = team_visitors;
 	}
 
 	/**
-	 * @param team_local_id the team_local_id to set
+	 * @return the visitor_goals
 	 */
-	public void setTeam_local_id(Long team_local_id) {
-		this.team_local_id = team_local_id;
+	public int getVisitor_goals() {
+		return visitor_goals;
 	}
 
 	/**
-	 * @return the team_visitors_id
+	 * @param visitor_goals the visitor_goals to set
 	 */
-	public Long getTeam_visitors_id() {
-		return team_visitors_id;
+	public void setVisitor_goals(int visitor_goals) {
+		this.visitor_goals = visitor_goals;
 	}
 
 	/**
-	 * @param team_visitors_id the team_visitors_id to set
+	 * @return the playeractions
 	 */
-	public void setTeam_visitors_id(Long team_visitors_id) {
-		this.team_visitors_id = team_visitors_id;
-	}
+//	@OneToMany
+//	@JsonIgnore
+//	public List<PlayerActions> getPlayeractions() {
+//		return playeractions;
+//	}
+//
+//	/**
+//	 * @param playeractions the playeractions to set
+//	 */
+//	public void setPlayeractions(List<PlayerActions> playeractions) {
+//		this.playeractions = playeractions;
+//	}
 
 	/////////////// TOSTRING ///////////////
 	@Override
 	public String toString() {
-		return "Match [id=" + id + ", timestamp=" + timestamp + ", local_goals=" + local_goals + ", visitors_goals="
-				+ visitor_goals + ", team_local_id=" + team_local_id + ", team_visitors_id=" + team_visitors_id + "]";
+		return "Match [id=" + id + ", timestamp=" + date + ", local_goals=" + local_goals + ", visitors_goals="
+				+ visitor_goals + ", team_local_id=" + team_local.getId() + ", team_visitors_id=" + team_visitors.getId() + "]";
 	}
 }
