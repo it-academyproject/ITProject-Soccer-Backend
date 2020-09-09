@@ -1,8 +1,10 @@
 package com.itacademy.soccer.controller;
 
 import com.itacademy.soccer.dto.User;
+import com.itacademy.soccer.dto.typeUser.TypeUser;
 import com.itacademy.soccer.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -67,6 +69,27 @@ public class UserController {
     {
         return iUserService.showUserById(id);
     }
+    
+    
+    @GetMapping("/users/teams/{id}") // SHOW USER BY TEAM (MANAGER OF THIS TEAM {ID})
+    
+    public User showUserByTeam(@PathVariable Long id) {
+    	User manager = new User();
+    	manager =iUserService.showUserByTeam(id); //Is possible null if the postman enter a number of team doesn't exist
+    	
+    	if (manager !=null) {   
+    	  
+    		manager.setPassword("****************");
+    	  	 
+    		if (manager.getTypeUser().equals(TypeUser.ADMIN)) {
+    			manager=null;   		
+    		}
+    		
+    	}
+     	return manager;   	
+    }
+    
+ 
 
 // POSTS
 
