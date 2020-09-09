@@ -12,8 +12,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers("/login").permitAll() // permitimos el acceso a /login a
-																					// // cualquiera
+		
+		// permitimos el acceso a /login a cualquiera
+		//	http.csrf().disable().authorizeRequests().antMatchers("/login").permitAll() 
+
+		// permitimos el acceso a cualquier web api a cualquiera
+			http.csrf().disable().authorizeRequests().antMatchers("/**").permitAll() //comentar esta linea y descomentar linea anterior para correcto funcionamiento de autenticacion por token
+		
 				.anyRequest().authenticated() // cualquier otra peticion requiere autenticacion
 				.and()
 				// Las peticiones /login pasaran previamente por este filtro
@@ -34,3 +39,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.inMemoryAuthentication().withUser("user3").password("{noop}pass3").roles("USER");
 	}
 }
+
+/* 	IMPLEMENTACION DEL METODO CONFIGURE PARA PERMITIR SIN TOKEN SOLO EL ACCESO A "/login"
+
+ @Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable().authorizeRequests().antMatchers("/login").permitAll() // permitimos el acceso a /login a
+																					// // cualquiera
+				.anyRequest().authenticated() // cualquier otra peticion requiere autenticacion
+				.and()
+				// Las peticiones /login pasaran previamente por este filtro
+				.addFilterBefore(new LoginFilter("/login", authenticationManager()),
+						UsernamePasswordAuthenticationFilter.class)
+
+				// Las demás peticiones pasarán por este filtro para validar el token
+				.addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
+	}
+
+ */
