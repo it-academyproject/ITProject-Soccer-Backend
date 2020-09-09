@@ -63,7 +63,7 @@ public class SalesController {
 		return map;
 	}
 	
-	@GetMapping("/players/{id}/sales")
+	@GetMapping("/sales/players/{id}")
 	public HashMap<String,Object> getSalesByPlayer(@PathVariable(name="id") Long playerId){
 		
 		List<Sale> listSales = saleServiceImpl.getSalesByPlayer(playerId);
