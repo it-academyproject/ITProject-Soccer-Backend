@@ -4,6 +4,8 @@
  */
 package com.itacademy.soccer.controller;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.impl.TeamServiceImpl;
 
@@ -123,5 +126,41 @@ public class TeamController {
 		}
 		return map;
 	}
+	@GetMapping (path = "/{id}/bests")
+	public HashMap<String,Object> getBestPlayersByTeam(@PathVariable Long id){
+		
+		HashMap<String, Object> map = new HashMap<>();
+		
+		List <Player> playersByTeam = teamServiceImpl.getBestPlayersByTeam(id);
+		
+		
+		Collections.sort(playersByTeam, Comparator.comparing(Player::getKeeper).reversed());
+		Player keeper = playersByTeam.get(0);
+		
+		Collections.sort(playersByTeam, Comparator.comparing(Player::getDefense).reversed());	
+		Player defender = playersByTeam.get(0);
+		
+		Collections.sort(playersByTeam, Comparator.comparing(Player::getPass).reversed());
+		Player passer = playersByTeam.get(0);
+		
+		Collections.sort(playersByTeam, Comparator.comparing(Player::getAttack).reversed());
+		Player shooter = playersByTeam.get(0);
+		
+			
+						
+		try {
+			map.put("keeper:",keeper.getName());
+			map.put("defender:",defender.getName());
+			map.put("passer:", passer.getName());
+			map.put("shooter:",shooter.getName());
+			
+		}catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "no team to be shown! :" + e.getMessage());			
+		}
+		return map;
+	}
+		
+	}
 
-}
+

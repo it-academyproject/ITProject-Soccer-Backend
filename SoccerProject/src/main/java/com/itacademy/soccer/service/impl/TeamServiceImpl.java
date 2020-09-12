@@ -4,12 +4,15 @@
  */
 package com.itacademy.soccer.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dao.ITeamDAO;
+import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.ITeamService;
 
@@ -22,6 +25,8 @@ public class TeamServiceImpl implements ITeamService {
 
 	@Autowired
 	ITeamDAO iTeamsDao;
+	@Autowired
+	IPlayerDAO iPlayerDao;
 
 	@Override
 	public Team createTeam(Team team) {
@@ -52,5 +57,18 @@ public class TeamServiceImpl implements ITeamService {
 	public void deleteOneTeamById(Long id) {
 		iTeamsDao.deleteById(id);
 	}
+
+	public List<Player> getBestPlayersByTeam(Long id) {
+		List<Player>getAllPlayer = iPlayerDao.findAll();//Traigo todos los jugadores a lista Player
+		List<Player>getPlayersByTeams = new ArrayList<>(); 
+		for (Player player : getAllPlayer) {
+			if(player.getTeam().getId()==id) {
+				getPlayersByTeams.add(player);
+			}
+			
+		}
+		return getPlayersByTeams;
+	}
+
 
 }

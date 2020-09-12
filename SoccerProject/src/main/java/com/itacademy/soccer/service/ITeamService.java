@@ -6,6 +6,7 @@ package com.itacademy.soccer.service;
 
 import java.util.List;
 
+import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Team;
 
 /**
@@ -25,5 +26,7 @@ public interface ITeamService {
 	public Team getOneTeamByIdResults(Long id);
 
 	public void deleteOneTeamById(Long id);
+	
+	public List<Player> getBestPlayersByTeam(Long id);
 
 }
