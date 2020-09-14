@@ -38,6 +38,8 @@ public class League {
 	@Column (name= "division")
 	private Long division;
 	
+	public League() {	}
+	
 	public League(Long id, String name, Date beginDate, Date endingDate, int numberRounds, int participants,
 			Long division) {
 
