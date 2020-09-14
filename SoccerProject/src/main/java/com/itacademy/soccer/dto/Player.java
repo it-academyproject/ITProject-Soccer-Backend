@@ -57,6 +57,7 @@ public class Player {
 		this.team_id = team_id;
 		this.playerActions = playerActions;
 		this.team = team;
+		
 	}
 	//getters and setters
 

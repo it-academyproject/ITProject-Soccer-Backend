@@ -11,7 +11,7 @@ import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/players")
 
 public class PlayerController {
 
@@ -20,7 +20,7 @@ public class PlayerController {
 	VerifyDataPlayer verifyDataPlayer = new VerifyDataPlayer();
 
 	//get all players
-	@GetMapping("/players")
+	@GetMapping()
 	HashMap<String,Object> getAllPlayers(){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
@@ -44,7 +44,7 @@ public class PlayerController {
 		
 		return map;
 	}
-	@PostMapping("/insertPlayers")
+	@PostMapping()
 	public HashMap<String, Object> createPlayer(@RequestBody Player player) {
 		HashMap<String, Object> map = new HashMap<>();
 		player = verifyDataPlayer.assignInitialValues(player);
@@ -60,7 +60,7 @@ public class PlayerController {
 		return map;
 	}
 	
-	@GetMapping("/teams/{id}/players")
+	@GetMapping("/teams/{id}")
 	HashMap<String,Object> getPlayersByTeamId(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
@@ -86,7 +86,7 @@ public class PlayerController {
 		return map;
 	}
 	
-	@GetMapping("/players/id/{id}")
+	@GetMapping("/{id}")
 	HashMap<String,Object> getPlayerById(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
@@ -103,7 +103,7 @@ public class PlayerController {
 		return map;
 	}
 	
-	@GetMapping("/players/name/{name}")
+	@GetMapping("/name/{name}")
 	HashMap<String,Object> getPlayersByName(@PathVariable String name){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
@@ -129,7 +129,7 @@ public class PlayerController {
 	}
 	
 	//edit Aka in player
-	@PutMapping("/players/{id}")
+	@PutMapping("/{id}")
 	HashMap<String,Object> putPlayersAka(@RequestBody Player player, @PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
@@ -140,6 +140,7 @@ public class PlayerController {
 				map.put("success", true);
 				map.put("player with new Aka", playerLocalized);
 				map.put("message", "AKA modified");
+				playerServiceImpl.save(playerLocalized);
 			}else {
 				map.put("success", false);
 				map.put("message", "player with id " + player.getId() + " not found and aka not changed");
@@ -154,7 +155,7 @@ public class PlayerController {
 				
 		return map;
 	}
-	@DeleteMapping("/deletePlayer/{id}")
+	@DeleteMapping("/{id}")
 	public void deleteUser(@PathVariable long id){
 		playerServiceImpl.deletePlayerById(id);
 	}
