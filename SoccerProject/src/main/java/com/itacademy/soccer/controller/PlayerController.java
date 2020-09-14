@@ -33,7 +33,6 @@ public class PlayerController {
 			}else {
 				map.put("success", false);
 				map.put("message", "Error getting all players");
-				
 				//throw new Exception();
 			}
 		}
@@ -73,7 +72,6 @@ public class PlayerController {
 			}else {
 				map.put("success", false);
 				map.put("message", "Error getting all players");
-				
 				//throw new Exception();
 			}
 			
@@ -124,7 +122,6 @@ public class PlayerController {
 			map.put("success", false);
 			map.put("message", "something went wrong: " + e.getMessage());
 		}
-		
 		return map;
 	}
 	
