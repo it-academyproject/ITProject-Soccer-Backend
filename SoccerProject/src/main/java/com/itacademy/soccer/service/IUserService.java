@@ -31,9 +31,4 @@ public interface IUserService {
         // DELETE
 
     public void deleteUser(Long id);
-
-   
-    public User showUserByTeam(Long id);
-	
-        
 }
