@@ -73,20 +73,21 @@ public class UserController {
     
     @GetMapping("/users/teams/{id}") // SHOW USER BY TEAM (MANAGER OF THIS TEAM {ID})
     
-    public User showUserByTeam(@PathVariable Long id) {
+    public String showUserByTeam(@PathVariable Long id) {
     	User manager = new User();
     	manager =iUserService.showUserByTeam(id); //Is possible null if the postman enter a number of team doesn't exist
     	
-    	if (manager !=null) {   
-    	  
-    		manager.setPassword("****************");
-    	  	 
+    	String msj="The id Team : " + id +  " has no user, this id is of a team without assigned user or that doesn't exist";
+    	
+    	if (manager !=null) {       	  
+     	  	 
     		if (manager.getTypeUser().equals(TypeUser.ADMIN)) {
-    			manager=null;   		
+    			msj="The Teams : " + id + " has no Manager because allow to user : ADMIN";   		
+    		}else {
+    			msj="The Teams : " + id + " allow to user type MANAGER with user name : " + manager.getEmail();
     		}
-    		
     	}
-     	return manager;   	
+     	return  msj;   	
     }
     
  
