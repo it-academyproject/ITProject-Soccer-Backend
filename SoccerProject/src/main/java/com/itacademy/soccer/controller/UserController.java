@@ -73,21 +73,36 @@ public class UserController {
     
     @GetMapping("/users/teams/{id}") // SHOW USER BY TEAM (MANAGER OF THIS TEAM {ID})
     
-    public String showUserByTeam(@PathVariable Long id) {
+    public HashMap <String, Object>  showUserByTeam(@PathVariable Long id) {
+    	
+    	HashMap<String, Object> map = new HashMap<>();    	    
     	User manager = new User();
-    	manager =iUserService.showUserByTeam(id); //Is possible null if the postman enter a number of team doesn't exist
     	
-    	String msj="The id Team : " + id +  " has no user, this id is of a team without assigned user or that doesn't exist";
+    	try {
+    	   	manager =iUserService.showUserByTeam(id); //Is possible null if the postman enter a number of team doesn't exist
+    		String msj="The id Team : " + id +  " has no user, this id is of a team without assigned user or that doesn't exist";        	
+    	   	map.put("message", msj);
+    	  
+    	   	if (manager !=null) {    
+        	  	 
+        		if (manager.getTypeUser().equals(TypeUser.ADMIN)) {
+        			msj="The Teams : " + id + " has no Manager because allow to user : ADMIN";   		
+        		   	map.put("message", msj);
+        	    	
+        		}else {
+        			msj="The Teams : " + id + " allow to user type MANAGER with user name : " + manager.getEmail();
+        		   	map.put("message", msj);
+        	    	
+        		}
+        	}
+    	    
+    	}catch (Exception e) {
+    		
+            map.put("message", "something went wrong! :" + e.getMessage());
+            
+		}    	
     	
-    	if (manager !=null) {       	  
-     	  	 
-    		if (manager.getTypeUser().equals(TypeUser.ADMIN)) {
-    			msj="The Teams : " + id + " has no Manager because allow to user : ADMIN";   		
-    		}else {
-    			msj="The Teams : " + id + " allow to user type MANAGER with user name : " + manager.getEmail();
-    		}
-    	}
-     	return  msj;   	
+     	return  map;   	
     }
     
  
