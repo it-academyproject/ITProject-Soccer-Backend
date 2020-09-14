@@ -1,5 +1,4 @@
 package com.itacademy.soccer.controller;
-
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ public class PlayerActionsController {
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("success", true);
 		map.put("message", "get all players");
-		
 		return map;
 	}
 	//put playerActions by playerId and matchId (TO DO)
@@ -38,5 +36,4 @@ public class PlayerActionsController {
 		
 		return map;
 	}
-
 }
