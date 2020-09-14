@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,10 @@ public class SalesController {
 
 	@Autowired
 	SaleServiceImpl saleServiceImpl;
+
+	//B26
+	@Autowired
+	PlayerServiceImpl playerServiceImpl;
 	
 	@GetMapping("/sales")
 	public HashMap<String,Object> listAllSales(){
@@ -63,20 +69,48 @@ public class SalesController {
 		return map;
 	}
 	
-	@GetMapping("/players/{id}/sales")
-	public HashMap<String,Object> getSalesByPlayer(@PathVariable(name="id") Long playerId){
-		
-		List<Sale> listSales = saleServiceImpl.getSalesByPlayer(playerId);
-		List<SaleJson> jsonList = SaleJson.parseListToJson(listSales);
-		
+	@GetMapping("/sales/players/{id}")
+	//B26
+	HashMap<String,Object> getSalesByPlayer(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
-		map.put("playerId", playerId);
-		map.put("sales", jsonList);
-		map.put("success", true);
-		map.put("message", "Pendiente de implementar por evitar conflicto con codigo Player");
-		
+		try {
+			Player myplayer = playerServiceImpl.playerById(id);
+			List<Sale> allSalesByPlayer = saleServiceImpl.saleListByPlayer(myplayer);
+
+			if(allSalesByPlayer.size() > 0) {
+				map.put("success", true);
+				map.put("all sales by player id", allSalesByPlayer);
+				map.put("message", "get all sales by player id");
+			}else {
+				map.put("success", false);
+				map.put("message", "Error getting all sales");
+
+				//throw new Exception();
+			}
+
+		}
+		catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
+
 		return map;
 	}
+
+
+	//public HashMap<String,Object> getSalesByPlayer(@PathVariable(name="id") Long playerId){
+	//
+	//	List<Sale> listSales = saleServiceImpl.getSalesByPlayer(playerId);
+	//	List<SaleJson> jsonList = SaleJson.parseListToJson(listSales);
+		
+	//	HashMap<String,Object> map = new HashMap<>();
+	//	map.put("playerId", playerId);
+	//	map.put("sales", jsonList);
+	//	map.put("success", true);
+	//	map.put("message", "Pendiente de implementar por evitar conflicto con codigo Player");
+		
+	//	return map;
+	//}
 	
 	@PostMapping("/sales") //@RequestBody Sale p_sale
 	public HashMap<String,Object> createSale(@RequestBody SaleJson saleJson){

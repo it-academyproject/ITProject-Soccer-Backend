@@ -45,6 +45,13 @@ public class SaleServiceImpl implements ISaleService{
 		return iSaleDAO.findById(saleId).get();
 	}
 
+	//B26
+	@Override
+	public List<Sale> saleListByPlayer(Player player) {
+		return iSaleDAO.findSalesByPlayer(player);
+	}
+
+
 	@Override
 	public List<Sale> getSalesByPlayer(Long playerId) {
 		

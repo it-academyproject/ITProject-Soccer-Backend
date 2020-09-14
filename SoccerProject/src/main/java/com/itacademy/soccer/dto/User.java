@@ -22,8 +22,6 @@ public class User
 
     @Column(name="password")
     private String password; // User Password
-    
-  
         
  //   @OneToOne(fetch = FetchType.LAZY)
  //   @JoinColumn(name="teamId")

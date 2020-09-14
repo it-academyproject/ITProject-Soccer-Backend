@@ -59,7 +59,7 @@ Mail server connection failed; nested exception is javax.mail.MessagingException
 
 @Service
 public class MailService {
-
+	
     private JavaMailSender javaMailSender;
 
     @Autowired
