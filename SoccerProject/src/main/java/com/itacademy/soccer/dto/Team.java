@@ -4,19 +4,15 @@
  */
 package com.itacademy.soccer.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
+import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 /**
  * @author KevHaes
@@ -36,12 +32,18 @@ public class Team {
 	private int losses;
 	private int draws;
 
+
+	@JsonIgnore
+	@OneToMany(mappedBy="team" )
+	private List<Player> playersList ;
+
 	// Kevin annotations
 	// @OneToOne(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
 	// private User user;
 	
 	@OneToMany
 	private List<Match> matches;
+
 
 	/////////////// CONSTRUCTORS ///////////////
 	public Team(Long id, String name, Date foundation_date, String badge, Float budget, int wins, int losses,
@@ -174,20 +176,28 @@ public class Team {
 	}
 
 	/**
-	 * @return the userId
+	 * List of players in team
+	 * @return list players
 	 */
-//	public User getUser() {
-//		return user;
-//	}
-//
-//	/**
-//	 * @param userId the userId to set
-//	 */
-//	public void setUser(User user) {
-//		this.user = user;
-//	}
+	public List<Player> getPlayersList() {
+		return playersList;
+	}
+	public void setPlayersList(List<Player> playersList) {
+		this.playersList = playersList;
+	}
+	/* @return the userId
+	 
+	public User getUser() {
+		return user;
+	}
 
-	/**
+    @param userId the userId to set
+	
+	public void setUser(User user) {
+		this.user = user;
+	}
+	*/
+	/*
 	 * @return the matches
 	 */
 	@OneToMany

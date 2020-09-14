@@ -2,16 +2,9 @@ package com.itacademy.soccer.dto;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
-
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,7 +16,7 @@ public class Player {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+	@NotEmpty
 	private String name;
 	private int age;
 	private String aka;
@@ -31,6 +24,7 @@ public class Player {
 	private int defense;
 	private int pass;
 	private int attack;
+	private Long team_id;
 
 	//Error! duplicated declaration of team object
 	//@ManyToOne
@@ -42,16 +36,40 @@ public class Player {
 	
 	//relation with team
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="team_id")
+    @JoinColumn(name="team_id", insertable = false, updatable = false)
 	@JsonIgnore
 	private Team team;
-	
+
+
 	//Empty constructor
 	public Player() {
-		
 	}
 
+	public Player(Long id, @NotEmpty String name, int age, String aka, int keeper, int defense, int pass, int attack, Long team_id, List<PlayerActions> playerActions, Team team) {
+		this.id = id;
+		this.name = name;
+		this.age = age;
+		this.aka = aka;
+		this.keeper = keeper;
+		this.defense = defense;
+		this.pass = pass;
+		this.attack = attack;
+		this.team_id = team_id;
+		this.playerActions = playerActions;
+		this.team = team;
+		
+	}
 	//getters and setters
+
+
+	public Long getTeam_id() {
+		return team_id;
+	}
+
+	public void setTeam_id(Long team_id) {
+		this.team_id = team_id;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -117,6 +135,7 @@ public class Player {
 	}
 
 	public Team getTeam() {
+
 		return team;
 	}
 
