@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dto.PlayerActions;
-import com.itacademy.soccer.dto.serializable.PlayerMatchId;
 import com.itacademy.soccer.service.IPlayerActionsService;
 
 @Service

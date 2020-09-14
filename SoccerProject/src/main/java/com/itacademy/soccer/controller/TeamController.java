@@ -96,7 +96,7 @@ public class TeamController {
 		return map;
 	}
 
-	@GetMapping(path = "/{id}/result")
+	@GetMapping(path = "/{id}/stats")//Change "{id}/result" to "{id}/stats"
 	public HashMap<String, Object> getOneTeamByIdResults(@PathVariable Long id) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
