@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.itacademy.soccer.dto.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,7 +48,28 @@ public class BidsController {
 			
 		return map;
 	}
-	
+
+	//TODO B29
+	@PostMapping("/bids/sales/{id}")
+	public HashMap<String, Object> createBid(@PathVariable(name="id") Long id, @RequestBody Bid newBid) {
+		HashMap<String, Object> map = new HashMap<>();
+
+		//player = verifyDataPlayer.assignInitialValues(player);
+		// TODO Comprobar si existe la Sale y/o el equipo
+
+		try {
+			Bid NewlyCreatedBid = bidServiceImpl.save(newBid);
+			map.put("success", true);
+			map.put("message", "Bid Created");
+			map.put("bid", NewlyCreatedBid);
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "Bid NOT Created ! :" + e.getMessage());
+		}
+		return map;
+	}
+
+
 	@PostMapping("/sales/{id}/bids") // Accesible desde usuario MANAGER (pendiente)
 	public HashMap<String,Object> createBidBySale(@PathVariable(name="id") Long salesId,
 									 @RequestBody BidJson bidJson){

@@ -3,6 +3,7 @@ package com.itacademy.soccer.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.itacademy.soccer.dto.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,4 +88,9 @@ public class BidServiceImpl implements IBidService{
 		
 	}
 
+	//TODO B29
+	@Override
+	public Bid save(Bid bid) {
+		return iBidDAO.save(bid);
+	}
 }
