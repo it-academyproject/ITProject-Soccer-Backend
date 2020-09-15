@@ -27,13 +27,10 @@ public class User
   
         
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="teamId")
+    @JoinColumn(name="team_id")
     @JsonIgnore
     private Team team;  // User Team Relation One To One (STANDBY)*/
-    
- //   @Column(name="teamId")
-  //  private int team;  // User Team Relation by ID/ because if I try as entity there is conflict with IPlayerActionsDAO
-    
+   
 
     public User() { } // Constructor
 
@@ -86,13 +83,4 @@ public class User
         this.team = team;
     }
     
-  /*  public int getTeam() {
-        return team;
-    }
-
-    public void setTeam(int team) {
-        this.team = team;
-    }
-   */ 
-       
 }
