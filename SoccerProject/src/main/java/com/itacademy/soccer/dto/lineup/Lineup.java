@@ -5,5 +5,8 @@ public enum Lineup {
 	DEFENDER,
 	MIDFIELDER,
 	FORWARD;
-	
+
+	Lineup() {
+	}
+
 }
