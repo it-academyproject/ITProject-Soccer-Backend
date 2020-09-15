@@ -3,9 +3,7 @@ package com.itacademy.soccer.controller.json;
 import java.util.Date;
 
 public class MatchJson {
-	
-//	private Long match_id;
-	
+		
 	private Long local_team;
 	
 	private Long visitor_team;
@@ -35,14 +33,7 @@ public class MatchJson {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-//
-//	public Long getMatch_id() {
-//		return match_id;
-//	}
-//
-//	public void setMatch_id(Long match_id) {
-//		this.match_id = match_id;
-//	}
+
 
 	
 	
