@@ -22,10 +22,14 @@ public class User
 
     @Column(name="password")
     private String password; // User Password
-
-//   @OneToOne(fetch = FetchType.LAZY)
-//   @JoinColumn(name="teams_id")
-//   private Team team;  // User Team Relation One To One (STANDBY)
+        
+ //   @OneToOne(fetch = FetchType.LAZY)
+ //   @JoinColumn(name="teamId")
+ //   private Team team;  // User Team Relation One To One (STANDBY)*/
+    
+    @Column(name="teamId")
+    private int team;  // User Team Relation by ID/ because if I try as entity there is conflict with IPlayerActionsDAO
+    
 
     public User() { } // Constructor
 
@@ -69,11 +73,22 @@ public class User
         this.password = password;
     }
 
-   /*public Team getTeam() {
+    
+ /*  public Team getTeam() {
         return team;
     }
 
     public void setTeam(Team team) {
         this.team = team;
     }*/
+    
+    public int getTeam() {
+        return team;
+    }
+
+    public void setTeam(int team) {
+        this.team = team;
+    }
+    
+       
 }

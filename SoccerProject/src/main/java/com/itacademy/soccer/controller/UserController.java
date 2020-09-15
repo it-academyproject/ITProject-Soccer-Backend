@@ -1,8 +1,10 @@
 package com.itacademy.soccer.controller;
 
 import com.itacademy.soccer.dto.User;
+import com.itacademy.soccer.dto.typeUser.TypeUser;
 import com.itacademy.soccer.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -67,6 +69,43 @@ public class UserController {
     {
         return iUserService.showUserById(id);
     }
+    
+    
+    @GetMapping("/users/teams/{id}") // SHOW USER BY TEAM (MANAGER OF THIS TEAM {ID})
+    
+    public HashMap <String, Object>  showUserByTeam(@PathVariable Long id) {
+    	
+    	HashMap<String, Object> map = new HashMap<>();    	    
+    	User manager = new User();
+    	
+    	try {
+    	   	manager =iUserService.showUserByTeam(id); //Is possible null if the postman enter a number of team doesn't exist
+    		String msj="The id Team : " + id +  " has no user, this id is of a team without assigned user or that doesn't exist";        	
+    	   	map.put("message", msj);
+    	  
+    	   	if (manager !=null) {    
+        	  	 
+        		if (manager.getTypeUser().equals(TypeUser.ADMIN)) {
+        			msj="The Teams : " + id + " has no Manager because allow to user : ADMIN";   		
+        		   	map.put("message", msj);
+        	    	
+        		}else {
+        			msj="The Teams : " + id + " allow to user type MANAGER with user name : " + manager.getEmail();
+        		   	map.put("message", msj);
+        	    	
+        		}
+        	}
+    	    
+    	}catch (Exception e) {
+    		
+            map.put("message", "something went wrong! :" + e.getMessage());
+            
+		}    	
+    	
+     	return  map;   	
+    }
+    
+ 
 
 // POSTS
 

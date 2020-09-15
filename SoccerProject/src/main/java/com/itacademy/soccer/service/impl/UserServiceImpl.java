@@ -26,7 +26,29 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User showUserById(Long id) { return iUserDAO.findById(id).get();}
-
+    
+    @Override
+    
+    
+	public User showUserByTeam(Long id) {
+    	
+    	User manager = new User();    	
+    	List<User> users = iUserDAO.findAll();
+    	manager = null;
+    	
+    	for (User user : users) {    	
+    		
+    		if (user.getTeam() == id) {
+    			manager = iUserDAO.findById(user.getId()).get();
+    		}
+			
+		}
+	   
+    	return manager;
+		
+	}
+    
+    
     // POSTS
 
     @Override
@@ -56,4 +78,6 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public void deleteUser(Long id) { iUserDAO.deleteById(id);}
+
+	
 }
