@@ -73,19 +73,22 @@ public class MatchController {
 
 	// Create a new match between 2 teams
 	// Schedule generation of match created from GameEngine
+	// Important: field date from match inside requestBody must be annotated with this annotation: 
+	//            @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Europe/Madrid")
+	//            In other case matches cannot be scheduled in the correct timezone timestamp
 	@PostMapping(path = "/matches")
-	//public HashMap<String, Object> createMatch(@RequestBody Team local_team, Team visitor_team) {
 	public HashMap<String, Object> createMatch(@RequestBody MatchJson jsonMatch) {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("success", true);
 				
 		Long localTeamId = jsonMatch.getLocal_team();
 		Long visitorTeamId = jsonMatch.getVisitor_team();
-		Date date = jsonMatch.getDate();
+		Date scheduleDate = jsonMatch.getDate();
+		//System.out.println("Request Date: "+ scheduleDate);
 		
 		try {
 			Match createdMatch = matchServiceImpl.createMatch(
-					localTeamId, visitorTeamId,date);
+					localTeamId, visitorTeamId,scheduleDate);
 			
 			gameEngine.scheduleMatch(createdMatch.getId()); // SCHEDULE ENGINE
 			
@@ -104,7 +107,7 @@ public class MatchController {
 	// TO DO: Only allow acces to ADMIN users
 	// In case match should have been generated but it is not
 	
-	// Play generation of match (matchId field from json request body)
+	// Play generation of match 
 	@PutMapping(path = "/matches/play/{id}")
 	public HashMap<String, Object> playMatch(@PathVariable("id") Long matchId) {
 		

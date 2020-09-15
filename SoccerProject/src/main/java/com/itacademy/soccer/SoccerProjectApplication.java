@@ -22,10 +22,10 @@ public class SoccerProjectApplication {
 	// Set correct TimeZone UTC + 2 for correct scheduling time play of matches
 	@PostConstruct
     public void initTimeZone(){
-        //WARNING: Problems with TimeZone!
 		
 	    TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.of("Europe/Madrid")));  
-	    //TimeZone.setDefault(TimeZone.getTimeZone("UTC+2"));  
+//		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+		
 	    System.out.println("Test UTC TimeZone : "+new Date()); //It should be the current time 
     }
 	

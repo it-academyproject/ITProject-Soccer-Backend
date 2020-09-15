@@ -26,13 +26,12 @@ public class GameEngine implements IGameEngine{
 		System.out.println("scheduling Match "+matchId+" ...");
 
 		Match match = iMatchDAO.findById(matchId).get();
-		Date matchDate = match.getDate();//TO DO: ¿¿¿ WHY IS NOT UTC CORRECT ???
-		
-		matchDate = addHoursToDate(matchDate,-2); // UTC+2 HARDCODED SOLUTION. IN THIS WAY WORKS FINE...
+		Date matchDate = match.getDate();
 		
 		Runnable runnable = new PlayMatchRunnable(this, matchId);
 		matchScheduler.schedule(runnable, matchDate);
 		
+//	    System.out.println("Test UTC TimeZone : "+new Date()); //It should be the current time 
 		System.out.println("scheduled Match "+matchId+ " for date: " + matchDate + ".");
 		
 	}
@@ -43,7 +42,7 @@ public class GameEngine implements IGameEngine{
 	}
 	
 	
-	//Method for testing schedules purpose
+	//Help Method for testing schedules purpose
 	private Date addHoursToDate(Date date, int hours) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
