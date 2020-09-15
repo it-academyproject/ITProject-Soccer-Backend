@@ -70,7 +70,7 @@ public class PlayerActionsController {
 		}
 		return map;
 	}
-	//TODO no hace nada . put playerActions by playerId and matchId
+	//TODO no hace nada - Inacabado . put playerActions by playerId and matchId
 	@PutMapping("/matches/{id2}/playeractions")
 	HashMap<String,Object> putActionsByPlayerId(@RequestBody PlayerActions playerActions, @RequestParam Long playerId, @RequestParam Long matchId){
 		HashMap<String,Object> map = new HashMap<>();
