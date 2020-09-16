@@ -112,16 +112,16 @@ public class Match {
 	/**
 	 * @return the visitors_goals
 	 */
-	public int getVisitors_goals() {
-		return visitor_goals;
-	}
-
-	/**
-	 * @param visitors_goals the visitors_goals to set
-	 */
-	public void setVisitors_goals(int visitors_goals) {
-		this.visitor_goals = visitors_goals;
-	}
+//	public int getVisitors_goals() {
+//		return visitor_goals;
+//	}
+//
+//	/**
+//	 * @param visitors_goals the visitors_goals to set
+//	 */
+//	public void setVisitors_goals(int visitors_goals) {
+//		this.visitor_goals = visitors_goals;
+//	}
 
 	
 
