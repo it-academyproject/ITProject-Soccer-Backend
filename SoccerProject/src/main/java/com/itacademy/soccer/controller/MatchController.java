@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itacademy.soccer.controller.json.MatchJson;
 import com.itacademy.soccer.dto.Match;
+import com.itacademy.soccer.gameEngine.GameEngine;
 import com.itacademy.soccer.service.impl.MatchServiceImpl;
 
 /**
@@ -28,6 +30,9 @@ import com.itacademy.soccer.service.impl.MatchServiceImpl;
 @RequestMapping(path = "/api")
 public class MatchController {
 
+	@Autowired
+	GameEngine gameEngine;
+	
 	@Autowired
 	MatchServiceImpl matchServiceImpl;
 
@@ -67,18 +72,26 @@ public class MatchController {
 	}
 
 	// Create a new match between 2 teams
+	// Schedule generation of match created from GameEngine
+	// Important: field date from match inside requestBody must be annotated with this annotation: 
+	//            @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Europe/Madrid")
+	//            In other case matches cannot be scheduled in the correct timezone timestamp
 	@PostMapping(path = "/matches")
-	//public HashMap<String, Object> createMatch(@RequestBody Team local_team, Team visitor_team) {
 	public HashMap<String, Object> createMatch(@RequestBody MatchJson jsonMatch) {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("success", true);
-		
-		Date date = jsonMatch.getDate();
-		if (date==null) date = new Date();
+				
+		Long localTeamId = jsonMatch.getLocal_team();
+		Long visitorTeamId = jsonMatch.getVisitor_team();
+		Date scheduleDate = jsonMatch.getDate();
+		//System.out.println("Request Date: "+ scheduleDate);
 		
 		try {
-			Match createdMatch = matchServiceImpl.createMatch(jsonMatch.getLocal_team(),
-													jsonMatch.getVisitor_team(),date);
+			Match createdMatch = matchServiceImpl.createMatch(
+					localTeamId, visitorTeamId,scheduleDate);
+			
+			gameEngine.scheduleMatch(createdMatch.getId()); // SCHEDULE ENGINE
+			
 			map.put("success", true);
 			map.put("message", "createdMatch");
 			map.put("match", createdMatch);
@@ -90,4 +103,30 @@ public class MatchController {
 
 	}
 
+
+	// TO DO: Only allow acces to ADMIN users
+	// In case match should have been generated but it is not
+	
+	// Play generation of match 
+	@PutMapping(path = "/matches/play/{id}")
+	public HashMap<String, Object> playMatch(@PathVariable("id") Long matchId) {
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("success", true);
+				
+		try {
+			
+			gameEngine.playMatch(matchId); // PLAY ENGINE
+			
+			map.put("success", true);
+			map.put("message", "played match");
+			
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "Match NOT Played ! :" + e.getMessage());
+		}
+		return map;
+
+	}
+	
 }

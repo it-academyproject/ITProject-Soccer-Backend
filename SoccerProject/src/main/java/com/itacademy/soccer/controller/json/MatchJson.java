@@ -2,12 +2,16 @@ package com.itacademy.soccer.controller.json;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class MatchJson {
-	
+		
 	private Long local_team;
 	
 	private Long visitor_team;
 	
+	//Required to receive date and time in correct timezone
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Europe/Madrid")
 	private Date date;
 
 	public Long getLocal_team() {
@@ -33,6 +37,7 @@ public class MatchJson {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
 
 	
 	
