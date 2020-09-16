@@ -10,4 +10,7 @@ import java.util.List;
 public interface ISaleDAO extends JpaRepository<Sale,Long>{
 
     List<Sale> findSalesByPlayer(Player player);
+
+    //TODO B29
+    Sale findSalesById(Long saleId);
 }

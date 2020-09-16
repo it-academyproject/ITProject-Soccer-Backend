@@ -22,5 +22,6 @@ public interface ISaleService {
 		
 		public void deleteSale(Long saleId);
 
+
 	
 }

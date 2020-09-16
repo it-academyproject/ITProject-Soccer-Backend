@@ -1,10 +1,14 @@
 package com.itacademy.soccer.controller;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.service.impl.SaleServiceImpl;
+import com.itacademy.soccer.service.impl.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +30,12 @@ public class BidsController {
 	
 	@Autowired
 	BidServiceImpl bidServiceImpl;
+
+	@Autowired
+	SaleServiceImpl saleServiceImpl;
+
+	@Autowired
+	TeamServiceImpl teamServiceImpl;
 	
 	@GetMapping("/sales/{id}/bids") // Accesible desde usuario MANAGER o ADMIN (pendiente)
 	public HashMap<String,Object> listBidsBySale(@PathVariable(name="id") Long salesId){
@@ -56,7 +66,13 @@ public class BidsController {
 
 		//player = verifyDataPlayer.assignInitialValues(player);
 		// TODO Comprobar si existe la Sale y/o el equipo
+		// TODO Marcar la fecha de creacion del BID
+		newBid.setSale(saleServiceImpl.getSaleById(id));
 
+		//System.out.println(newBid.getTeam_id());
+		newBid.setTeam(teamServiceImpl.getOneTeamById(newBid.getTeam_id()));
+		Date now = new Date();
+		newBid.setOperationDate(now);
 		try {
 			Bid NewlyCreatedBid = bidServiceImpl.save(newBid);
 			map.put("success", true);
