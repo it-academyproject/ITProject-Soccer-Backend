@@ -50,7 +50,7 @@ public class UserServiceImpl implements IUserService {
     	
     	for (User user : users) {    	
     		
-    		if (user.getTeam().getId() == id) {
+    		if (user.getTeam() != null && user.getTeam().getId() == id) {
     			manager = iUserDAO.findById(user.getId()).get();
     		}
 			
