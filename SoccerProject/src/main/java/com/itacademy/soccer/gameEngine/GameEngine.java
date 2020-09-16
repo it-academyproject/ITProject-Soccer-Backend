@@ -38,7 +38,18 @@ public class GameEngine implements IGameEngine{
 	
 	@Override
 	public void playMatch(Long matchId) {
-		System.out.println("played Match "+matchId);
+		
+		System.out.println("Playing Match "+matchId+" ...");
+		
+		Match match = iMatchDAO.findById(matchId).get();
+		
+		match.setVisitor_goals(5);
+		match.setLocal_goals(5);
+		
+		iMatchDAO.save(match);
+		
+		System.out.println("Played Match " +matchId+".");
+		
 	}
 	
 	
