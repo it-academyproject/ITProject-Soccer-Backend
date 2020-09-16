@@ -6,7 +6,4 @@ public enum Lineup {
 	MIDFIELDER,
 	FORWARD;
 
-	Lineup() {
-	}
-
 }

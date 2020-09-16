@@ -14,15 +14,17 @@ import org.springframework.web.bind.annotation.*;
 import com.itacademy.soccer.dto.PlayerActions;
 import com.itacademy.soccer.service.impl.PlayerActionsServiceImpl;
 
+import static com.itacademy.soccer.dto.lineup.Lineup.*;
+
 @RestController
 @RequestMapping("/api/players/{id}")
 public class PlayerActionsController {
-	
+
 	@Autowired
 	PlayerActionsServiceImpl playerActionsServiceImpl;
 
 	DataForPlayerActions dataForPlayerActions = new DataForPlayerActions();
-	
+
 	//Get playerActions by player id and match id (TO DO)
 	@GetMapping("/matches/{id2}/playeractions")
 	HashMap<String,Object> getPlayerActionsByPlayerIdInMatch(@RequestParam Long playerId, @RequestParam Long matchId){
@@ -76,29 +78,39 @@ public class PlayerActionsController {
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("success", true);
 		map.put("message", "get all players");
-		
+
 		return map;
 	}
 	@PostMapping("/matches/{id2}/lineUp")
-	HashMap<String,Object> postLineUpInMatch(@RequestParam Long playerId, @RequestParam Long matchId, @RequestParam Lineup lineup){
+	HashMap<String,Object> postLineUpInMatch(@RequestParam Long playerId, @RequestParam Long matchId, @RequestParam String entry){
 		HashMap<String,Object> map = new HashMap<>();
-		try {
-			PlayerActions playerActionsById = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId( playerId, matchId);
+		// condicional verifica entrada de LINEUP
+		if ( entry.equals("KEEPER") || entry.equals("DEFENDER") || entry.equals("MIDFIELDER") || entry.equals("FORWARD")){
+			Lineup lineup = Lineup.valueOf(entry);
+			try {
 
-			if (playerActionsById != null) {
-				playerActionsById.setLineup(lineup);
-				map.put("success", true);
-				map.put("lineUp ", playerActionsById);
-				map.put("message", "LineUp modified");
-				playerActionsServiceImpl.save(playerActionsById);
-			}else {
+				PlayerActions playerActionsById = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(playerId, matchId);
+
+				if (playerActionsById != null) {
+					playerActionsById.setLineup(lineup);
+					map.put("success", true);
+					map.put("match_id ", playerActionsById.getId().getPlayerId());
+					map.put("player_id ", playerActionsById.getId().getMatchId());
+					map.put("lineUp ", playerActionsById.getLineup());
+					map.put("message", "LineUp modified");
+					playerActionsServiceImpl.save(playerActionsById);
+				} else {
+					map.put("success", false);
+					map.put("message", "player with id " + playerId + " or match with id " + matchId + " not found ");
+				}
+
+			} catch (Exception e) {
 				map.put("success", false);
-				map.put("message", "player with id " + playerId+ " or match with id "+ matchId+ " not found ");
+				map.put("message", "something went wrong: " + e.getMessage());
 			}
-		}
-		catch (Exception e) {
+		}else{
 			map.put("success", false);
-			map.put("message", "something went wrong: " + e.getMessage());
+			map.put("message", "lineUp no exist");
 		}
 		return map;
 	}
