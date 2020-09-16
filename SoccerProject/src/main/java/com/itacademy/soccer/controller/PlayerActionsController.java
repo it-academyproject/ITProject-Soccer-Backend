@@ -46,11 +46,17 @@ public class PlayerActionsController {
 		HashMap<String,Object> map = new HashMap<>();
 		PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(playerId, matchId);
 
-		if (playerActions != null) {
+		if (playerActions != null ) {
 			int data = dataForPlayerActions.getOnePlayerActionsInOneMatch(playerActions, action);
-			map.put("success", true);
-			map.put( action +" for this player ", data);
-			map.put("message", "actions for one player in matchid: " + matchId);
+
+			if (data != 0) {
+				map.put("success", true);
+				map.put(action + " for this player ", data);
+				map.put("message", "actions for one player in matchid: " + matchId);
+			}else {
+				map.put("success", false);
+				map.put("message", "action not exist");
+			}
 		}else {
 			map.put("success", false);
 			map.put("message", "player with id " + playerId + " or match with id "+ matchId + " not found ");
@@ -110,7 +116,7 @@ public class PlayerActionsController {
 			}
 		}else{
 			map.put("success", false);
-			map.put("message", "lineUp no exist");
+			map.put("message", "lineUp not exist");
 		}
 		return map;
 	}
