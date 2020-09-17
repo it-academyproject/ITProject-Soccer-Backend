@@ -1,5 +1,6 @@
 package com.itacademy.soccer.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.itacademy.soccer.dto.typeUser.TypeUser;
 
 import javax.persistence.*;
@@ -23,10 +24,13 @@ public class User
     @Column(name="password")
     private String password; // User Password
 
-//   @OneToOne(fetch = FetchType.LAZY)
-//   @JoinColumn(name="teams_id")
-//   private Team team;  // User Team Relation One To One (STANDBY)
-
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="team_id")
+    @JsonIgnore
+    private Team team;  // User Team Relation One To One (STANDBY)*/
+   
+    
     public User() { } // Constructor
 
     public Long getId()
@@ -69,11 +73,11 @@ public class User
         this.password = password;
     }
 
-   /*public Team getTeam() {
+   public Team getTeam() {
         return team;
     }
 
     public void setTeam(Team team) {
         this.team = team;
-    }*/
+    }
 }
