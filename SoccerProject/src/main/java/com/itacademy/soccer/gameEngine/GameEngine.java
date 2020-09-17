@@ -51,6 +51,8 @@ public class GameEngine implements IGameEngine{
 		Team kickOffTeam = matchOperations.generateKickOff(match);
 		// TO DO save kickoff team in DB
 		
+		System.out.println("KICKOFF TEAM: "+kickOffTeam.getName());
+		
 		match.setVisitor_goals(5);
 		match.setLocal_goals(5);
 		
