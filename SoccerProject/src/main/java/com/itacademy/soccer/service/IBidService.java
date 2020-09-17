@@ -21,6 +21,6 @@ public interface IBidService {
 
 	//TODO B29
 	public Bid save(Bid bid);
-
+	public List<Bid> getBidsBySale (Sale sale);
 
 }

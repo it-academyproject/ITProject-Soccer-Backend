@@ -1,10 +1,10 @@
 package com.itacademy.soccer.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
+import com.itacademy.soccer.dto.Bid;
 import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.service.impl.BidServiceImpl;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -31,6 +31,10 @@ public class SalesController {
 	//B26
 	@Autowired
 	PlayerServiceImpl playerServiceImpl;
+
+	//B29
+	@Autowired
+	BidServiceImpl bidServiceImpl;
 	
 	@GetMapping("/sales")
 	public HashMap<String,Object> listAllSales(){
@@ -173,5 +177,55 @@ public class SalesController {
 		
 		return map;
 	}
-	
+
+	//B29 TODO List Sales stadistics
+	@GetMapping("/sales/bids/stats")
+	HashMap<String,Object> getSalesStats(){
+		HashMap<String,Object> map = new HashMap<>();
+		//This map stores the number of bids per active sales
+		HashMap<Sale,Integer> salestats = new HashMap<>();
+		try {
+
+			// convert date to calendar to get last week date
+			Date today = new Date();
+			Calendar c = Calendar.getInstance();
+			c.setTime(today);
+			System.out.println(today);
+
+			// manipulate date to substract seven days
+			c.add(Calendar.DATE, -7);
+			Date lastweek = c.getTime();
+			System.out.println(lastweek);
+			List<Sale> allSalesLastWeek = saleServiceImpl.saleListBetweenDates(lastweek,today);
+
+			// get the number of bid per sale, if there are zero bids then the sale failed
+			for (Sale tempsale : allSalesLastWeek) {
+				List<Bid> bidspersale = bidServiceImpl.getBidsBySale(tempsale);
+				System.out.println(tempsale.getId());
+				System.out.println(bidspersale.size());
+				salestats.put(tempsale,bidspersale.size());
+			}
+
+
+
+			if(allSalesLastWeek.size() > 0) {
+				map.put("success", true);
+				map.put("all sales of last week", allSalesLastWeek);
+				map.put("message", "get all sales of last week");
+			}else {
+				map.put("success", false);
+				map.put("message", "Error getting all sales");
+
+				//throw new Exception();
+			}
+
+		}
+		catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
+
+		return map;
+	}
+
 }

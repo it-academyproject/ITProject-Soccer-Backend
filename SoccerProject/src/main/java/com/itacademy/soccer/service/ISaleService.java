@@ -1,5 +1,6 @@
 package com.itacademy.soccer.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.itacademy.soccer.dto.Player;
@@ -22,6 +23,7 @@ public interface ISaleService {
 		
 		public void deleteSale(Long saleId);
 
-
+		//TODO B29
+		public List<Sale> saleListBetweenDates(Date timeago, Date now);
 	
 }

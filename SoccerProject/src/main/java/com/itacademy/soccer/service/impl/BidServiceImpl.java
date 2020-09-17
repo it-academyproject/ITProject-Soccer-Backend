@@ -93,4 +93,7 @@ public class BidServiceImpl implements IBidService{
 	public Bid save(Bid bid) {
 		return iBidDAO.save(bid);
 	}
+
+	@Override
+	public List<Bid> getBidsBySale (Sale sale)  { return iBidDAO.findBySaleIs(sale);}
 }
