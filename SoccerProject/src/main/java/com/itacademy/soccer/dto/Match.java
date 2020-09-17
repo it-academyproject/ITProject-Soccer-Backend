@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * @author KevHaes
  *
@@ -31,6 +33,7 @@ public class Match {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="date")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Europe/Madrid")
 	private Date date;
 	
 	@Column(name="local_goals")
@@ -109,16 +112,16 @@ public class Match {
 	/**
 	 * @return the visitors_goals
 	 */
-	public int getVisitors_goals() {
-		return visitor_goals;
-	}
-
-	/**
-	 * @param visitors_goals the visitors_goals to set
-	 */
-	public void setVisitors_goals(int visitors_goals) {
-		this.visitor_goals = visitors_goals;
-	}
+//	public int getVisitors_goals() {
+//		return visitor_goals;
+//	}
+//
+//	/**
+//	 * @param visitors_goals the visitors_goals to set
+//	 */
+//	public void setVisitors_goals(int visitors_goals) {
+//		this.visitor_goals = visitors_goals;
+//	}
 
 	
 
