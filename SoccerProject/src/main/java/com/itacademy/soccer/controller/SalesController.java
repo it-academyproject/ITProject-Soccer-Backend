@@ -198,7 +198,7 @@ public class SalesController {
 			System.out.println(lastweek);
 			List<Sale> allSalesLastWeek = saleServiceImpl.saleListBetweenDates(lastweek,today);
 
-			// get the number of bid per sale, if there are zero bids then the sale failed
+			// get the number of bid per sale in hashmap called salestats with sale as key and number of bids as value, if there are zero bids then the sale failed
 			for (Sale tempsale : allSalesLastWeek) {
 				List<Bid> bidspersale = bidServiceImpl.getBidsBySale(tempsale);
 				System.out.println(tempsale.getId());
@@ -206,15 +206,37 @@ public class SalesController {
 				salestats.put(tempsale,bidspersale.size());
 			}
 
+			// create another hashmap to get the frequency a value ( number of bids ) appears in the salestats hashmap
+			//Map<Integer, Integer> bidscounts = new HashMap<Integer, Integer>();
+			//for ( Integer b : salestats.values()){
+			//	int bidnumber =  bidscounts.get(b) == null ? 0 : bidscounts.get(b);
+			//	bidscounts.put(b, bidnumber +1);
+			//}
+			//System.out.println(bidscounts);
+
+			// create a TreeMap to get the frequency a value ( number of bids ) appears in the salestats hashmap
+			NavigableMap<Integer, Integer> bidscounts = new TreeMap<Integer, Integer>();
+			for ( Integer b : salestats.values()){
+				int bidnumber =  bidscounts.get(b) == null ? 0 : bidscounts.get(b);
+				bidscounts.put(b, bidnumber +1);
+			}
+			System.out.println(bidscounts);
+
 
 
 			if(allSalesLastWeek.size() > 0) {
 				map.put("success", true);
-				map.put("all sales of last week", allSalesLastWeek);
-				map.put("message", "get all sales of last week");
+				map.put("message", "these are the stadistics for last week");
+				map.put("total number of succesful sales, those WITH bids", salestats.size()-bidscounts.get(0));
+				map.put("total number of failed sales, those WITHOUT bids", bidscounts.get(0));
+				map.put("maximum number of bids a particular sales has got", bidscounts.lastKey());
+
+
+				//map.put("all sales of last week", allSalesLastWeek);
+				//map.put("message", "get all sales of last week");
 			}else {
 				map.put("success", false);
-				map.put("message", "Error getting all sales");
+				map.put("message", "There were no sales in that period of time, sorry!");
 
 				//throw new Exception();
 			}
