@@ -52,9 +52,10 @@ public class MatchOperations implements IMatchOperations {
 
 		Team kickOffTeam = null;
 		
+		//if possibility of both teams are equal the local team will be the kickoff team
 		if(visitorPossibility > localPossibility) {
 			kickOffTeam = match.getTeam_visitor();
-		}else {
+		}else { 
 			kickOffTeam = match.getTeam_local();
 		}
 		
