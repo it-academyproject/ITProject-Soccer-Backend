@@ -51,7 +51,6 @@ public class PlayerActions {
 	@Column(name="yellow_cards")
 	private int yellowCards;
 	private int saves;
-	private int pass;
 
 	private Lineup lineup;
 	
@@ -125,12 +124,5 @@ public class PlayerActions {
 		this.lineup = lineup;
 	}
 	
-	public int getPass() {
-		return pass;
-	}
-
-	public void setPass(int pass) {
-		this.pass = pass;
-	}
 	
 }

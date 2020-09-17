@@ -39,8 +39,13 @@ public class MatchOperations implements IMatchOperations {
 		double LP = sumTeamPass(localPlayersAct);
 		double VP = sumTeamPass(visitorPlayersAct);
 		
-		double localPossibility = LP/(LP+VP);
-		double visitorPossibility = VP/(LP+VP);
+		double localPossibility=0;
+		double visitorPossibility=0;
+		
+		if (LP!=0 && VP!=0) { 
+			localPossibility = LP/(LP+VP);
+			visitorPossibility = VP/(LP+VP);
+		}
 		
 		System.out.println(">>> LOCAL POSSIBILITY = [" + localPossibility +"] <<<");
 		System.out.println(">>> VISITOR POSSIBILITY = [" + visitorPossibility +"] <<<");
@@ -88,7 +93,7 @@ public class MatchOperations implements IMatchOperations {
 		int total = 0;
 		
 		for ( PlayerActions pa : listPlayerActions ) {
-			total = total + pa.getPass();
+			total = total + pa.getPlayer().getPass();
 		}
 		
 		return total;
@@ -117,7 +122,8 @@ public class MatchOperations implements IMatchOperations {
 			PlayerMatchId playerMatchId = pa.getPlayerMatchId();
 			Player player = pa.getPlayer();
 			
-			System.out.println("Player [id="+player.getId()+", name="+player.getName()+"]");
+			System.out.println("Player [id="+player.getId()+", name="+player.getName()+
+							   ", pass="+player.getPass()+"]");
 			
 		}
 	}
