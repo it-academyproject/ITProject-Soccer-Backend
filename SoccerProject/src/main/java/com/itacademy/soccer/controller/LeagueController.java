@@ -8,8 +8,11 @@ import com.itacademy.soccer.dto.League;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.dto.User;
+import com.itacademy.soccer.service.ILeagueService;
+import com.itacademy.soccer.service.ITeamService;
 import com.itacademy.soccer.service.impl.LeagueServiceImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,11 +22,10 @@ import java.util.List;
 
 public class LeagueController {
 
-
     @Autowired
     LeagueServiceImpl leagueServiceImpl;
-
-
+    @Autowired
+    ITeamService iTeamService;
 
     @GetMapping("/leagues") // SHOW ALL LEAGUES TO ALL USERS
     public HashMap<String, Object> showAllUsers()    
@@ -43,7 +45,7 @@ public class LeagueController {
         return map;
     }
 
-    @GetMapping("/league/{id}") // SHOW THAT LEAGUE TO ALL USERS     
+    @GetMapping("/leagues/{id}") // SHOW THAT LEAGUE TO ALL USERS     
     public  HashMap<String, Object> showLeagueById (@PathVariable Long id) {
     	HashMap<String, Object> map = new HashMap<>();
     	
@@ -59,7 +61,7 @@ public class LeagueController {
 		return map;
     }
     
-	@PutMapping("/league/{id}") // MODIFY LEAGUE ONLY BY ADMIN
+	@PutMapping("/leagues/{id}") // MODIFY LEAGUE ONLY BY ADMIN
 	HashMap<String,Object> modifyLeague(@PathVariable Long id, @RequestBody League league){
 	
 		HashMap<String,Object> map = new HashMap<>();		
@@ -95,7 +97,73 @@ public class LeagueController {
 	}
 	
 	
-	@PostMapping("/league") // CREATE LEAGUE ONLY BY ADMIN
+	@GetMapping("/leagues/{id}/teams") // SHOWS THE TEAMS BELONGS TO THE LEAGUE.
+	    
+	    public HashMap <String, Object>  showTeamsByLeague(@PathVariable Long id) {
+	    	
+	    	HashMap<String, Object> map = new HashMap<>();    	    
+	     	List<Team> teamsLeague = new ArrayList<>();
+	    	
+	    	
+	    	try {
+	    		
+	    		League 	league = leagueServiceImpl.getOneLeagueById(id);	
+	    		teamsLeague =leagueServiceImpl.showTeamsByLeague(id); //All teams with the same {id} league 
+	    	 		    	 	
+	    		if (teamsLeague !=null && teamsLeague.size() != 0) {
+	    			
+	    			map.put("The "+ id +" League called : --- "  + league.getName() + " Has : ", teamsLeague);  	
+	    		}else {
+	    			
+	    		 	map.put("message", "The "+ id +" League called : --- " + league.getName() +  " --- has no teams");   
+	    		}
+	       	    
+	    	}catch (Exception e) {
+	    		
+	            map.put("message", "something went wrong! :" + e.getMessage());
+	    	   	map.put("message", "The "+ id  +  " --- doesn't exist");        	
+	            
+			}    	
+	    	
+	     	return  map;   	
+	    }
+
+	
+	@PutMapping("/leagues/teams/{id}") // INSERT ONE TEAM IN ONE LEAGUE ONLY BY ADMIN
+	
+	HashMap<String,Object> insertTeamintoLeague(@PathVariable Long id, @RequestBody Long league_id){
+		HashMap<String,Object> map = new HashMap<>();	
+		Team teamSelected =new Team();
+		League leagueSelected = new League();		
+		
+		try {
+			
+			teamSelected= iTeamService.getOneTeamById(id);			
+			leagueSelected = leagueServiceImpl.getOneLeagueById(league_id);
+			
+			if (teamSelected != null && leagueSelected != null) {				
+				
+				teamSelected.setLeague(leagueSelected); 			
+				
+				leagueServiceImpl.insertTeamintoLeague(teamSelected);
+				
+				map.put("success", true);
+				map.put("The Team called " + teamSelected.getName() + ": has signed up for league ", leagueSelected);
+				}else {
+				map.put("success", false);
+			}
+			
+			
+		} catch (Exception e) {
+			
+			map.put("success", false);
+		   	   	map.put("message","Make sure The Team "+ id + " exists or the league "+ league_id +" exists");        
+		}
+		
+		return map;
+	}
+		
+	@PostMapping("/leagues") // CREATE LEAGUE ONLY BY ADMIN
 	HashMap<String,Object> createLeague(@RequestBody League league){
 	
 		HashMap<String,Object> map = new HashMap<>();	
@@ -116,7 +184,7 @@ public class LeagueController {
 		return map;
 	}
 	
-	@DeleteMapping("/league/{id}")  //DELETE LEAGUE ONLY BY ADMIN
+	@DeleteMapping("/leagues/{id}")  //DELETE LEAGUE ONLY BY ADMIN
 	public HashMap<String, Object> deleteLeagueById(@PathVariable Long id) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {

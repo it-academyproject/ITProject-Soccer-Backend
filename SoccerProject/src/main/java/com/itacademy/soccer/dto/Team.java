@@ -19,20 +19,39 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 @Entity
+@Table(name="team") // Tab Team
 public class Team {
 	/////////////// ATRIBUTES ///////////////
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(name="name")	
 	private String name;
+	
+	@Column(name="foundation_date")	
 	private Date foundation_date;
+	
+	@Column(name="badge")
 	private String badge;
+	
+	@Column(name="budget")
 	private Float budget;
+	
+	@Column(name="wins")
 	private int wins;
+	
+	@Column(name="losses")
 	private int losses;
+	
+	@Column(name="draws")
 	private int draws;
-
-
+	
+	@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="league_id")   
+	@JsonIgnore
+	private League league;  //Team Relation One to One with a League
+	
 	@JsonIgnore
 	@OneToMany(mappedBy="team" )
 	private List<Player> playersList ;
@@ -46,7 +65,7 @@ public class Team {
 
 
 	/////////////// CONSTRUCTORS ///////////////
-	public Team(Long id, String name, Date foundation_date, String badge, Float budget, int wins, int losses,
+/*	public Team(Long id, String name, Date foundation_date, String badge, Float budget, int wins, int losses,
 			int draws) {
 		this.id = id;
 
@@ -57,7 +76,8 @@ public class Team {
 		this.wins = wins;
 		this.losses = losses;
 		this.draws = draws;
-	}
+		this.league=getLeague();
+	}*/
 
 	public Team() {
 	}
@@ -212,12 +232,22 @@ public class Team {
 	public void setMatches(List<Match> matches) {
 		this.matches = matches;
 	}
+	
 
+	public League getLeague() {
+		return league;
+	}
+
+	public void setLeague(League league) {
+		this.league = league;
+	}
+	
+		
 	/////////////// TOSTRING ///////////////
 	@Override
 	public String toString() {
 		return "Team [id=" + id + ", name=" + name + ", foundation_date=" + foundation_date + ", badge=" + badge
-				+ ", budget=" + budget + ", wins=" + wins + ", losses=" + losses + ", draws=" + draws + "]";
+				+ ", budget=" + budget + ", wins=" + wins + ", losses=" + losses + ", draws=" + draws + ",league=" + league + "]";
 	}
 
 }
