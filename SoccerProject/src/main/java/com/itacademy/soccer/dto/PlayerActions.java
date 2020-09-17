@@ -1,11 +1,6 @@
 package com.itacademy.soccer.dto;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.itacademy.soccer.dto.lineup.Lineup;
 import com.itacademy.soccer.dto.serializable.PlayerMatchId;
@@ -16,33 +11,65 @@ public class PlayerActions {
 	
 	//Atributes
 	@EmbeddedId
-	private PlayerMatchId playerMatchId;
+	private PlayerMatchId id;
 	
 	@MapsId("playerId")
 	@ManyToOne
 	private Player player;
 	
-	//@MapsId("matchId")
-	//@ManyToOne
-	//private Match match;
+	@MapsId("matchId")
+	@ManyToOne
+	private Match match;
 	
 	
 	
 	private int goals;
 	private int assists;
+	private int fouls;
 	@Column(name="red_cards")
 	private int redCards;
 	@Column(name="yellow_cards")
 	private int yellowCards;
 	private int saves;
+
+	@Enumerated(EnumType.STRING)
 	private Lineup lineup;
 	
 	//Constructor
 	public PlayerActions() {
-		
+
 	}
 
-	//Getters and Setters
+	public PlayerActions(PlayerMatchId id, Player player, int goals, int assists, int fouls, int redCards, int yellowCards, int saves, Lineup lineup) {
+		this.id = id;
+		this.player = player;
+		this.goals = goals;
+		this.assists = assists;
+		this.fouls = fouls;
+		this.redCards = redCards;
+		this.yellowCards = yellowCards;
+		this.saves = saves;
+		this.lineup = lineup;
+	}
+//Getters and Setters
+
+
+	public int getFouls() {
+		return fouls;
+	}
+
+	public void setFouls(int fouls) {
+		this.fouls = fouls;
+	}
+
+	public PlayerMatchId getId() {
+		return id;
+	}
+
+	public void setId(PlayerMatchId playerMatchId) {
+		this.id = playerMatchId;
+	}
+
 	public Player getPlayer() {
 		return player;
 	}
