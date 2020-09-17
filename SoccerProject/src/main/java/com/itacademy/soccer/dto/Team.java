@@ -41,8 +41,8 @@ public class Team {
 	// @OneToOne(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
 	// private User user;
 	
-	@OneToMany
-	private List<Match> matches;
+//	@OneToMany
+//	private List<Match> matches;
 
 
 	/////////////// CONSTRUCTORS ///////////////
@@ -197,21 +197,21 @@ public class Team {
 		this.user = user;
 	}
 	*/
-	/*
-	 * @return the matches
-	 */
-	@OneToMany
-	@JsonIgnore
-	public List<Match> getMatches() {
-		return matches;
-	}
-
-	/**
-	 * @param matches the matches to set
-	 */
-	public void setMatches(List<Match> matches) {
-		this.matches = matches;
-	}
+//	/*
+//	 * @return the matches
+//	 */
+//	@OneToMany
+//	@JsonIgnore
+//	public List<Match> getMatches() {
+//		return matches;
+//	}
+//
+//	/**
+//	 * @param matches the matches to set
+//	 */
+//	public void setMatches(List<Match> matches) {
+//		this.matches = matches;
+//	}
 
 	/////////////// TOSTRING ///////////////
 	@Override

@@ -5,6 +5,7 @@
 package com.itacademy.soccer.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -48,11 +50,11 @@ public class Match {
 
 	@ManyToOne
 	@JoinColumn(name="team_visitor_id")
-	private Team team_visitors;
+	private Team team_visitor;
 
 //	@OneToMany
+//	@JoinColumn(name="match_id")
 //	private List<PlayerActions> playeractions;
-	// waiting B-19
 
 	/////////////// CONSTRUCTORS ///////////////
 	public Match(Long id, Date date, int local_goals, int visitor_goals) {
@@ -133,12 +135,12 @@ public class Match {
 		this.team_local = team_local;
 	}
 
-	public Team getTeam_visitors() {
-		return team_visitors;
+	public Team getTeam_visitor() {
+		return team_visitor;
 	}
 
-	public void setTeam_visitors(Team team_visitors) {
-		this.team_visitors = team_visitors;
+	public void setTeam_visitor(Team team_visitor) {
+		this.team_visitor = team_visitor;
 	}
 
 	/**
@@ -175,6 +177,6 @@ public class Match {
 	@Override
 	public String toString() {
 		return "Match [id=" + id + ", timestamp=" + date + ", local_goals=" + local_goals + ", visitors_goals="
-				+ visitor_goals + ", team_local_id=" + team_local.getId() + ", team_visitors_id=" + team_visitors.getId() + "]";
+				+ visitor_goals + ", team_local_id=" + team_local.getId() + ", team_visitors_id=" + team_visitor.getId() + "]";
 	}
 }

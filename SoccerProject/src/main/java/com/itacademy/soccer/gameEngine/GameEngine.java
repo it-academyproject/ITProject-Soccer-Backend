@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.itacademy.soccer.dao.IMatchDAO;
 import com.itacademy.soccer.dto.Match;
+import com.itacademy.soccer.dto.Team;
+import com.itacademy.soccer.gameEngine.interfaces.IGameEngine;
 import com.itacademy.soccer.gameEngine.schedule.MatchScheduler;
 import com.itacademy.soccer.gameEngine.schedule.PlayMatchRunnable;
 
@@ -19,6 +21,9 @@ public class GameEngine implements IGameEngine{
 	
 	@Autowired
 	MatchScheduler matchScheduler;
+	
+	@Autowired
+	MatchOperations matchOperations;
 	
 	@Override
 	public void scheduleMatch(Long matchId) {
@@ -42,6 +47,9 @@ public class GameEngine implements IGameEngine{
 		System.out.println("Playing Match "+matchId+" ...");
 		
 		Match match = iMatchDAO.findById(matchId).get();
+		
+		Team kickOffTeam = matchOperations.generateKickOff(match);
+		// TO DO save kickoff team in DB
 		
 		match.setVisitor_goals(5);
 		match.setLocal_goals(5);
