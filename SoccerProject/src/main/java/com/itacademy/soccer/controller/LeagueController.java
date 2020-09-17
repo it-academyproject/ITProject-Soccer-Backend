@@ -61,6 +61,40 @@ public class LeagueController {
 		return map;
     }
     
+
+	@GetMapping("/leagues/{id}/teams") // SHOWS THE TEAMS BELONGS TO THE LEAGUE.
+	    
+	    public HashMap <String, Object>  showTeamsByLeague(@PathVariable Long id) {
+	    	
+	    	HashMap<String, Object> map = new HashMap<>();    	    
+	     	List<Team> teamsLeague = new ArrayList<>();
+	    	
+	    	
+	    	try {
+	    		
+	    		League 	league = leagueServiceImpl.getOneLeagueById(id);	
+	    		teamsLeague =leagueServiceImpl.showTeamsByLeague(id); //All teams with the same {id} league 
+	    	 		    	 	
+	    		if (teamsLeague !=null && teamsLeague.size() != 0) {
+	    			
+	    			map.put("The "+ id +" League called : --- "  + league.getName() + " Has : ", teamsLeague);  	
+	    		}else {
+	    			
+	    		 	map.put("message", "The "+ id +" League called : --- " + league.getName() +  " --- has no teams");   
+	    		}
+	       	    
+	    	}catch (Exception e) {
+	    		
+	            map.put("message", "something went wrong! :" + e.getMessage());
+	    	   	map.put("message", "The "+ id  +  " --- doesn't exist");        	
+	            
+			}    	
+	    	
+	     	return  map;   	
+	    }
+
+	
+    
 	@PutMapping("/leagues/{id}") // MODIFY LEAGUE ONLY BY ADMIN
 	HashMap<String,Object> modifyLeague(@PathVariable Long id, @RequestBody League league){
 	
@@ -96,38 +130,6 @@ public class LeagueController {
 		return map;
 	}
 	
-	
-	@GetMapping("/leagues/{id}/teams") // SHOWS THE TEAMS BELONGS TO THE LEAGUE.
-	    
-	    public HashMap <String, Object>  showTeamsByLeague(@PathVariable Long id) {
-	    	
-	    	HashMap<String, Object> map = new HashMap<>();    	    
-	     	List<Team> teamsLeague = new ArrayList<>();
-	    	
-	    	
-	    	try {
-	    		
-	    		League 	league = leagueServiceImpl.getOneLeagueById(id);	
-	    		teamsLeague =leagueServiceImpl.showTeamsByLeague(id); //All teams with the same {id} league 
-	    	 		    	 	
-	    		if (teamsLeague !=null && teamsLeague.size() != 0) {
-	    			
-	    			map.put("The "+ id +" League called : --- "  + league.getName() + " Has : ", teamsLeague);  	
-	    		}else {
-	    			
-	    		 	map.put("message", "The "+ id +" League called : --- " + league.getName() +  " --- has no teams");   
-	    		}
-	       	    
-	    	}catch (Exception e) {
-	    		
-	            map.put("message", "something went wrong! :" + e.getMessage());
-	    	   	map.put("message", "The "+ id  +  " --- doesn't exist");        	
-	            
-			}    	
-	    	
-	     	return  map;   	
-	    }
-
 	
 	@PutMapping("/leagues/teams/{id}") // INSERT ONE TEAM IN ONE LEAGUE ONLY BY ADMIN
 	
