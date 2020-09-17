@@ -132,9 +132,11 @@ public class LeagueController {
 	@PutMapping("/leagues/teams/{id}") // INSERT ONE TEAM IN ONE LEAGUE ONLY BY ADMIN
 	
 	HashMap<String,Object> insertTeamintoLeague(@PathVariable Long id, @RequestBody Long league_id){
-		HashMap<String,Object> map = new HashMap<>();	
+		
 		Team teamSelected =new Team();
 		League leagueSelected = new League();		
+		
+		HashMap<String,Object> map = new HashMap<>();	
 		
 		try {
 			
@@ -143,13 +145,19 @@ public class LeagueController {
 			
 			if (teamSelected != null && leagueSelected != null) {				
 				
-				teamSelected.setLeague(leagueSelected); 			
-				
-				leagueServiceImpl.insertTeamintoLeague(teamSelected);
-				
-				map.put("success", true);
-				map.put("The Team called " + teamSelected.getName() + ": has signed up for league ", leagueSelected);
+				if (teamSelected.getLeague().getId() != leagueSelected.getId()) {
+					teamSelected.setLeague(leagueSelected);
+					leagueServiceImpl.insertTeamintoLeague(teamSelected);
+					map.put("success", true);
+					map.put("The Team called " + teamSelected.getName() + " with id :" + id + " has signed up for league ", leagueSelected);
 				}else {
+					map.put("success", true);
+					map.put("The Team called " + teamSelected.getName() + " is already in the league ", league_id);
+			
+				}
+				
+			}else {
+					
 				map.put("success", false);
 			}
 			
@@ -157,7 +165,7 @@ public class LeagueController {
 		} catch (Exception e) {
 			
 			map.put("success", false);
-		   	   	map.put("message","Make sure The Team "+ id + " exists or the league "+ league_id +" exists");        
+		  	map.put("message","Make sure The Team "+ id + " exists or the league "+ league_id +" exists");        
 		}
 		
 		return map;
