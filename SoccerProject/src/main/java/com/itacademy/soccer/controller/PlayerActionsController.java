@@ -17,7 +17,7 @@ import com.itacademy.soccer.service.impl.PlayerActionsServiceImpl;
 import static com.itacademy.soccer.dto.lineup.Lineup.*;
 
 @RestController
-@RequestMapping("/api/players/{id}")
+@RequestMapping("/api/playeractions/{id}")
 public class PlayerActionsController {
 
 	@Autowired
@@ -41,7 +41,7 @@ public class PlayerActionsController {
 		}
 		return map;
 	}
-	@GetMapping("/matches/{id2}/onePlayeractions/{action}")
+	@GetMapping("/matches/{id2}/playeractions/{action}")
 	HashMap<String,Object> getOnePlayerActionsInMatch(@RequestParam Long playerId, @RequestParam Long matchId, @RequestParam String action){
 		HashMap<String,Object> map = new HashMap<>();
 		PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(playerId, matchId);
@@ -100,8 +100,8 @@ public class PlayerActionsController {
 				if (playerActionsById != null) {
 					playerActionsById.setLineup(lineup);
 					map.put("success", true);
-					map.put("match_id ", playerActionsById.getId().getPlayerId());
-					map.put("player_id ", playerActionsById.getId().getMatchId());
+					map.put("player_id ", playerActionsById.getId().getPlayerId());
+					map.put("match_id", playerActionsById.getId().getMatchId());
 					map.put("lineUp ", playerActionsById.getLineup());
 					map.put("message", "LineUp modified");
 					playerActionsServiceImpl.save(playerActionsById);
