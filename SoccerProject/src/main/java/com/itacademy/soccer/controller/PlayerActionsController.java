@@ -64,7 +64,7 @@ public class PlayerActionsController {
 		}
 		return map;
 	}
-	@GetMapping("/playeractions")
+	@GetMapping()
 	HashMap<String,Object> getPlayerActionsByPlayerIdInAllMatches(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
 		List<PlayerActions> playerActions = playerActionsServiceImpl.findByIdPlayerId(p.getPlayerId());
@@ -88,7 +88,7 @@ public class PlayerActionsController {
 
 		return map;
 	}
-	@PostMapping("/matches/{id2}/lineUp")
+	@PostMapping("/matches/{id2}/lineup")
 	HashMap<String,Object> postLineUpInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
 		// condicional verifica entrada de LINEUP
