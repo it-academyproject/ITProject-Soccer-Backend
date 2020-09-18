@@ -55,16 +55,22 @@ public class MatchOperations implements IMatchOperations {
 		System.out.println(">>> LOCAL POSSIBILITY = [" + localPossibility +"] <<<");
 		System.out.println(">>> VISITOR POSSIBILITY = [" + visitorPossibility +"] <<<");
 
-		Team kickOffTeam = null;
-		
-		//if possibility of both teams are equal the local team will be the kickoff team
-		if(visitorPossibility > localPossibility) {
-			kickOffTeam = match.getTeam_visitor();
-		}else { 
-			kickOffTeam = match.getTeam_local();
-		}
+		Team kickOffTeam = getRandomKickOff(match, localPossibility, visitorPossibility);
 		
 		return kickOffTeam;
+	}
+		
+	private Team getRandomKickOff(Match match, double localPossibility, double visitorPossibility) {
+		double randomNumber = Math.random();
+		
+		if (visitorPossibility==0) return match.getTeam_local();
+		if (localPossibility==0) return match.getTeam_visitor();
+		
+		if (randomNumber <= localPossibility) {
+			return match.getTeam_local();
+		}else {
+			return match.getTeam_visitor();
+		}
 	}
 	
 	public MatchActions saveKickOff(Match match, Team team) {
