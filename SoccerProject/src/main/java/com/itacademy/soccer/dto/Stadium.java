@@ -1,5 +1,7 @@
 package com.itacademy.soccer.dto;
 
+import com.itacademy.soccer.controller.json.StadiumJson;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,7 +9,7 @@ import javax.persistence.*;
 public class Stadium {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long stadiumId;
     private String name;
     private String city;
