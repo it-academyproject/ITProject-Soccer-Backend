@@ -8,18 +8,19 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Proxy;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author KevHaes
@@ -52,6 +53,11 @@ public class Match {
 	@JoinColumn(name="team_visitor_id")
 	private Team team_visitor;
 
+	@JsonIgnore
+	@OneToOne(mappedBy="match", fetch = FetchType.LAZY) //fetch = FetchType.LAZY resolves error
+														//Hibernate: More than one row with the given identifier was found error
+	private MatchActions match_actions;
+	
 //	@OneToMany
 //	@JoinColumn(name="match_id")
 //	private List<PlayerActions> playeractions;
@@ -155,6 +161,14 @@ public class Match {
 	 */
 	public void setVisitor_goals(int visitor_goals) {
 		this.visitor_goals = visitor_goals;
+	}
+	
+	public MatchActions getMatch_actions() {
+		return match_actions;
+	}
+
+	public void setMatch_actions(MatchActions match_actions) {
+		this.match_actions = match_actions;
 	}
 
 	/**

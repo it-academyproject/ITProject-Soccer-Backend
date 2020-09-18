@@ -7,9 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.itacademy.soccer.dao.IMatchActionsDAO;
 import com.itacademy.soccer.dao.IMatchDAO;
 import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dto.Match;
+import com.itacademy.soccer.dto.MatchActions;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.PlayerActions;
 import com.itacademy.soccer.dto.Team;
@@ -24,7 +26,10 @@ public class MatchOperations implements IMatchOperations {
 	
 	@Autowired
 	IPlayerActionsDAO iPlayerActionsDAO;
-		
+	
+	@Autowired
+	IMatchActionsDAO iMatchActionsDAO;
+	
 	public Team generateKickOff(Match match) {
 		
 		System.out.println("************************");
@@ -62,7 +67,24 @@ public class MatchOperations implements IMatchOperations {
 		return kickOffTeam;
 	}
 	
-
+	public MatchActions saveKickOff(Match match, Team team) {
+		
+		MatchActions updatedMatchActions = null;
+		
+		try {
+			
+			MatchActions matchActions = match.getMatch_actions();
+			matchActions.setKickOff(team);
+			
+			updatedMatchActions = iMatchActionsDAO.save(matchActions);
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return updatedMatchActions;
+	}
+	
 	// Returns the subset of team players playing the match passed by parameter
 	// Returns a list of PlayerActions. Each PlayerActions has a relationship with one Player
 	// and one Match
@@ -76,6 +98,9 @@ public class MatchOperations implements IMatchOperations {
 			PlayerMatchId playerMatchId = new PlayerMatchId();
 			playerMatchId.setMatchId(match.getId());
 			playerMatchId.setPlayerId(player.getId());
+			
+//			System.out.println("Match="+match.getId());
+//			System.out.println("Player="+player.getId());
 			
 			Optional<PlayerActions> optionalPlayerAction = iPlayerActionsDAO.findById(playerMatchId);
 			
