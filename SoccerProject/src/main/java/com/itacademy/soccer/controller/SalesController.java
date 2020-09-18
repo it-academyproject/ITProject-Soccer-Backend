@@ -206,14 +206,6 @@ public class SalesController {
 				salestats.put(tempsale,bidspersale.size());
 			}
 
-			// create another hashmap to get the frequency a value ( number of bids ) appears in the salestats hashmap
-			//Map<Integer, Integer> bidscounts = new HashMap<Integer, Integer>();
-			//for ( Integer b : salestats.values()){
-			//	int bidnumber =  bidscounts.get(b) == null ? 0 : bidscounts.get(b);
-			//	bidscounts.put(b, bidnumber +1);
-			//}
-			//System.out.println(bidscounts);
-
 			// create a TreeMap to get the frequency a value ( number of bids ) appears in the salestats hashmap
 			NavigableMap<Integer, Integer> bidscounts = new TreeMap<Integer, Integer>();
 			for ( Integer b : salestats.values()){
@@ -222,14 +214,36 @@ public class SalesController {
 			}
 			System.out.println(bidscounts);
 
+			//get the total of bids (totalbids) my multiplying the key and value of the bidscounts TreeMap
+			int totalbids = 0;
+			for ( int d = 0; d <= bidscounts.lastKey(); d++) {
+				if (bidscounts.get(d) != null) {
+					totalbids = totalbids + ( d * bidscounts.get(d) );
+					System.out.println(d);
+					System.out.println(bidscounts.get(d));
+				}
+			}
+			System.out.println(totalbids);
+			System.out.println(salestats.size());
+			int totalsales = salestats.size();
+			System.out.println(totalsales);
 
+			double averagebids = (double) totalbids / (double ) totalsales;
+			System.out.println(averagebids);
+
+			//B29 TODO they are not imlemented yet the following stadistics
+			//- Most buyer Team
+			//- Most seller Team
+			// Also the stadistics should be repeated for the last month, maybe it should extracted the code from
+			// the controller into a separate class to reuse the stadistics calculation source.
 
 			if(allSalesLastWeek.size() > 0) {
-				map.put("success", true);
-				map.put("message", "these are the stadistics for last week");
 				map.put("total number of succesful sales, those WITH bids", salestats.size()-bidscounts.get(0));
 				map.put("total number of failed sales, those WITHOUT bids", bidscounts.get(0));
+				map.put("average number of bids per sale", averagebids);
 				map.put("maximum number of bids a particular sales has got", bidscounts.lastKey());
+				map.put("success", true);
+				map.put("message", "these are the stadistics for last week");
 
 
 				//map.put("all sales of last week", allSalesLastWeek);
