@@ -79,7 +79,8 @@ public class MatchOperations implements IMatchOperations {
 			
 			Optional<PlayerActions> optionalPlayerAction = iPlayerActionsDAO.findById(playerMatchId);
 			
-			if (optionalPlayerAction.isEmpty()==false) {
+			//if (optionalPlayerAction.isEmpty()==false) { //Available method isEmpty from Java 11
+			if (optionalPlayerAction.isPresent()) { //Java 8
 				PlayerActions playerAction = optionalPlayerAction.get();
 				listMatchPlayerActionsByTeam.add(playerAction);
 			}
