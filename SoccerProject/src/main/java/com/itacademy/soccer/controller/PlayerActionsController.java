@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.itacademy.soccer.controller.json.PlayerActionsJson;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.lineup.Lineup;
 import com.itacademy.soccer.dto.serializable.PlayerMatchId;
@@ -26,10 +27,10 @@ public class PlayerActionsController {
 	DataForPlayerActions dataForPlayerActions = new DataForPlayerActions();
 
 	//Get playerActions by player id and match id (TO DO)
-	@GetMapping("/matches/{id2}/playeractions")
-	HashMap<String,Object> getPlayerActionsByPlayerIdInMatch(@RequestParam Long playerId, @RequestParam Long matchId){
+	@GetMapping("/matches/{id2}")
+	HashMap<String,Object> getPlayerActionsByPlayerIdInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
-		PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(playerId, matchId);
+		PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(p.getPlayerId(), p.getMatchId());
 
 		if (playerActions != null) {
 			map.put("success", true);
@@ -37,36 +38,36 @@ public class PlayerActionsController {
 			map.put("message", "get all players");
 		}else {
 			map.put("success", false);
-			map.put("message", "player with id " + playerId + " or match with id "+ matchId + " not found ");
+			map.put("message", "player with id " + p.getPlayerId() + " or match with id "+ p.getMatchId() + " not found ");
 		}
 		return map;
 	}
-	@GetMapping("/matches/{id2}/playeractions/{action}")
-	HashMap<String,Object> getOnePlayerActionsInMatch(@RequestParam Long playerId, @RequestParam Long matchId, @RequestParam String action){
+	@GetMapping("/matches/{id2}/{action}")
+	HashMap<String,Object> getOnePlayerActionsInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
-		PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(playerId, matchId);
+		PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(p.getPlayerId(), p.getMatchId());
 
 		if (playerActions != null ) {
-			int data = dataForPlayerActions.getOnePlayerActionsInOneMatch(playerActions, action);
+			int data = dataForPlayerActions.getOnePlayerActionsInOneMatch(playerActions, p.getAction());
 
 			if (data != 0) {
 				map.put("success", true);
-				map.put(action + " for this player ", data);
-				map.put("message", "actions for one player in matchid: " + matchId);
+				map.put(p.getAction() + " for this player ", data);
+				map.put("message", "actions for one player in matchid: " + p.getMatchId());
 			}else {
 				map.put("success", false);
 				map.put("message", "action not exist");
 			}
 		}else {
 			map.put("success", false);
-			map.put("message", "player with id " + playerId + " or match with id "+ matchId + " not found ");
+			map.put("message", "player with id " + p.getPlayerId() + " or match with id "+ p.getMatchId() + " not found ");
 		}
 		return map;
 	}
 	@GetMapping("/playeractions")
-	HashMap<String,Object> getPlayerActionsByPlayerIdInAllMatches(@RequestParam Long playerId){
+	HashMap<String,Object> getPlayerActionsByPlayerIdInAllMatches(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
-		List<PlayerActions> playerActions = playerActionsServiceImpl.findByIdPlayerId(playerId);
+		List<PlayerActions> playerActions = playerActionsServiceImpl.findByIdPlayerId(p.getPlayerId());
 
 		if (playerActions.size() > 0) {
 			map.put("success", true);
@@ -74,12 +75,12 @@ public class PlayerActionsController {
 			map.put("message", "get all players");
 		}else {
 			map.put("success", false);
-			map.put("message", "player with id " + playerId + " not found ");
+			map.put("message", "player with id " + p.getPlayerId() + " not found ");
 		}
 		return map;
 	}
 	//TODO no hace nada - Inacabado . put playerActions by playerId and matchId
-	@PutMapping("/matches/{id2}/playeractions")
+	@PutMapping("/matches/{id2}")
 	HashMap<String,Object> putActionsByPlayerId(@RequestBody PlayerActions playerActions, @RequestParam Long playerId, @RequestParam Long matchId){
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("success", true);
@@ -88,14 +89,14 @@ public class PlayerActionsController {
 		return map;
 	}
 	@PostMapping("/matches/{id2}/lineUp")
-	HashMap<String,Object> postLineUpInMatch(@RequestParam Long playerId, @RequestParam Long matchId, @RequestParam String entry){
+	HashMap<String,Object> postLineUpInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
 		// condicional verifica entrada de LINEUP
-		if ( entry.equals("KEEPER") || entry.equals("DEFENDER") || entry.equals("MIDFIELDER") || entry.equals("FORWARD")){
-			Lineup lineup = Lineup.valueOf(entry);
+		if ( p.getAction().equals("KEEPER") || p.getAction().equals("DEFENDER") || p.getAction().equals("MIDFIELDER") || p.getAction().equals("FORWARD")){
+			Lineup lineup = Lineup.valueOf(p.getAction());
 			try {
 
-				PlayerActions playerActionsById = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(playerId, matchId);
+				PlayerActions playerActionsById = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(p.getPlayerId(), p.getMatchId());
 
 				if (playerActionsById != null) {
 					playerActionsById.setLineup(lineup);
@@ -107,7 +108,7 @@ public class PlayerActionsController {
 					playerActionsServiceImpl.save(playerActionsById);
 				} else {
 					map.put("success", false);
-					map.put("message", "player with id " + playerId + " or match with id " + matchId + " not found ");
+					map.put("message", "player with id " + p.getPlayerId() + " or match with id " + p.getMatchId() + " not found ");
 				}
 
 			} catch (Exception e) {
