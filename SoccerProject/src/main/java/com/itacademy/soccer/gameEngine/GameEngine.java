@@ -56,9 +56,10 @@ public class GameEngine implements IGameEngine{
 		
 		//(1) CREATE INSTANCE OF MATCH_ACTIONS FOR THE CURRENT MATCH
 		//----------------------------------------------------------
-		//TO DO!!! - MATCH_ACTIONS IDENTIFIER(PRIMARY KEY) SHOULD BE MATCH_ID
-		//TO DO!!! - IF MATCH_ACTIONS FOR THE CURRENT MATCH DOESN'T EXISTS CREATE A NEW MATCHACTIONS
-		//           ELSE USE THE ONE ALREADY CREATED FOR THIS MATCH
+		//TO DO!!! future improvements : MATCH_ACTIONS IDENTIFIER(PRIMARY KEY) SHOULD BE MATCH_ID
+		
+		// IF MATCH_ACTIONS FOR THE CURRENT MATCH DOESN'T EXISTS CREATE A NEW MATCHACTIONS
+		// ELSE USE THE ONE ALREADY CREATED FOR THIS MATCH
 		if(match.getMatch_actions()==null) {
 			MatchActions matchActions = new MatchActions();
 			matchActions.setMatch(match);
