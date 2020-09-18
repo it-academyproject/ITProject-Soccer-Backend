@@ -1,8 +1,9 @@
 package com.itacademy.soccer.dto;
 
-import com.itacademy.soccer.controller.json.StadiumJson;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="stadium")
@@ -16,20 +17,29 @@ public class Stadium {
     private int capacity;
     private double annual_income;
 
-//    @OneToMany(mappedBy="stadium" , fetch = FetchType.LAZY,  cascade=CascadeType.ALL)
-//    private List<Match> matchList;
+    @JsonIgnore
+    @OneToMany(mappedBy="stadiumMany" )
+    private List<Match> matchList;
 
-    public Stadium(Long stadiumId, String name, String city, int capacity, double annual_income) {
+    public Stadium(Long stadiumId, String name, String city, int capacity, double annual_income, List<Match> matchList) {
         this.stadiumId = stadiumId;
         this.name = name;
         this.city = city;
         this.capacity = capacity;
         this.annual_income = annual_income;
        // this.matchList = matchList;
+        this.matchList = matchList;
     }
 
     public Stadium() {
+    }
 
+    public List<Match> getMatchList() {
+        return matchList;
+    }
+
+    public void setMatchList(List<Match> matchList) {
+        this.matchList = matchList;
     }
 
     public Long getStadiumId() {

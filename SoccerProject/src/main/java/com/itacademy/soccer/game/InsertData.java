@@ -1,9 +1,11 @@
 package com.itacademy.soccer.game;
 
 import com.itacademy.soccer.controller.json.StadiumJson;
+import com.itacademy.soccer.dto.Match;
 import com.itacademy.soccer.dto.Stadium;
 
 import java.awt.print.PrinterException;
+import java.util.Optional;
 
 public class InsertData {
 
@@ -15,7 +17,6 @@ public class InsertData {
         stadium.setCity(s.getCity());
         stadium.setCapacity(Integer.parseInt(s.getCapacity()));
         stadium.setAnnual_income(Double.parseDouble(s.getAnnual_income()));
-
         return stadium;
     }
     public Stadium putStadium(StadiumJson stadium){
@@ -30,5 +31,15 @@ public class InsertData {
             e.printStackTrace();
         }
         return s;
+    }
+    public Stadium addMatch(Stadium stadium, Optional<Match> match){
+        Match x = new Match();
+        System.out.println("maravilloso.................................");
+        if ( match.isPresent()){
+            x = match.get();
+        }
+        stadium.getMatchList().add(x);
+        System.out.println("............ xxx "+ x.getDate());
+        return stadium;
     }
 }

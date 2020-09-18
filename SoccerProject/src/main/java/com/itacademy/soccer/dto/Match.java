@@ -6,18 +6,10 @@ package com.itacademy.soccer.dto;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author KevHaes
@@ -50,16 +42,22 @@ public class Match {
 	@JoinColumn(name="team_visitor_id")
 	private Team team_visitors;
 
+	@JsonIgnore
+	@ManyToOne (fetch = FetchType.LAZY,  cascade=CascadeType.ALL)
+	@JoinColumn(name="stadium_id")
+	private Stadium stadiumMany;
+
 //	@OneToMany
 //	private List<PlayerActions> playeractions;
 	// waiting B-19
 
 	/////////////// CONSTRUCTORS ///////////////
-	public Match(Long id, Date date, int local_goals, int visitor_goals) {
+	public Match(Long id, Date date, int local_goals, int visitor_goals, Stadium stadiumMany) {
 		this.id = id;
 		this.date = date;
 		this.local_goals = local_goals;
 		this.visitor_goals = visitor_goals;
+		this.stadiumMany = stadiumMany;
 	}
 
 	public Match() {

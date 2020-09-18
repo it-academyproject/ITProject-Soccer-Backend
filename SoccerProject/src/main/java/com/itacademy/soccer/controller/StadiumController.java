@@ -2,10 +2,12 @@ package com.itacademy.soccer.controller;
 
 
 import com.itacademy.soccer.controller.json.StadiumJson;
+import com.itacademy.soccer.dto.Match;
 import com.itacademy.soccer.dto.Stadium;
 import com.itacademy.soccer.game.InsertData;
 import com.itacademy.soccer.game.VerifyDataStadium;
 import com.itacademy.soccer.service.IStadiumService;
+import com.itacademy.soccer.service.impl.MatchServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/stadium")
@@ -21,6 +24,8 @@ public class StadiumController {
     @Qualifier("IStadiumService")
     @Autowired
     IStadiumService iStadiumService;
+    @Autowired
+    MatchServiceImpl matchServiceImpl;
     HashMap<String,Object> map = new HashMap<>();
 
     @GetMapping
@@ -95,10 +100,35 @@ public class StadiumController {
         }catch (Exception e) {
             map.put("success", false);
             map.put("message", "something went wrong: " + e.getMessage());
-            e.printStackTrace();
         }
         return map;
     }
+    //TODO No funciona ... Fallo al ir a la capa service a buscar Match por el Id, prefiero no tocar esa capa service que no he hecho yo.
+    @PutMapping("/stadiumId/matchId")
+    public HashMap<String, Object> addMatch(@RequestBody StadiumJson s) {
+        map.clear();
+        try{
+            map = new VerifyDataStadium().verifyIds(s, map);
+
+            if ( map.size() == 0) {
+//                System.out.println("maravilloso............111.....................");
+//                Stadium stadium = iStadiumService.findByStadiumId(Long.parseLong(s.getId()));
+//                System.out.println("maravilloso.................2222................"+ s.getId2());
+//                Optional<Match> match = matchServiceImpl.findById(Long.parseLong(s.getId2()));
+//                System.out.println("maravilloso................3333.................");
+//                stadium = new InsertData().addMatch(stadium, match);
+//                iStadiumService.save(stadium);
+//                map.put("success", true);
+//                map.put("stadium", stadium);
+                map.put("update", HttpStatus.OK);
+            }
+        }catch (Exception e) {
+            map.put("success", false);
+            map.put("message", "something went wrong: " + e.getMessage());
+        }
+        return map;
+    }
+
     @DeleteMapping("/id")
     public HashMap<String,Object> deleteStadium(@RequestBody StadiumJson s){
         map.clear();
@@ -116,4 +146,5 @@ public class StadiumController {
         }
         return map;
     }
+
 }

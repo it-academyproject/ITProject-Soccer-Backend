@@ -47,4 +47,15 @@ public class VerifyDataStadium {
         }
         return map;
     }
+    public HashMap<String,Object> verifyIds(StadiumJson s, HashMap<String, Object> map){
+        Long  id;
+        try{
+             id = Long.parseLong(s.getId());
+             id = Long.parseLong(s.getId2());
+        }catch (Exception e){
+            map.put("success", false);
+            map.put("messages", "Incorrect data : " + s.getId());
+        }
+        return map;
+    }
 }

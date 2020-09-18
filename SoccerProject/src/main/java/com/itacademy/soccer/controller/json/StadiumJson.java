@@ -5,6 +5,7 @@ import javax.validation.constraints.Pattern;
 public class StadiumJson {
 
     private String id;
+    private String id2;
     private String name;
     private String city;
     private String capacity;
@@ -16,12 +17,26 @@ public class StadiumJson {
         this.id = id;
     }
 
+    public StadiumJson(String id, String id2) {
+        this.id = id;
+        this.id2 = id2;
+    }
+
     public StadiumJson(String name, String city, String capacity, String annual_income) {
 
         this.name = name;
         this.city = city;
         this.capacity = capacity;
         this.annual_income = annual_income;
+    }
+
+
+    public String getId2() {
+        return id2;
+    }
+
+    public void setId2(String id2) {
+        this.id2 = id2;
     }
 
     public String getName() {
