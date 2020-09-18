@@ -14,10 +14,6 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
-/**
- * @author KevHaes
- *
- */
 @Entity
 @Table(name="team") // Tab Team
 public class Team {
@@ -47,9 +43,8 @@ public class Team {
 	@Column(name="draws")
 	private int draws;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="league_id")   
-	@JsonIgnore
+	@OneToOne()
+    @JoinColumn(name="league_id")  
 	private League league;  //Team Relation One to One with a League
 	
 	@JsonIgnore

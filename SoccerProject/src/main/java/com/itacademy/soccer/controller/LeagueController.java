@@ -62,9 +62,8 @@ public class LeagueController {
     }
     
 
-	@GetMapping("/leagues/{id}/teams") // SHOWS THE TEAMS BELONGS TO THE LEAGUE.
-	    
-	    public HashMap <String, Object>  showTeamsByLeague(@PathVariable Long id) {
+	@GetMapping("/leagues/{id}/teams") // SHOWS THE TEAMS BELONGS TO THE LEAGUE.	    
+    public HashMap <String, Object>  showTeamsByLeague(@PathVariable Long id) {
 	    	
 	    	HashMap<String, Object> map = new HashMap<>();    	    
 	     	List<Team> teamsLeague = new ArrayList<>();
@@ -96,7 +95,7 @@ public class LeagueController {
 	
     
 	@PutMapping("/leagues/{id}") // MODIFY LEAGUE ONLY BY ADMIN
-	HashMap<String,Object> modifyLeague(@PathVariable Long id, @RequestBody League league){
+	public HashMap<String,Object> modifyLeague(@PathVariable Long id, @RequestBody League league){
 	
 		HashMap<String,Object> map = new HashMap<>();		
 		League leagueSelected = new League();	
@@ -111,8 +110,7 @@ public class LeagueController {
 				leagueSelected.setEndingDate(league.getEndingDate());
 				leagueSelected.setNumberRounds(league.getNumberRounds());
 				leagueSelected.setParticipants(league.getParticipants());
-				leagueSelected.setDivision(league.getDivision());
-				
+				leagueSelected.setDivision(league.getDivision());				
 				
 				leagueServiceImpl.updateLeague(leagueSelected);
 				
@@ -131,9 +129,8 @@ public class LeagueController {
 	}
 	
 	
-	@PutMapping("/leagues/teams/{id}") // INSERT ONE TEAM IN ONE LEAGUE ONLY BY ADMIN
-	
-	HashMap<String,Object> insertTeamintoLeague(@PathVariable Long id, @RequestBody Long league_id){
+	@PutMapping("/leagues/teams/{id}") // INSERT ONE TEAM IN ONE LEAGUE ONLY BY ADMIN	
+	public HashMap<String,Object> insertTeamintoLeague(@PathVariable Long id, @RequestBody Team team){
 		
 		Team teamSelected =new Team();
 		League leagueSelected = new League();		
@@ -143,7 +140,7 @@ public class LeagueController {
 		try {
 			
 			teamSelected= iTeamService.getOneTeamById(id);			
-			leagueSelected = leagueServiceImpl.getOneLeagueById(league_id);
+			leagueSelected = leagueServiceImpl.getOneLeagueById(team.getLeague().getId());
 			
 			if (teamSelected != null && leagueSelected != null) {				
 				
@@ -154,27 +151,28 @@ public class LeagueController {
 					map.put("The Team called " + teamSelected.getName() + " with id :" + id + " has signed up for league ", leagueSelected);
 				}else {
 					map.put("success", true);
-					map.put("The Team called " + teamSelected.getName() + " is already in the league ", league_id);
+					map.put("The Team called " + teamSelected.getName() + " is already in the league ", team.getLeague().getId());
 			
 				}
 				
 			}else {
 					
 				map.put("success", false);
+				
 			}
 			
 			
 		} catch (Exception e) {
 			
 			map.put("success", false);
-		  	map.put("message","Make sure The Team "+ id + " exists or the league "+ league_id +" exists");        
+		  	map.put("message","Make sure The Team "+ id + " exists or the league "+ team.getLeague().getId() +" exists");        
 		}
 		
 		return map;
 	}
 		
-	@PostMapping("/leagues") // CREATE LEAGUE ONLY BY ADMIN
-	HashMap<String,Object> createLeague(@RequestBody League league){
+	@PostMapping("/leagues") // CREATE LEAGUE ONLY BY ADMIN	
+	public HashMap<String,Object> createLeague(@RequestBody League league){
 	
 		HashMap<String,Object> map = new HashMap<>();	
 		League newLeague = new League();
