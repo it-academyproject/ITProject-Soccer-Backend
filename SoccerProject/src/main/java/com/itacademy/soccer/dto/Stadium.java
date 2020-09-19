@@ -3,6 +3,7 @@ package com.itacademy.soccer.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -12,7 +13,9 @@ public class Stadium {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long stadiumId;
+    @Size(min = 1, max = 50)
     private String name;
+    @Size(min = 1, max = 50)
     private String city;
     private int capacity;
     private double annual_income;
