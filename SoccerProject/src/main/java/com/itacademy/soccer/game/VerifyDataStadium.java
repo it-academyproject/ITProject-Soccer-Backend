@@ -40,23 +40,28 @@ public class VerifyDataStadium {
         return map;
     }
     public HashMap<String,Object> verifyNumericPost(StadiumJson s, HashMap<String, Object> map){
-        double annual;  int capaci;
+
 
         try{
-            if ( !s.getCapacity().isEmpty() ) capaci = Integer.parseInt(s.getCapacity());
+
+            if ( !s.getCapacity().isEmpty() )  Integer.parseInt(s.getCapacity());
             else {
                 messageError("Capacity");
                 return map;
             }
-
-            if ( !s.getAnnual_income().isEmpty() ) annual = Double.parseDouble(s.getAnnual_income());
+            if ( !s.getAnnual_income().isEmpty() ) Double.parseDouble(s.getAnnual_income());
             else {
                 messageError("Capacity");
+                return map;
+            }
+            if ( (Integer.parseInt( s.getCapacity()) < 0 ) || ( Double.parseDouble(s.getAnnual_income()) < 0 )) {
+                map.put("success", false);
+                map.put("message", "Incorrect data Not < 0 " );
                 return map;
             }
         }catch (Exception e){
             map.put("success", false);
-            map.put("messages", "Incorrect data  " );
+            map.put("message", "Incorrect data  " );
         }
         return map;
     }
@@ -87,6 +92,11 @@ public class VerifyDataStadium {
             }
             else {
                 map = messageError( "Annual income");
+                return map;
+            }
+            if ( (Integer.parseInt( s.getCapacity()) < 0 ) || ( Double.parseDouble(s.getAnnual_income()) < 0 )) {
+                map.put("success", false);
+                map.put("message", "Incorrect data Not < 0 " );
                 return map;
             }
         }catch (Exception e){
