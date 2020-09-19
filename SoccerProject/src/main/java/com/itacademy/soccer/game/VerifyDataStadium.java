@@ -14,11 +14,11 @@ public class VerifyDataStadium {
 
         if ( stadium.getCity().isEmpty()){
             map.put("success", false);
-            map.put("city", "it cant be empty");
+            map.put("message", "city cant be empty");
         }
         if ( stadium.getName().isEmpty()){
             map.put("success", false);
-            map.put("name", "it cant be empty");
+            map.put("message", "name cant be empty");
         }else {
             List<Stadium> stadiumList = iStadiumService.findAll();
 
@@ -26,13 +26,13 @@ public class VerifyDataStadium {
                 // condicional para el POST
                 if (x.getName().equalsIgnoreCase(stadium.getName()) && stadium.getId() == null ) {
                     map.put("success", false);
-                    map.put("name stadium", "it already exists");
+                    map.put("message", "name stadium already exists");
                     return map;
                 }else
                     // condicional para el PUT, que permita repetir nombre oero en el mismo Id
                 if (x.getName().equalsIgnoreCase(stadium.getName()) && x.getStadiumId() != Long.parseLong(stadium.getId()) ) {
                     map.put("success", false);
-                    map.put("name stadium", "it already exists");
+                    map.put("message", "name stadium already exists");
                     return map;
                 }
             }

@@ -34,12 +34,11 @@ public class InsertData {
     }
     public Stadium addMatch(Stadium stadium, Optional<Match> match){
         Match x = new Match();
-        System.out.println("maravilloso.................................");
+
         if ( match.isPresent()){
             x = match.get();
         }
         stadium.getMatchList().add(x);
-        System.out.println("............ xxx "+ x.getDate());
         return stadium;
     }
 }

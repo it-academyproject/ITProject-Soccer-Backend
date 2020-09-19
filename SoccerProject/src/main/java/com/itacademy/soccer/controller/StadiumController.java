@@ -98,8 +98,8 @@ public class StadiumController {
             if ( map.size() == 0) {
                 iStadiumService.save(s);
                 map.put("success", true);
-                map.put("stadium", s);
-                map.put("update", HttpStatus.OK);
+                map.put("stadium update", s);
+                map.put("message", HttpStatus.OK);
             }
         }catch (Exception e) {
             map.put("success", false);
