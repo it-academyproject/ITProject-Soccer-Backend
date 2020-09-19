@@ -30,6 +30,13 @@ public class StadiumJson {
         this.annual_income = annual_income;
     }
 
+    public StadiumJson(String id, String name, String city, String capacity, String annual_income) {
+        this.id = id;
+        this.name = name;
+        this.city = city;
+        this.capacity = capacity;
+        this.annual_income = annual_income;
+    }
 
     public String getId2() {
         return id2;

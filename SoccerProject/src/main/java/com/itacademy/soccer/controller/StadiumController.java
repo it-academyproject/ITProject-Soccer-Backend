@@ -2,7 +2,6 @@ package com.itacademy.soccer.controller;
 
 
 import com.itacademy.soccer.controller.json.StadiumJson;
-import com.itacademy.soccer.dto.Match;
 import com.itacademy.soccer.dto.Stadium;
 import com.itacademy.soccer.game.InsertData;
 import com.itacademy.soccer.game.VerifyDataStadium;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/stadium")
@@ -27,6 +25,7 @@ public class StadiumController {
     @Autowired
     MatchServiceImpl matchServiceImpl;
     HashMap<String,Object> map = new HashMap<>();
+    VerifyDataStadium verifyDataStadium = new VerifyDataStadium();
 
     @GetMapping
     HashMap<String,Object> getAllStadium(){
@@ -46,9 +45,10 @@ public class StadiumController {
     @GetMapping("/id")
     HashMap<String,Object> getStadium(@RequestBody StadiumJson s){
         map.clear();
-        map = new VerifyDataStadium().verifyNumeric(s, map);
+        map = verifyDataStadium.verifyIds(s, map);
 
         if ( map.size() == 0) {
+
             Stadium stadium= iStadiumService.findByStadiumId( Long.parseLong(s.getId()));
 
             if (stadium != null) {
@@ -67,8 +67,8 @@ public class StadiumController {
     HashMap<String,Object> postStadium(@RequestBody StadiumJson stadium){
         try {
             map.clear();
-            map = new VerifyDataStadium().verifyStrings(stadium, iStadiumService, map);
-            map = new VerifyDataStadium().verifyNumeric(stadium, map);
+            map = verifyDataStadium.verifyStrings(stadium, iStadiumService, map);
+            map = verifyDataStadium.verifyNumericPost(stadium, map);
 
             if ( map.size() == 0) {
                 Stadium s = new InsertData().insertStadium(stadium);
@@ -87,19 +87,24 @@ public class StadiumController {
     @PutMapping()
     public HashMap<String,Object> updateStadium(@RequestBody StadiumJson stadium){
         map.clear();
+
         try{
-            map = new VerifyDataStadium().verifyStrings(stadium, iStadiumService, map);
+            map = verifyDataStadium.verifyNumericPut(stadium, map);
+
+            if (map.size() == 0 ) map = verifyDataStadium.verifyStrings(stadium, iStadiumService, map);
+            else return map;
             Stadium s = new InsertData().putStadium(stadium);
 
             if ( map.size() == 0) {
                 iStadiumService.save(s);
                 map.put("success", true);
-                map.put("stadium", stadium);
+                map.put("stadium", s);
                 map.put("update", HttpStatus.OK);
             }
         }catch (Exception e) {
             map.put("success", false);
             map.put("message", "something went wrong: " + e.getMessage());
+            e.printStackTrace();
         }
         return map;
     }
@@ -108,7 +113,7 @@ public class StadiumController {
     public HashMap<String, Object> addMatch(@RequestBody StadiumJson s) {
         map.clear();
         try{
-            map = new VerifyDataStadium().verifyIds(s, map);
+            map = verifyDataStadium.verifyIds(s, map);
 
             if ( map.size() == 0) {
 //                System.out.println("maravilloso............111.....................");
@@ -132,7 +137,7 @@ public class StadiumController {
     @DeleteMapping("/id")
     public HashMap<String,Object> deleteStadium(@RequestBody StadiumJson s){
         map.clear();
-        map = new VerifyDataStadium().verifyNumeric(s, map);
+        map = verifyDataStadium.verifyIds(s, map);
 
         if ( map.size() == 0) {
             try {
