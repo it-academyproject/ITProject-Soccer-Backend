@@ -143,7 +143,7 @@ public class StadiumController {
             try {
                 iStadiumService.deleteById(Long.parseLong(s.getId()));
                 map.put("success", true);
-                map.put("delete", HttpStatus.OK);
+                map.put("message", HttpStatus.OK);
             } catch (Exception e) {
                 map.put("success", false);
                 map.put("message", "something went wrong: " + e.getMessage());
