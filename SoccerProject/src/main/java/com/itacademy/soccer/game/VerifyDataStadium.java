@@ -120,7 +120,7 @@ public class VerifyDataStadium {
             if ( s.getId2() != null) id = Long.parseLong(s.getId2());
         }catch (Exception e){
             map.put("success", false);
-            map.put("messages", "Incorrect data : " + s.getId());
+            map.put("message", "Incorrect data : " + s.getId());
         }
         return map;
     }
