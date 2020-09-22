@@ -4,13 +4,16 @@
  */
 package com.itacademy.soccer.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
-import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -19,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 @Entity
+
 public class Team {
 	/////////////// ATRIBUTES ///////////////
 	@Id
@@ -33,16 +37,20 @@ public class Team {
 	private int draws;
 
 
+	// SOLUTION FOR GAME ENGINE - SCHEDULING MATCHES
+	// - When trying to generate kickoff team and querying players from this team, the next exception 
+	//   is triggered:
+	// - org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: XXX, 
+	//   could not initialize proxy - no Session Runnable
+	// - property [fetch = FetchType.EAGER] inside @OneToMany annotation SOLVES THIS PROBLEM 
+	
 	@JsonIgnore
-	@OneToMany(mappedBy="team" )
+	@OneToMany(mappedBy="team", fetch = FetchType.EAGER ) // READ COMMENTS BEFORE !!!
 	private List<Player> playersList ;
 
 	// Kevin annotations
 	// @OneToOne(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
 	// private User user;
-	
-	@OneToMany
-	private List<Match> matches;
 
 
 	/////////////// CONSTRUCTORS ///////////////
@@ -197,21 +205,6 @@ public class Team {
 		this.user = user;
 	}
 	*/
-	/*
-	 * @return the matches
-	 */
-	@OneToMany
-	@JsonIgnore
-	public List<Match> getMatches() {
-		return matches;
-	}
-
-	/**
-	 * @param matches the matches to set
-	 */
-	public void setMatches(List<Match> matches) {
-		this.matches = matches;
-	}
 
 	/////////////// TOSTRING ///////////////
 	@Override

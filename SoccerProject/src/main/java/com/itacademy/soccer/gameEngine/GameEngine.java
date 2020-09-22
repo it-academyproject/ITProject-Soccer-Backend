@@ -6,8 +6,12 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.itacademy.soccer.dao.IMatchActionsDAO;
 import com.itacademy.soccer.dao.IMatchDAO;
 import com.itacademy.soccer.dto.Match;
+import com.itacademy.soccer.dto.MatchActions;
+import com.itacademy.soccer.dto.Team;
+import com.itacademy.soccer.gameEngine.interfaces.IGameEngine;
 import com.itacademy.soccer.gameEngine.schedule.MatchScheduler;
 import com.itacademy.soccer.gameEngine.schedule.PlayMatchRunnable;
 
@@ -19,6 +23,12 @@ public class GameEngine implements IGameEngine{
 	
 	@Autowired
 	MatchScheduler matchScheduler;
+	
+	@Autowired
+	MatchOperations matchOperations;
+	
+	@Autowired
+	IMatchActionsDAO iMatchActionsDAO;
 	
 	@Override
 	public void scheduleMatch(Long matchId) {
@@ -41,8 +51,36 @@ public class GameEngine implements IGameEngine{
 		
 		System.out.println("Playing Match "+matchId+" ...");
 		
+		
 		Match match = iMatchDAO.findById(matchId).get();
 		
+		//(1) CREATE INSTANCE OF MATCH_ACTIONS FOR THE CURRENT MATCH
+		//----------------------------------------------------------
+		//TO DO!!! future improvements : MATCH_ACTIONS IDENTIFIER(PRIMARY KEY) SHOULD BE MATCH_ID
+		
+		// IF MATCH_ACTIONS FOR THE CURRENT MATCH DOESN'T EXISTS CREATE A NEW MATCHACTIONS
+		// ELSE USE THE ONE ALREADY CREATED FOR THIS MATCH
+		if(match.getMatch_actions()==null) {
+			MatchActions matchActions = new MatchActions();
+			matchActions.setMatch(match);
+			iMatchActionsDAO.save(matchActions);
+			
+			match.setMatch_actions(matchActions);
+			iMatchDAO.save(match);
+		}
+		
+		//(2) KICKOFF
+		//-----------
+		//generate KICKOFF
+		Team kickOffTeam = matchOperations.generateKickOff(match); 
+		// save KICKOFF in database
+		MatchActions updatedMatchActions = matchOperations.saveKickOff(match, kickOffTeam); 
+		
+		//pring kickoff team
+		System.out.println("KICKOFF TEAM: [id="+kickOffTeam.getId()+", name="+kickOffTeam.getName()+"]");
+		
+		//(3) SCORE GENERATION (TO DO)
+		//----------------------------
 		match.setVisitor_goals(5);
 		match.setLocal_goals(5);
 		
