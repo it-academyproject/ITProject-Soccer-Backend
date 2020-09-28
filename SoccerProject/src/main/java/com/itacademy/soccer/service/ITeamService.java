@@ -24,6 +24,7 @@ public interface ITeamService {
 
 	public Team getOneTeamByIdResults(Long id);
 
-	public void deleteOneTeamById(Long id);
+	public void deleteOneTeamById(Long id);	
+
 
 }
