@@ -20,13 +20,14 @@ public class DataForPlayerActions {
                         if ( action.equalsIgnoreCase("yellow_cards")) data = playerActions.getYellowCards();
                         else
                             if ( action.equalsIgnoreCase("saves")) data = playerActions.getSaves();
-                                else return 0;
+                                else return -1;
         return data;
     }
     public HashMap<String,Object> verifyIds(String ids, String id2, HashMap<String, Object> map){
         Long id;
         try{
             id = Long.parseLong( ids );
+            System.out.println("vamos a ver ..................................  " + id2);
 
             if ( id2 != null) id = Long.parseLong( id2 );
         }catch (Exception e){
