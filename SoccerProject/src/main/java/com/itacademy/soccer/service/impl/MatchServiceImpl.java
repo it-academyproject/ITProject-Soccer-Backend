@@ -48,7 +48,7 @@ public class MatchServiceImpl implements IMatchService {
 		for (Match match : showAllMatches()) {
 			
 			Team localTeam = match.getTeam_local();
-			Team visitorTeam = match.getTeam_visitors();
+			Team visitorTeam = match.getTeam_visitor();
 			
 			if (localTeam.getId().equals(id) || visitorTeam.getId().equals(id)) {
 				matchesToShow.add(match);
@@ -67,7 +67,7 @@ public class MatchServiceImpl implements IMatchService {
 		Team visitorTeam = iTeamDAO.findById(visitorTeamId).get();
 		
 		matchToSave.setTeam_local(localTeam);
-		matchToSave.setTeam_visitors(visitorTeam);
+		matchToSave.setTeam_visitor(visitorTeam);
 		
 		matchToSave.setLocal_goals(0);
 		matchToSave.setVisitor_goals(0);

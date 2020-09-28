@@ -1,21 +1,18 @@
-/**
- * @author KevHaes
- *
- */
-package com.itacademy.soccer.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package com.itacademy.soccer.dto;
 
 import java.util.Date;
 import java.util.List;
 
-
 import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
 @Table(name="team") // Tab Team
+
+
 public class Team {
 	/////////////// ATRIBUTES ///////////////
 	@Id
@@ -42,37 +39,29 @@ public class Team {
 	
 	@Column(name="draws")
 	private int draws;
+
 	
 	@OneToOne()
     @JoinColumn(name="league_id")  
 	private League league;  //Team Relation One to One with a League
+
+
+
+	// SOLUTION FOR GAME ENGINE - SCHEDULING MATCHES
+	// - When trying to generate kickoff team and querying players from this team, the next exception 
+	//   is triggered:
+	// - org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: XXX, 
+	//   could not initialize proxy - no Session Runnable
+	// - property [fetch = FetchType.EAGER] inside @OneToMany annotation SOLVES THIS PROBLEM 
+
 	
 	@JsonIgnore
-	@OneToMany(mappedBy="team" )
+	@OneToMany(mappedBy="team")
 	private List<Player> playersList ;
 
-	// Kevin annotations
-	// @OneToOne(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-	// private User user;
-	
 	@OneToMany
 	private List<Match> matches;
 
-
-	/////////////// CONSTRUCTORS ///////////////
-/*	public Team(Long id, String name, Date foundation_date, String badge, Float budget, int wins, int losses,
-			int draws) {
-		this.id = id;
-
-		this.foundation_date = foundation_date;
-		this.name = name;
-		this.badge = badge;
-		this.budget = budget;
-		this.wins = wins;
-		this.losses = losses;
-		this.draws = draws;
-		this.league=getLeague();
-	}*/
 
 	public Team() {
 	}
@@ -200,21 +189,7 @@ public class Team {
 	public void setPlayersList(List<Player> playersList) {
 		this.playersList = playersList;
 	}
-	/* @return the userId
-	 
-	public User getUser() {
-		return user;
-	}
-
-    @param userId the userId to set
 	
-	public void setUser(User user) {
-		this.user = user;
-	}
-	*/
-	/*
-	 * @return the matches
-	 */
 	@OneToMany
 	@JsonIgnore
 	public List<Match> getMatches() {
