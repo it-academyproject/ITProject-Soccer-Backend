@@ -28,17 +28,21 @@ public class PlayerActionsController {
 
 	//Get playerActions by player id and match id (TO DO)
 	@GetMapping("/match/{id2}")
-	HashMap<String,Object> getPlayerActionsByPlayerIdInMatch(@RequestBody PlayerActionsJson p){
+	HashMap<String,Object> getPlayerActionsByPlayerIdInMatch(@RequestParam String id, @RequestParam String id2 ){
 		HashMap<String,Object> map = new HashMap<>();
-		PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(p.getPlayerId(), p.getMatchId());
+		map = dataForPlayerActions.verifyIds(id, id2, map);
 
-		if (playerActions != null) {
-			map.put("success", true);
-			map.put("player actions: ", playerActions);
-			map.put("message", "get all players");
-		}else {
-			map.put("success", false);
-			map.put("message", "player with id " + p.getPlayerId() + " or match with id "+ p.getMatchId() + " not found ");
+		if ( map.size() == 0) {
+			PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(Long.parseLong(id), Long.parseLong(id2));
+
+			if (playerActions != null) {
+				map.put("success", true);
+				map.put("player actions: ", playerActions);
+				map.put("message", "get all players");
+			} else {
+				map.put("success", false);
+				map.put("message", "player with id " + id + " or match with id " + id2 + " not found ");
+			}
 		}
 		return map;
 	}

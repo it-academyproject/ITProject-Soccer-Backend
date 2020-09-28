@@ -2,6 +2,8 @@ package com.itacademy.soccer.game;
 
 import com.itacademy.soccer.dto.PlayerActions;
 
+import java.util.HashMap;
+
 public class DataForPlayerActions {
 
     public int getOnePlayerActionsInOneMatch(PlayerActions playerActions, String action){
@@ -20,5 +22,17 @@ public class DataForPlayerActions {
                             if ( action.equalsIgnoreCase("saves")) data = playerActions.getSaves();
                                 else return 0;
         return data;
+    }
+    public HashMap<String,Object> verifyIds(String ids, String id2, HashMap<String, Object> map){
+        Long id;
+        try{
+            id = Long.parseLong( ids );
+
+            if ( id2 != null) id = Long.parseLong( id2 );
+        }catch (Exception e){
+            map.put("success", false);
+            map.put("message", "Incorrect data Id  " );
+        }
+        return map;
     }
 }
