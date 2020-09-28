@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/stadium")
+@RequestMapping("/api/stadiums")
 public class StadiumController {
 
     @Qualifier("IStadiumService")
@@ -134,14 +134,14 @@ public class StadiumController {
         return map;
     }
 
-    @DeleteMapping("/{id}")
-    public HashMap<String,Object> deleteStadium(@PathVariable String id){
+    @DeleteMapping
+    public HashMap<String,Object> deleteStadium(@RequestBody StadiumJson id){
         map.clear();
-        map = verifyDataStadium.verifyIds(id, map);
+        map = verifyDataStadium.verifyIds(id.getId(), map);
 
         if ( map.size() == 0) {
             try {
-                iStadiumService.deleteById(Long.parseLong( id ));
+                iStadiumService.deleteById(Long.parseLong( id.getId() ));
                 map.put("success", true);
                 map.put("message", HttpStatus.OK);
             } catch (Exception e) {
