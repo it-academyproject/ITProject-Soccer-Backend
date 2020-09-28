@@ -97,31 +97,39 @@ public class PlayerActionsController {
 
 		return map;
 	}
+//	@RequestMapping(
+//			value = "/match/{id2}/lineup",
+//
+//			method = {RequestMethod.GET, RequestMethod.PUT})
 	@PutMapping("/match/{id2}/lineup")
 	HashMap<String,Object> postLineUpInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
 		// condicional verifica entrada de LINEUP
 		if ( p.getAction().equals("KEEPER") || p.getAction().equals("DEFENDER") || p.getAction().equals("MIDFIELDER") || p.getAction().equals("FORWARD")){
 			Lineup lineup = Lineup.valueOf(p.getAction());
-			try {
-				PlayerActions playerActionsById = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(p.getPlayerId(), p.getMatchId());
+			map = dataForPlayerActions.verifyIds(p.getPlayerId(), p.getMatchId(), map);
 
-				if (playerActionsById != null) {
-					playerActionsById.setLineup(lineup);
-					map.put("success", true);
-					map.put("player_id ", playerActionsById.getId().getPlayerId());
-					map.put("match_id", playerActionsById.getId().getMatchId());
-					map.put("lineUp ", playerActionsById.getLineup());
-					map.put("message", "LineUp modified");
-					playerActionsServiceImpl.save(playerActionsById);
-				} else {
+			if (map.size() == 0) {
+				try {
+					PlayerActions playerActionsById = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(Long.parseLong(p.getPlayerId()), Long.parseLong(p.getMatchId()));
+
+					if (playerActionsById != null) {
+						playerActionsById.setLineup(lineup);
+						map.put("success", true);
+						map.put("player_id ", playerActionsById.getId().getPlayerId());
+						map.put("match_id", playerActionsById.getId().getMatchId());
+						map.put("lineUp ", playerActionsById.getLineup());
+						map.put("message", "LineUp modified");
+						playerActionsServiceImpl.save(playerActionsById);
+					} else {
+						map.put("success", false);
+						map.put("message", "player with id " + p.getPlayerId() + " or match with id " + p.getMatchId() + " not found ");
+					}
+
+				} catch (Exception e) {
 					map.put("success", false);
-					map.put("message", "player with id " + p.getPlayerId() + " or match with id " + p.getMatchId() + " not found ");
+					map.put("message", "something went wrong: " + e.getMessage());
 				}
-
-			} catch (Exception e) {
-				map.put("success", false);
-				map.put("message", "something went wrong: " + e.getMessage());
 			}
 		}else{
 			map.put("success", false);

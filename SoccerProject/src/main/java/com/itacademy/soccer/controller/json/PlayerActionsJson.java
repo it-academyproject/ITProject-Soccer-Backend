@@ -2,23 +2,23 @@ package com.itacademy.soccer.controller.json;
 
 public class PlayerActionsJson {
 
-    private Long playerId;
-    private Long matchId;
+    private String playerId;
+    private String matchId;
     private String action;
 
     public PlayerActionsJson() {
     }
 
-    public PlayerActionsJson(Long playerId, Long matchId) {
+    public PlayerActionsJson(String playerId, String matchId) {
         this.playerId = playerId;
         this.matchId = matchId;
     }
 
-    public PlayerActionsJson(Long playerId) {
+    public PlayerActionsJson(String playerId) {
         this.playerId = playerId;
     }
 
-    public PlayerActionsJson(Long playerId, Long matchId, String action) {
+    public PlayerActionsJson(String playerId, String matchId, String action) {
         this.playerId = playerId;
         this.matchId = matchId;
         this.action = action;
@@ -33,19 +33,19 @@ public class PlayerActionsJson {
         this.action = action;
     }
 
-    public Long getPlayerId() {
+    public String getPlayerId() {
         return playerId;
     }
 
-    public void setPlayerId(Long playerId) {
+    public void setPlayerId(String playerId) {
         this.playerId = playerId;
     }
 
-    public Long getMatchId() {
+    public String getMatchId() {
         return matchId;
     }
 
-    public void setMatchId(Long matchId) {
+    public void setMatchId(String matchId) {
         this.matchId = matchId;
     }
 }

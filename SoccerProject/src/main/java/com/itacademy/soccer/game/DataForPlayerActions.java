@@ -27,7 +27,6 @@ public class DataForPlayerActions {
         Long id;
         try{
             id = Long.parseLong( ids );
-            System.out.println("vamos a ver ..................................  " + id2);
 
             if ( id2 != null) id = Long.parseLong( id2 );
         }catch (Exception e){
