@@ -18,7 +18,7 @@ import com.itacademy.soccer.service.impl.PlayerActionsServiceImpl;
 import static com.itacademy.soccer.dto.lineup.Lineup.*;
 
 @RestController
-@RequestMapping("/api/playeractions/{id}")
+@RequestMapping("/api/playeraction/{id}")
 public class PlayerActionsController {
 
 	@Autowired
@@ -27,7 +27,7 @@ public class PlayerActionsController {
 	DataForPlayerActions dataForPlayerActions = new DataForPlayerActions();
 
 	//Get playerActions by player id and match id (TO DO)
-	@GetMapping("/matches/{id2}")
+	@GetMapping("/match/{id2}")
 	HashMap<String,Object> getPlayerActionsByPlayerIdInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
 		PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(p.getPlayerId(), p.getMatchId());
@@ -42,7 +42,7 @@ public class PlayerActionsController {
 		}
 		return map;
 	}
-	@GetMapping("/matches/{id2}/{action}")
+	@GetMapping("/match/{id2}/{action}")
 	HashMap<String,Object> getOnePlayerActionsInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
 		PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(p.getPlayerId(), p.getMatchId());
@@ -80,7 +80,7 @@ public class PlayerActionsController {
 		return map;
 	}
 	//TODO no hace nada - Inacabado . put playerActions by playerId and matchId
-	@PutMapping("/matches/{id2}")
+	@PutMapping("/match/{id2}")
 	HashMap<String,Object> putActionsByPlayerId(@RequestBody PlayerActions playerActions, @RequestParam Long playerId, @RequestParam Long matchId){
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("success", true);
@@ -88,7 +88,7 @@ public class PlayerActionsController {
 
 		return map;
 	}
-	@PostMapping("/matches/{id2}/lineup")
+	@PutMapping("/match/{id2}/lineup")
 	HashMap<String,Object> postLineUpInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
 		// condicional verifica entrada de LINEUP
