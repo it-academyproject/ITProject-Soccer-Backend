@@ -144,23 +144,20 @@ public class LeagueController {
 			
 			if (teamSelected != null && leagueSelected != null) {				
 				
-				if (teamSelected.getLeague().getId() != leagueSelected.getId()) {
-					teamSelected.setLeague(leagueSelected);
-					leagueServiceImpl.insertTeamintoLeague(teamSelected);
-					map.put("success", true);
-					map.put("The Team called " + teamSelected.getName() + " with id :" + id + " has signed up for league ", leagueSelected);
-				}else {
-					map.put("success", true);
-					map.put("The Team called " + teamSelected.getName() + " is already in the league ", team.getLeague().getId());
-			
-				}
+					if (teamSelected.getLeague() == null || teamSelected.getLeague().getId() != leagueSelected.getId()) {	
+						
+						teamSelected.setLeague(leagueSelected);						
+						leagueServiceImpl.insertTeamintoLeague(teamSelected);
+						map.put("success", true);
+						map.put("The Team called " + teamSelected.getName() + " with id :" + id + " has signed up for league ", leagueSelected);						
+					}else {
+						map.put("success", true);
+						map.put("The Team called " + teamSelected.getName() + " is already in the league ", team.getLeague().getId());		
+					}	
 				
-			}else {
-					
-				map.put("success", false);
-				
-			}
-			
+			}else {					
+				map.put("success", false);				
+			}			
 			
 		} catch (Exception e) {
 			
