@@ -43,6 +43,7 @@ public class Team {
 	
 	@OneToOne()
     @JoinColumn(name="league_id")  
+	@JsonIgnore
 	private League league;  //Team Relation One to One with a League
 
 
