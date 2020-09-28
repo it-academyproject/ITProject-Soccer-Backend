@@ -42,14 +42,14 @@ public class StadiumController {
         }
         return map;
     }
-    @GetMapping("/id")
-    HashMap<String,Object> getStadium(@RequestBody StadiumJson s){
+    @GetMapping("/{id}")
+    HashMap<String,Object> getStadium(@PathVariable String id){
         map.clear();
-        map = verifyDataStadium.verifyIds(s, map);
+        map = verifyDataStadium.verifyIds(id, map);
 
         if ( map.size() == 0) {
 
-            Stadium stadium= iStadiumService.findByStadiumId( Long.parseLong(s.getId()));
+            Stadium stadium= iStadiumService.findByStadiumId( Long.parseLong( id ));
 
             if (stadium != null) {
                 map.put("success", true);
@@ -57,7 +57,7 @@ public class StadiumController {
                 map.put("message", "get stadium ");
             } else {
                 map.put("success", false);
-                map.put("message", "there are no stadium whith id: " + s.getId());
+                map.put("message", "there are no stadium whith id: " + id);
             }
             return map;
         }
@@ -113,7 +113,7 @@ public class StadiumController {
     public HashMap<String, Object> addMatch(@RequestBody StadiumJson s) {
         map.clear();
         try{
-            map = verifyDataStadium.verifyIds(s, map);
+         //   map = verifyDataStadium.verifyIds(s, map);
 
             if ( map.size() == 0) {
 //                System.out.println("maravilloso............111.....................");
@@ -134,14 +134,14 @@ public class StadiumController {
         return map;
     }
 
-    @DeleteMapping("/id")
-    public HashMap<String,Object> deleteStadium(@RequestBody StadiumJson s){
+    @DeleteMapping("/{id}")
+    public HashMap<String,Object> deleteStadium(@PathVariable String id){
         map.clear();
-        map = verifyDataStadium.verifyIds(s, map);
+        map = verifyDataStadium.verifyIds(id, map);
 
         if ( map.size() == 0) {
             try {
-                iStadiumService.deleteById(Long.parseLong(s.getId()));
+                iStadiumService.deleteById(Long.parseLong( id ));
                 map.put("success", true);
                 map.put("message", HttpStatus.OK);
             } catch (Exception e) {
