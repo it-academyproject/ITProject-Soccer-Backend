@@ -126,8 +126,8 @@ public class PlayerController {
 	}
 	
 	//edit Aka in player
-	@PutMapping("/{id}")
-	HashMap<String,Object> putPlayersAka(@RequestBody Player player, @PathVariable Long id){
+	@PutMapping
+	HashMap<String,Object> putPlayersAka(@RequestBody Player player, @RequestParam Long id){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
 			Player playerLocalized = playerServiceImpl.playerById(id);
