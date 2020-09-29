@@ -104,7 +104,9 @@ public class BidsController {
 			map.put("bid",json);
 			map.put("success", true);
 			map.put("message", "All working perfectly");
+			
 		}catch(NoSuchElementException e) { //si sale o team no existe
+			
 			map.put("success", false);
 			map.put("message", "Sale with id "+salesId+ " or Team with id "+ teamId +" doesn't exist.");
 		}

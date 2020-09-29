@@ -43,6 +43,7 @@ public class BidServiceImpl implements IBidService{
 		Sale sale = iSaleDAO.findById(saleId).get();
 		bid.setSale(sale);
 		bid.setTeam(team);
+		bid.setTeam_id(team.getId());
 		
 		if (bid.getOperationDate()==null) bid.setOperationDate(new Date()); //si no hay fecha poner la actual
 		
