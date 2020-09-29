@@ -1,4 +1,4 @@
-package com.itacademy.soccer.gameEngine;
+package com.itacademy.soccer.gameEngine.interfaces;
 
 import java.util.Date;
 

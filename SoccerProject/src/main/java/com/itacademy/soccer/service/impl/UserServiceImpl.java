@@ -40,7 +40,25 @@ public class UserServiceImpl implements IUserService {
         user.setTypeUser(TypeUser.ADMIN);
         return iUserDAO.save(user);
     }
-
+    
+    @Override    
+	public User showUserByTeam(Long id) {
+    	
+    	User manager = new User();    	
+    	List<User> users = iUserDAO.findAll();
+    	manager = null;
+    	
+    	for (User user : users) {    	
+    		
+    		if (user.getTeam() != null && user.getTeam().getId() == id) {
+    			manager = iUserDAO.findById(user.getId()).get();
+    		}
+			
+		}
+	   
+    	return manager;
+		
+	}
     // PUTS
 
     @Override
