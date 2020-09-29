@@ -94,13 +94,9 @@ public class PlayerActionsController {
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("success", true);
 		map.put("message", "get all players");
-
 		return map;
 	}
-//	@RequestMapping(
-//			value = "/match/{id2}/lineup",
-//
-//			method = {RequestMethod.GET, RequestMethod.PUT})
+
 	@PutMapping("/matches/{id2}/lineup")
 	HashMap<String,Object> postLineUpInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
