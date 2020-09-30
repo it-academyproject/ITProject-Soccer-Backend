@@ -2,6 +2,7 @@ package com.itacademy.soccer.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.itacademy.soccer.dto.Match;
 
@@ -13,4 +14,5 @@ public interface IMatchService {
 	
 	public Match createMatch( Long localTeamId, Long visitorTeamId, Date date);
 
+	Optional<Match> findById(Long id);
 }
