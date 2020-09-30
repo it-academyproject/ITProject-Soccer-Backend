@@ -116,8 +116,6 @@ public class MatchOperations implements IMatchOperations {
 			if (optionalPlayerAction.isPresent()) { //Java 8
 				PlayerActions playerAction = optionalPlayerAction.get();
 				listMatchPlayerActionsByTeam.add(playerAction);
-				//// print para ver cosas
-				System.out.println(" find id playerMatchId  getId. getMatchId: " + playerAction.getId().getMatchId());
 			}
 
 		}
