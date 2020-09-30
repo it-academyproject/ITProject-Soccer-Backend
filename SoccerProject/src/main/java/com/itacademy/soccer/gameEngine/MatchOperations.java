@@ -152,7 +152,7 @@ public class MatchOperations implements IMatchOperations {
 		
 		for(PlayerActions pa : listPlayerActions ) {
 			
-			PlayerMatchId playerMatchId = pa.getPlayerMatchId();
+			PlayerMatchId playerMatchId = pa.getId();
 			Player player = pa.getPlayer();
 			
 			System.out.println("Player [id="+player.getId()+", name="+player.getName()+
