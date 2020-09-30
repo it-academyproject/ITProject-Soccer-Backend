@@ -127,10 +127,10 @@ public class PlayerController {
 	
 	//edit Aka in player
 	@PutMapping
-	HashMap<String,Object> putPlayersAka(@RequestBody Player player, @RequestParam Long id){
+	HashMap<String,Object> putPlayersAka(@RequestBody Player player){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
-			Player playerLocalized = playerServiceImpl.playerById(id);
+			Player playerLocalized = playerServiceImpl.playerById(player.getId());
 			
 			if (playerLocalized != null) {
 				playerLocalized.setAka(player.getAka());
