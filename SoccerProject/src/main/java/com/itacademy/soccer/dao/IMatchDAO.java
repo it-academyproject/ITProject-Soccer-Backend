@@ -17,8 +17,4 @@ import java.util.Optional;
  */
 public interface IMatchDAO extends JpaRepository<Match, Long> {
 
-    @Override
-    default Optional<Match> findById(Long id){
-        return findById(id);
-    }
 }
