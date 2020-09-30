@@ -23,8 +23,6 @@ public class PlayerActionsJson {
         this.matchId = matchId;
         this.action = action;
     }
-
-
     public String getAction() {
         return action;
     }
