@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name="sale")
 public class Sale {
 	
+	
 	@Id
 	@GeneratedValue( strategy=GenerationType.IDENTITY )
 	private Long id;
@@ -92,4 +93,10 @@ public class Sale {
 		this.bids = bids;
 	}
 	
+	@Override
+	public String toString() {
+		return "Sale [id=" + id + ", limitDate=" + limitDate + ", initialPrice=" + initialPrice + ", player=" + player
+				+ ", bids=" + bids + "]";
+	}
+
 }

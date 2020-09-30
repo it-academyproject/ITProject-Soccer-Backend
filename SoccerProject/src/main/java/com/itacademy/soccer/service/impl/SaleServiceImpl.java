@@ -82,6 +82,7 @@ public class SaleServiceImpl implements ISaleService{
 	}
 
 	//B29 TODO
+	@Override
 	public List<Sale> saleListBetweenDates(Date timeago, Date now) {
 		return iSaleDAO.findByLimitDateIsBetween(timeago, now);
 	}

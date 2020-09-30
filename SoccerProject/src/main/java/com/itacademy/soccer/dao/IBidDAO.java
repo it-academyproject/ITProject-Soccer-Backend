@@ -11,5 +11,5 @@ public interface IBidDAO extends JpaRepository<Bid,Long>{
 
     //TODO B29
     List<Bid> findBySaleIs(Sale sale);
-
+     
 }
