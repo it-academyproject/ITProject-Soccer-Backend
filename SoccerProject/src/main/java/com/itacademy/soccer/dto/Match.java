@@ -6,18 +6,7 @@ package com.itacademy.soccer.dto;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -54,20 +43,26 @@ public class Match {
 	private Team team_visitor;
 
 	@JsonIgnore
+	@ManyToOne (fetch = FetchType.LAZY,  cascade=CascadeType.ALL)
+	@JoinColumn(name="stadium_id")
+	private Stadium stadiumMany;
+
+	@JsonIgnore
 	@OneToOne(mappedBy="match", fetch = FetchType.LAZY) //fetch = FetchType.LAZY resolves error
 														//Hibernate: More than one row with the given identifier was found error
 	private MatchActions match_actions;
-	
+
 //	@OneToMany
 //	@JoinColumn(name="match_id")
 //	private List<PlayerActions> playeractions;
 
 	/////////////// CONSTRUCTORS ///////////////
-	public Match(Long id, Date date, int local_goals, int visitor_goals) {
+	public Match(Long id, Date date, int local_goals, int visitor_goals, Stadium stadiumMany) {
 		this.id = id;
 		this.date = date;
 		this.local_goals = local_goals;
 		this.visitor_goals = visitor_goals;
+		this.stadiumMany = stadiumMany;
 	}
 
 	public Match() {
@@ -162,7 +157,7 @@ public class Match {
 	public void setVisitor_goals(int visitor_goals) {
 		this.visitor_goals = visitor_goals;
 	}
-	
+
 	public MatchActions getMatch_actions() {
 		return match_actions;
 	}
