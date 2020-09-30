@@ -22,12 +22,28 @@ public class PlayerActions {
 	@ManyToOne
 	private Player player;
 	
-	//@MapsId("matchId")
-	//@ManyToOne
-	//private Match match;
+	@MapsId("matchId")
+	@ManyToOne
+	private Match match;
 	
 	
 	
+	public PlayerMatchId getPlayerMatchId() {
+		return playerMatchId;
+	}
+
+	public void setPlayerMatchId(PlayerMatchId playerMatchId) {
+		this.playerMatchId = playerMatchId;
+	}
+
+	public Match getMatch() {
+		return match;
+	}
+
+	public void setMatch(Match match) {
+		this.match = match;
+	}
+
 	private int goals;
 	private int assists;
 	@Column(name="red_cards")
@@ -35,6 +51,7 @@ public class PlayerActions {
 	@Column(name="yellow_cards")
 	private int yellowCards;
 	private int saves;
+
 	private Lineup lineup;
 	
 	//Constructor

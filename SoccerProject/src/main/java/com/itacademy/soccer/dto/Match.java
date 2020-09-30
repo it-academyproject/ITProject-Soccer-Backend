@@ -40,16 +40,21 @@ public class Match {
 
 	@ManyToOne
 	@JoinColumn(name="team_visitor_id")
-	private Team team_visitors;
+	private Team team_visitor;
 
 	@JsonIgnore
 	@ManyToOne (fetch = FetchType.LAZY,  cascade=CascadeType.ALL)
 	@JoinColumn(name="stadium_id")
 	private Stadium stadiumMany;
 
+	@JsonIgnore
+	@OneToOne(mappedBy="match", fetch = FetchType.LAZY) //fetch = FetchType.LAZY resolves error
+														//Hibernate: More than one row with the given identifier was found error
+	private MatchActions match_actions;
+
 //	@OneToMany
+//	@JoinColumn(name="match_id")
 //	private List<PlayerActions> playeractions;
-	// waiting B-19
 
 	/////////////// CONSTRUCTORS ///////////////
 	public Match(Long id, Date date, int local_goals, int visitor_goals, Stadium stadiumMany) {
@@ -131,12 +136,12 @@ public class Match {
 		this.team_local = team_local;
 	}
 
-	public Team getTeam_visitors() {
-		return team_visitors;
+	public Team getTeam_visitor() {
+		return team_visitor;
 	}
 
-	public void setTeam_visitors(Team team_visitors) {
-		this.team_visitors = team_visitors;
+	public void setTeam_visitor(Team team_visitor) {
+		this.team_visitor = team_visitor;
 	}
 
 	/**
@@ -151,6 +156,14 @@ public class Match {
 	 */
 	public void setVisitor_goals(int visitor_goals) {
 		this.visitor_goals = visitor_goals;
+	}
+
+	public MatchActions getMatch_actions() {
+		return match_actions;
+	}
+
+	public void setMatch_actions(MatchActions match_actions) {
+		this.match_actions = match_actions;
 	}
 
 	/**
@@ -173,6 +186,6 @@ public class Match {
 	@Override
 	public String toString() {
 		return "Match [id=" + id + ", timestamp=" + date + ", local_goals=" + local_goals + ", visitors_goals="
-				+ visitor_goals + ", team_local_id=" + team_local.getId() + ", team_visitors_id=" + team_visitors.getId() + "]";
+				+ visitor_goals + ", team_local_id=" + team_local.getId() + ", team_visitors_id=" + team_visitor.getId() + "]";
 	}
 }
