@@ -18,7 +18,7 @@ import com.itacademy.soccer.service.impl.PlayerActionsServiceImpl;
 import static com.itacademy.soccer.dto.lineup.Lineup.*;
 
 @RestController
-@RequestMapping("/api/playeractions/{id}")
+@RequestMapping("/api/playeractions")
 public class PlayerActionsController {
 
 	@Autowired
@@ -27,7 +27,7 @@ public class PlayerActionsController {
 	DataForPlayerActions dataForPlayerActions = new DataForPlayerActions();
 
 	//Get playerActions by player id and match id (TO DO)
-	@GetMapping("/matches/{id2}")
+	@GetMapping("/{id}/matches/{id2}")
 	HashMap<String,Object> getPlayerActionsByPlayerIdInMatch(@PathVariable String id, @PathVariable String id2 ){
 		HashMap<String,Object> map = new HashMap<>();
 		map = dataForPlayerActions.verifyIds(id, id2, map);
@@ -46,7 +46,7 @@ public class PlayerActionsController {
 		}
 		return map;
 	}
-	@GetMapping("/matches/{id2}/{action}")
+	@GetMapping("/{id}/matches/{id2}/{action}")
 	HashMap<String,Object> getOnePlayerActionsInMatch(@PathVariable String id, @PathVariable String id2, @PathVariable String action){
 		HashMap<String,Object> map = new HashMap<>();
 		map = dataForPlayerActions.verifyIds(id, id2, map);
@@ -69,7 +69,7 @@ public class PlayerActionsController {
 		}
 		return map;
 	}
-	@GetMapping()
+	@GetMapping("/{id}")
 	HashMap<String,Object> getPlayerActionsByPlayerIdInAllMatches(@PathVariable String id ){
 		HashMap<String,Object> map = new HashMap<>();
 		map = dataForPlayerActions.verifyIds(id, null, map); // null para aprovechar el mismo método existente
@@ -89,7 +89,7 @@ public class PlayerActionsController {
 		return map;
 	}
 	//TODO no hace nada - Inacabado . put playerActions by playerId and matchId
-	@PutMapping("/matches/{id2}")
+	@PutMapping("/{id}/matches/{id2}")
 	HashMap<String,Object> putActionsByPlayerId(@RequestBody PlayerActions playerActions, @PathVariable Long playerId, @PathVariable Long matchId){
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("success", true);
@@ -97,7 +97,7 @@ public class PlayerActionsController {
 		return map;
 	}
 
-	@PutMapping("/matches/{id2}/lineup")
+	@PutMapping("/matches/lineup")
 	HashMap<String,Object> postLineUpInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
 		// condicional verifica entrada de LINEUP
