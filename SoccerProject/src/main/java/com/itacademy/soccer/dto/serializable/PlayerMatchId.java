@@ -1,6 +1,7 @@
 package com.itacademy.soccer.dto.serializable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Embeddable;
 
@@ -33,6 +34,18 @@ public class PlayerMatchId implements Serializable{
 	public void setMatchId(Long matchId) {
 		this.matchId = matchId;
 	}
-	
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PlayerMatchId that = (PlayerMatchId) o;
+		return playerId.equals(that.playerId) &&
+				matchId.equals(that.matchId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(playerId, matchId);
+	}
 }

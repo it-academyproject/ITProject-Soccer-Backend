@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.itacademy.soccer.dao.IMatchActionsDAO;
@@ -23,7 +24,8 @@ public class MatchOperations implements IMatchOperations {
 
 	@Autowired
 	IMatchDAO iMatchDAO;
-	
+
+	@Qualifier("IPlayerActionsDAO")
 	@Autowired
 	IPlayerActionsDAO iPlayerActionsDAO;
 	
@@ -152,7 +154,7 @@ public class MatchOperations implements IMatchOperations {
 		
 		for(PlayerActions pa : listPlayerActions ) {
 			
-			PlayerMatchId playerMatchId = pa.getPlayerMatchId();
+			PlayerMatchId playerMatchId = pa.getId();
 			Player player = pa.getPlayer();
 			
 			System.out.println("Player [id="+player.getId()+", name="+player.getName()+
