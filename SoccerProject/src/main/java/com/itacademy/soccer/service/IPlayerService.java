@@ -1,6 +1,7 @@
 package com.itacademy.soccer.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.itacademy.soccer.dto.Player;
 
@@ -15,6 +16,9 @@ public interface IPlayerService {
 	public Player playerById(Long playerId);
 	
 	public Player updatePlayer(Player player);
+
+	Optional<Player> findById(Long playerId);
+
 	Player save(Player player);
 
 	void deletePlayerById(Long id);
