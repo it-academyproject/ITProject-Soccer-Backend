@@ -56,6 +56,11 @@ public class PlayerServiceImpl implements IPlayerService{
 	}
 
 	@Override
+	public Optional<Player> findById(Long playerId) {
+		return iPlayerDAO.findById(playerId);
+	}
+
+	@Override
 	public void deletePlayerById(Long id) { iPlayerDAO.deleteById(id);}
 
 }
