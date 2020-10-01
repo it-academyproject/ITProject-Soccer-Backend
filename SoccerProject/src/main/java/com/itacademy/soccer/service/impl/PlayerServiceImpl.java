@@ -2,6 +2,7 @@ package com.itacademy.soccer.service.impl;
 
 import java.util.List;
 
+import com.itacademy.soccer.controller.json.PlayerJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +41,12 @@ public class PlayerServiceImpl implements IPlayerService{
 	}
 
 	@Override
-	public Player updatePlayer(Player player) {
-		return iPlayerDAO.save(player);
+	public Player updatePlayer(PlayerJson player) {
+
+		Player playerLocalized = playerById(Long.parseLong(player.getIdPlayer()));
+		if(player.getAka().length()==0) playerLocalized.setAka(null);
+		else playerLocalized.setAka(player.getAka());
+		return iPlayerDAO.save(playerLocalized);
 	}
 
 	@Override

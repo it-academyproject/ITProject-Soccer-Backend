@@ -3,8 +3,11 @@ package com.itacademy.soccer.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import com.itacademy.soccer.controller.json.PlayerJson;
 import com.itacademy.soccer.game.VerifyDataPlayer;
+import org.dom4j.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.itacademy.soccer.dto.Player;
@@ -127,27 +130,19 @@ public class PlayerController {
 	
 	//edit Aka in player
 	@PutMapping
-	HashMap<String,Object> putPlayersAka(@RequestBody Player player){
+	HashMap<String,Object> putPlayersAka(@RequestBody PlayerJson player){
 		HashMap<String,Object> map = new HashMap<>();
+
 		try {
-			Player playerLocalized = playerServiceImpl.playerById(player.getId());
-			
-			if (playerLocalized != null) {
-				playerLocalized.setAka(player.getAka());
-				map.put("success", true);
-				map.put("player with new Aka", playerLocalized);
-				map.put("message", "AKA modified");
-				playerServiceImpl.save(playerLocalized);
-			}else {
-				map.put("success", false);
-				map.put("message", "player with id " + player.getId() + " not found and aka not changed");
-				
-				//throw new Exception();
-			}
+			Player updatedPlayer = playerServiceImpl.updatePlayer(player);
+
+			map.put("success", true);
+			map.put("player with new Aka", playerServiceImpl.playerById(updatedPlayer.getId()));
+			map.put("message", "AKA modified");
 		}
 		catch (Exception e) {
 			map.put("success", false);
-			map.put("message", "something went wrong: " + e.getMessage());
+			map.put("message", "something went wrong: It seems Player with Id "+player.getIdPlayer() +" does not exist");
 		}
 				
 		return map;
