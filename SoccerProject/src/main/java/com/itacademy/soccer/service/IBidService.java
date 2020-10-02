@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.itacademy.soccer.dto.Bid;
 import com.itacademy.soccer.dto.Sale;
+import com.itacademy.soccer.dto.Team;
 
 public interface IBidService {
 
@@ -25,5 +26,7 @@ public interface IBidService {
 	public List<Bid> getBidsBySale (Sale sale);
 
 	public List<Bid> getAllBids();
+
+	public List<Bid> getBidsByTeams(Team team);
 
 }

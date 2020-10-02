@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.itacademy.soccer.dto.Bid;
 import com.itacademy.soccer.dto.Sale;
+import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.IStatService;
 
 @Service
@@ -21,6 +22,10 @@ public class StatServiceImpl implements IStatService {
 	
 	@Autowired
 	BidServiceImpl bidServiceImpl;
+	
+	@Autowired
+	TeamServiceImpl teamServiceImpl;
+	
 
 	@Override	
 	public Date initDateInterval(Long id) {
@@ -115,14 +120,57 @@ public class StatServiceImpl implements IStatService {
 	}
 
 	@Override
-	public Map<Object, Integer> sortMapbyBids(HashMap<Object, Integer> countBidsSales) {
+	public Map<Object, Integer> sortMapbyValue(HashMap<Object, Integer> sortMap) {
 		
-		Map<Object, Integer> sortCountBidsSales = countBidsSales.entrySet()
+		Map<Object, Integer> sortMapValue = sortMap.entrySet()
         .stream()
         .sorted((Map.Entry.<Object, Integer>comparingByValue().reversed()))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-		return sortCountBidsSales;
+		return sortMapValue;
+	}
+
+	@Override
+	public HashMap<Object, Integer> getBidsperTeams(List<Bid> allBids) {
+		
+		HashMap<Object,Integer> countBidsTeams = new HashMap<>();
+		
+		List<Team> allTeams = teamServiceImpl.getAllTeams();
+		
+		for (Team team : allTeams) {
+			
+			List<Bid> bidsTeam = bidServiceImpl.getBidsByTeams(team);
+			
+			if(bidsTeam.size()<0) {
+				
+				countBidsTeams.put(team , 0);			
+				
+			}else {				
+					
+				countBidsTeams.put(team, bidsTeam.size());
+			}		
+		}
+		
+	
+		return countBidsTeams;
+	}
+
+	@Override
+	public HashMap<Object, Integer> getMostBuyer(HashMap<Object, Integer> countBidsTeams) {
+	
+		HashMap<Object, Integer> mostTeamBids  = new HashMap<>();
+		
+		Map<Object, Integer> sortedByTeams= sortMapbyValue(countBidsTeams);		
+		
+	    Map.Entry<Object, Integer> entry = sortedByTeams.entrySet().iterator().next();
+	    
+	    //devuelve hash si quieres enseñar el total de bids
+	    
+	    mostTeamBids.put(entry.getKey(), entry.getValue());
+	 
+	    
+	//	return (Team)  entry.getKey();
+	    return mostTeamBids;
 	}
 	
 }

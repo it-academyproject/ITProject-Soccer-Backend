@@ -104,4 +104,10 @@ public class BidServiceImpl implements IBidService{
 		
 		return iBidDAO.findAll();
 	}
+
+	@Override
+	public List<Bid> getBidsByTeams(Team team) {
+		
+		return iBidDAO.findByTeamIs(team);
+	}
 }
