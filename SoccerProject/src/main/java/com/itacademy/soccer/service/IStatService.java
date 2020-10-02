@@ -14,5 +14,7 @@ public interface IStatService {
 
 	HashMap<Object, Object> getAverageBidsperSales(List<Sale> allSales);
 
+	HashMap<Object, Integer> getBidsperSales(List<Sale> allSales);
+
 
 }

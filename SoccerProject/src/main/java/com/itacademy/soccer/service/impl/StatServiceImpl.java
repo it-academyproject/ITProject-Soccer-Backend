@@ -82,13 +82,33 @@ public class StatServiceImpl implements IStatService {
 			}else {
 				
 				isales =bidsSale.size();
-				iratio=isales/iTotalBids;					
-				
+				iratio=isales/iTotalBids;			
 				ratio.put("Sale number " + sale.getId() + " from Player " + sale.getPlayer().getAka(), iratio);
 			}			
 		}
 		
 		return ratio;
+	}
+
+	@Override
+	public HashMap<Object, Integer> getBidsperSales(List<Sale> allSales) {
+		
+		HashMap<Object,Integer> countBidsSales = new HashMap<>();
+		
+		for (Sale sale : allSales) {
+			
+			List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);	
+			
+			if(bidsSale.size()<0) {
+				
+				countBidsSales.put(sale.getId() , 0);			
+				
+			}else {				
+					
+				countBidsSales.put(sale.getId(), bidsSale.size());
+			}			
+		}
+		return countBidsSales;
 	}
 	
 }

@@ -1,29 +1,22 @@
 package com.itacademy.soccer.controller;
 
-import java.util.ArrayList;
-import java.util.Calendar;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.NavigableMap;
-import java.util.NoSuchElementException;
-import java.util.TreeMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.itacademy.soccer.controller.json.BidJson;
-import com.itacademy.soccer.dto.Bid;
 import com.itacademy.soccer.dto.Sale;
-import com.itacademy.soccer.service.ISaleService;
 import com.itacademy.soccer.service.impl.BidServiceImpl;
 import com.itacademy.soccer.service.impl.SaleServiceImpl;
 import com.itacademy.soccer.service.impl.StatServiceImpl;
@@ -121,5 +114,30 @@ public class StatsController {
 		return map;
 	}
 	
+	
+	@GetMapping("sales/bids/max")	
+	public HashMap<String,Object> getMaxBidsperSales(){			
+		
+		
+		HashMap<String,Object> map = new HashMap<>();		
+		try {
+			
+			List<Sale> allSales = saleServiceImpl.listAllSales();			
+			HashMap<Object,Integer> countBidsSales = statServiceImpl.getBidsperSales(allSales);	
+			
+			Map<Object, Integer> sortedByCount = countBidsSales.entrySet()
+		                .stream()
+		                .sorted((Map.Entry.<Object, Integer>comparingByValue().reversed()))
+		                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+	   
+			map.put("maximum sales bids  ", sortedByCount);		
+			
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "There were no sales in that period of time, sorry!");
+
+		}
+		return map;
+	}
 
 }
