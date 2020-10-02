@@ -16,5 +16,9 @@ public interface IStatService {
 
 	HashMap<Object, Integer> getBidsperSales(List<Sale> allSales);
 
+	Map<Object, Integer> sortMapbyBids(HashMap<Object, Integer> countBidsSales);
+	
+	
+
 
 }

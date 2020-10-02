@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,6 +112,17 @@ public class StatServiceImpl implements IStatService {
 			}			
 		}
 		return countBidsSales;
+	}
+
+	@Override
+	public Map<Object, Integer> sortMapbyBids(HashMap<Object, Integer> countBidsSales) {
+		
+		Map<Object, Integer> sortCountBidsSales = countBidsSales.entrySet()
+        .stream()
+        .sorted((Map.Entry.<Object, Integer>comparingByValue().reversed()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+		return sortCountBidsSales;
 	}
 	
 }

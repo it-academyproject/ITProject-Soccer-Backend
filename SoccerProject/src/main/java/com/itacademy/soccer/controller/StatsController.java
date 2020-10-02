@@ -123,13 +123,9 @@ public class StatsController {
 		try {
 			
 			List<Sale> allSales = saleServiceImpl.listAllSales();			
-			HashMap<Object,Integer> countBidsSales = statServiceImpl.getBidsperSales(allSales);	
+			HashMap<Object,Integer> countBidsSales = statServiceImpl.getBidsperSales(allSales);				
+			Map<Object, Integer> sortedByCount = statServiceImpl.sortMapbyBids(countBidsSales);
 			
-			Map<Object, Integer> sortedByCount = countBidsSales.entrySet()
-		                .stream()
-		                .sorted((Map.Entry.<Object, Integer>comparingByValue().reversed()))
-		                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-	   
 			map.put("maximum sales bids  ", sortedByCount);		
 			
 		} catch (Exception e) {
@@ -140,4 +136,20 @@ public class StatsController {
 		return map;
 	}
 
+	@GetMapping("sales/bids/buyer/most")	
+	public HashMap<String,Object> getMostBuyer(){	
+		
+		HashMap<String,Object> map = new HashMap<>();		
+		
+		return map;
+	}
+	
+	@GetMapping("sales/bids/seller/most")	
+	public HashMap<String,Object> getMostSeller(){	
+		
+		HashMap<String,Object> map = new HashMap<>();		
+		
+		return map;
+	}
+	
 }
