@@ -2,13 +2,12 @@ package com.itacademy.soccer.controller;
 
 
 import com.itacademy.soccer.controller.json.StadiumJson;
+import com.itacademy.soccer.dao.IStadiumDAO;
 import com.itacademy.soccer.dto.Stadium;
-import com.itacademy.soccer.game.InsertData;
-import com.itacademy.soccer.game.VerifyDataStadium;
 import com.itacademy.soccer.service.IStadiumService;
 import com.itacademy.soccer.service.impl.MatchServiceImpl;
+import com.itacademy.soccer.service.impl.StadiumService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,18 +18,17 @@ import java.util.List;
 @RequestMapping("/api/stadiums")
 public class StadiumController {
 
-    @Qualifier("IStadiumService")
     @Autowired
-    IStadiumService iStadiumService;
+    IStadiumDAO iStadiumDAO;
     @Autowired
     MatchServiceImpl matchServiceImpl;
+    @Autowired
+    StadiumService stadiumService;
     HashMap<String,Object> map = new HashMap<>();
-    VerifyDataStadium verifyDataStadium = new VerifyDataStadium();
-
     @GetMapping
     HashMap<String,Object> getAllStadium(){
         map.clear();
-        List<Stadium> stadiumList = iStadiumService.findAll();
+        List<Stadium> stadiumList = iStadiumDAO.findAll();
 
         if (stadiumList.size() > 0 ) {
             map.put("success", true);
@@ -45,11 +43,11 @@ public class StadiumController {
     @GetMapping("/{id}")
     HashMap<String,Object> getStadium(@PathVariable String id){
         map.clear();
-        map = verifyDataStadium.verifyIds(id, map);
+        map = stadiumService.verifyIds(id, map);
 
         if ( map.size() == 0) {
 
-            Stadium stadium= iStadiumService.findByStadiumId( Long.parseLong( id ));
+            Stadium stadium= iStadiumDAO.findByStadiumId( Long.parseLong( id ));
 
             if (stadium != null) {
                 map.put("success", true);
@@ -67,15 +65,15 @@ public class StadiumController {
     HashMap<String,Object> postStadium(@RequestBody StadiumJson stadium){
         try {
             map.clear();
-            map = verifyDataStadium.verifyStrings(stadium, iStadiumService, map);
-            map = verifyDataStadium.verifyNumericPost(stadium, map);
+            map = stadiumService.verifyStrings(stadium, iStadiumDAO, map);
+            map = stadiumService.verifyNumericPost(stadium, map);
 
             if ( map.size() == 0) {
-                Stadium s = new InsertData().insertStadium(stadium);
+                Stadium s = stadiumService.insertStadium(stadium);
                 map.put("success", true);
                 map.put("stadium ", s);
                 map.put("message", " create stadium");
-                iStadiumService.save(s);
+                iStadiumDAO.save(s);
             }
         }
         catch (Exception e) {
@@ -89,14 +87,14 @@ public class StadiumController {
         map.clear();
 
         try{
-            map = verifyDataStadium.verifyNumericPut(stadium, map);
+            map = stadiumService.verifyNumericPut(stadium, map);
 
-            if (map.size() == 0 ) map = verifyDataStadium.verifyStrings(stadium, iStadiumService, map);
+            if (map.size() == 0 ) map = stadiumService.verifyStrings(stadium, iStadiumDAO, map);
             else return map;
-            Stadium s = new InsertData().putStadium(stadium);
+            Stadium s = stadiumService.putStadium(stadium);
 
             if ( map.size() == 0) {
-                iStadiumService.save(s);
+                iStadiumDAO.save(s);
                 map.put("success", true);
                 map.put("stadium update", s);
                 map.put("message", HttpStatus.OK);
@@ -116,11 +114,9 @@ public class StadiumController {
          //   map = verifyDataStadium.verifyIds(s, map);
 
             if ( map.size() == 0) {
-//                System.out.println("maravilloso............111.....................");
+
 //                Stadium stadium = iStadiumService.findByStadiumId(Long.parseLong(s.getId()));
-//                System.out.println("maravilloso.................2222................"+ s.getId2());
 //                Optional<Match> match = matchServiceImpl.findById(Long.parseLong(s.getId2()));
-//                System.out.println("maravilloso................3333.................");
 //                stadium = new InsertData().addMatch(stadium, match);
 //                iStadiumService.save(stadium);
 //                map.put("success", true);
@@ -137,11 +133,11 @@ public class StadiumController {
     @DeleteMapping
     public HashMap<String,Object> deleteStadium(@RequestBody StadiumJson id){
         map.clear();
-        map = verifyDataStadium.verifyIds(id.getId(), map);
+        map = stadiumService.verifyIds(id.getId(), map);
 
         if ( map.size() == 0) {
             try {
-                iStadiumService.deleteById(Long.parseLong( id.getId() ));
+                iStadiumDAO.deleteById(Long.parseLong( id.getId() ));
                 map.put("success", true);
                 map.put("message", HttpStatus.OK);
             } catch (Exception e) {

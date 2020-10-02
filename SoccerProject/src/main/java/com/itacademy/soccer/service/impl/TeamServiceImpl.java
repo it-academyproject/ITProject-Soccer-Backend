@@ -4,6 +4,7 @@
  */
 package com.itacademy.soccer.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,23 @@ public class TeamServiceImpl implements ITeamService {
 
 	@Autowired
 	ITeamDAO iTeamsDao;
+	@Override
+	public void createTeamInitial(TeamServiceImpl teamService){
+		List<Team> teamsToShow = teamService.getAllTeams();
+		if ( teamsToShow.size() == 0){
+			Team team1 = new Team();
 
+			team1.setName("Free market");
+			team1.setFoundation_date(new Date());
+			team1.setBadge("x");
+			team1.setBudget(0F);
+			team1.setWins(0);
+			team1.setLosses(0);
+			team1.setDraws(0);
+
+			teamService.createTeam(team1);
+		}
+	}
 	@Override
 	public Team createTeam(Team team) {
 		return iTeamsDao.save(team);

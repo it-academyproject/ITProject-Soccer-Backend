@@ -53,4 +53,9 @@ public class PlayerServiceImpl implements IPlayerService{
 	@Override
 	public void deletePlayerById(Long id) { iPlayerDAO.deleteById(id);}
 
+	public Player assignInitialValues(Player player ){
+
+		if (player.getTeam_id() == null) player.setTeam_id(1L);
+		return player;
+	}
 }

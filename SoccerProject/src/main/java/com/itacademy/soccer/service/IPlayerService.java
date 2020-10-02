@@ -22,4 +22,5 @@ public interface IPlayerService {
 	Player save(Player player);
 
 	void deletePlayerById(Long id);
+	Player assignInitialValues(Player player );
 }

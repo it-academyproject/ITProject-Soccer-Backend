@@ -7,6 +7,7 @@ package com.itacademy.soccer.controller;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,18 +81,13 @@ public class MatchController {
 	public HashMap<String, Object> createMatch(@RequestBody MatchJson jsonMatch) {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("success", true);
-				
 		Long localTeamId = jsonMatch.getLocal_team();
 		Long visitorTeamId = jsonMatch.getVisitor_team();
 		Date scheduleDate = jsonMatch.getDate();
-		//System.out.println("Request Date: "+ scheduleDate);
 		
 		try {
-			Match createdMatch = matchServiceImpl.createMatch(
-					localTeamId, visitorTeamId,scheduleDate);
-			
+			Match createdMatch = matchServiceImpl.createMatch( localTeamId, visitorTeamId,scheduleDate);
 			gameEngine.scheduleMatch(createdMatch.getId()); // SCHEDULE ENGINE
-			
 			map.put("success", true);
 			map.put("message", "createdMatch");
 			map.put("match", createdMatch);
@@ -115,12 +111,9 @@ public class MatchController {
 		map.put("success", true);
 				
 		try {
-			
 			gameEngine.playMatch(matchId); // PLAY ENGINE
-			
 			map.put("success", true);
 			map.put("message", "played match");
-			
 		} catch (Exception e) {
 			map.put("success", false);
 			map.put("message", "Match NOT Played ! :" + e.getMessage());

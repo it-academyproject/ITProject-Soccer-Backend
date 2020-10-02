@@ -17,8 +17,4 @@ public interface IPlayerActionsDAO extends JpaRepository<PlayerActions, PlayerMa
 
     List<PlayerActions> findByIdPlayerId (Long playerId);
 
-    @Override
-    default <S extends PlayerActions> S save(S playerActions) {
-        return save(playerActions);
-    }
 }

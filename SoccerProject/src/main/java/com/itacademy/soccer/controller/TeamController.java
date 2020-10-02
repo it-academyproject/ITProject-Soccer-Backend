@@ -7,8 +7,6 @@ package com.itacademy.soccer.controller;
 import java.util.HashMap;
 import java.util.List;
 
-import com.itacademy.soccer.game.VerifyDataPlayer;
-import com.itacademy.soccer.game.VerifyDataTeam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,12 +30,11 @@ public class TeamController {
 
 	@Autowired
 	TeamServiceImpl teamServiceImpl;
-	VerifyDataTeam verifyDataTeam = new VerifyDataTeam();
 
 	@PostMapping
 	public HashMap<String, Object> createTeam(@RequestBody Team team) {
 		HashMap<String, Object> map = new HashMap<>();
-		verifyDataTeam.createTeamInitial(teamServiceImpl);
+		teamServiceImpl.createTeamInitial(teamServiceImpl);
 		try {
 			Team NewlyCreatedTeam = teamServiceImpl.createTeam(team);
 			map.put("success", true);

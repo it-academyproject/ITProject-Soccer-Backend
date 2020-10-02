@@ -2,23 +2,29 @@ package com.itacademy.soccer.dto;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.itacademy.soccer.dto.lineup.Lineup;
 import com.itacademy.soccer.dto.serializable.PlayerMatchId;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name="player_actions")
-public class PlayerActions {
-	
+public class PlayerActions  {
+
 	//Atributes
 	@EmbeddedId
 	private PlayerMatchId id;
-	
+
+	@JsonIgnore
 	@MapsId("playerId")
 	@ManyToOne
 	private Player player;
-	
+
+	@JsonIgnore
 	@MapsId("matchId")
-	@ManyToOne
+	@JoinColumn(name = "matchId")
+	@ManyToOne ( fetch = FetchType.LAZY, optional = false )
 	private Match match;
 	
 	
@@ -40,7 +46,7 @@ public class PlayerActions {
 
 	}
 
-	public PlayerActions(PlayerMatchId id, Player player, int goals, int assists, int fouls, int redCards, int yellowCards, int saves, Lineup lineup) {
+	public PlayerActions(PlayerMatchId id, Player player, int goals, int assists, int fouls, int redCards, int yellowCards, int saves, Lineup lineup, Match match) {
 		this.id = id;
 		this.player = player;
 		this.goals = goals;
@@ -50,9 +56,18 @@ public class PlayerActions {
 		this.yellowCards = yellowCards;
 		this.saves = saves;
 		this.lineup = lineup;
+		this.match = match;
 	}
 //Getters and Setters
 
+
+	public Match getMatch() {
+		return match;
+	}
+
+	public void setMatch(Match match) {
+		this.match = match;
+	}
 
 	public int getFouls() {
 		return fouls;

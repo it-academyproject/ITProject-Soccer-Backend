@@ -3,7 +3,6 @@ package com.itacademy.soccer.controller;
 import java.util.HashMap;
 import java.util.List;
 
-import com.itacademy.soccer.game.VerifyDataPlayer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,6 @@ public class PlayerController {
 
 	@Autowired
 	PlayerServiceImpl playerServiceImpl;
-	VerifyDataPlayer verifyDataPlayer = new VerifyDataPlayer();
 
 	//get all players
 	@GetMapping()
@@ -46,7 +44,7 @@ public class PlayerController {
 	@PostMapping()
 	public HashMap<String, Object> createPlayer(@RequestBody Player player) {
 		HashMap<String, Object> map = new HashMap<>();
-		player = verifyDataPlayer.assignInitialValues(player);
+		player = playerServiceImpl.assignInitialValues(player);
 		try {
 			Player NewlyCreatedPlayer = playerServiceImpl.save(player);
 			map.put("success", true);
