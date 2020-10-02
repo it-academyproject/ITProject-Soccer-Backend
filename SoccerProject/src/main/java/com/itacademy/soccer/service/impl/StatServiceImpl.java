@@ -10,7 +10,7 @@ import com.itacademy.soccer.service.IStatService;
 @Service
 public class StatServiceImpl implements IStatService {
 	
-	@Override
+/*	@Override
 	public Date initDateInterval(Date today, Long days) {
 		
 		Calendar c = Calendar.getInstance();
@@ -18,6 +18,18 @@ public class StatServiceImpl implements IStatService {
 		c.add(Calendar.DATE, (int) -days);		
 
 		return  c.getTime();
+	}*/
+
+	@Override	
+	public Date initDateInterval(Long id) {
+		Date now = new Date();
+		
+		Calendar c = Calendar.getInstance();
+		c.setTime(now);		
+		c.add(Calendar.DATE, (int) -id);		
+
+		return  c.getTime();
+	
 	}
 
 }

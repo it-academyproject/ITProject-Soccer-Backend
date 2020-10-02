@@ -81,9 +81,11 @@ public class SaleServiceImpl implements ISaleService{
 		iSaleDAO.deleteById(saleId);
 	}
 
-	//B29 TODO
+		
 	@Override
-	public List<Sale> saleListBetweenDates(Date timeago, Date now) {
-		return iSaleDAO.findByLimitDateIsBetween(timeago, now);
+	public List<Sale> saleListBetweenDates(Date initialDate) {
+		Date now = new Date();
+		return iSaleDAO.findByLimitDateIsBetween(initialDate, now);
+	
 	}
 }

@@ -1,5 +1,6 @@
 package com.itacademy.soccer.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,15 +45,42 @@ public class StatsController {
 	@Autowired
 	StatServiceImpl statServiceImpl;
 	
-
-	//B29 TODO List Sales stadistics
-	
-	
-	@GetMapping("sales/bids/period/{id}/successful")
-	public HashMap<String,Object> getSalesStats(@PathVariable Long id){	
+		
+	@GetMapping("sales/bids/days/{id}/successful")
+	public HashMap<String,Object> getSalesStatsOK(@PathVariable Long id){	
 		
 		
 		HashMap<String,Object> map = new HashMap<>();
+		
+		HashMap<Object,Object> salewithBids = new HashMap<>();
+		
+		try {
+			
+			Date initialDate = statServiceImpl.initDateInterval(id);			
+			List<Sale> allSalesPeriod = saleServiceImpl.saleListBetweenDates(initialDate);			
+			
+			for (Sale sale : allSalesPeriod) {
+				
+				List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);	
+					
+				if (bidsSale.size()>0) {					
+					salewithBids.put("Sale " + sale.getId(),bidsSale);					
+				}
+									
+			}
+			
+			map.put("total of Sale with BIDS is : ", salewithBids.size());		
+			map.put("There the follow Sales with Bids for last "+ id +" days", salewithBids);				
+
+		} catch (Exception e) {
+			
+			map.put("success", false);
+			map.put("message", "There were no sales in that period of time, sorry!");
+
+		}
+		
+		
+		/*
 		
 		//This map stores the number of bids per active sales
 		HashMap<Sale,Integer> salestats = new HashMap<>();
@@ -61,14 +89,14 @@ public class StatsController {
 		try {
 
 			Date today = new Date();			
-			Date period;
+			Date initialDate;
 			Long days = id;		
 			
 			// convert date to calendar to get period of time asked			
-			period = statServiceImpl.initDateInterval(today,days);			
+			initialDate = statServiceImpl.initDateInterval(today,days);			
 	
 					
-			List<Sale> allSalesPeriod = saleServiceImpl.saleListBetweenDates(period,today);
+			List<Sale> allSalesPeriod = saleServiceImpl.saleListBetweenDates(initialDate,today);
 
 			// get the number of bid per sale in hashmap called salestats with sale as key and number of bids as value, if there are zero bids then the sale failed
 			for (Sale tempsale : allSalesPeriod) {
@@ -142,7 +170,44 @@ public class StatsController {
 			map.put("success", false);
 			map.put("message", "something went wrong: " + e.getMessage());
 		}
+*/
+		
+		return map;
+	}
+	
+	@GetMapping("sales/bids/days/{id}/failed")
+	
+	public HashMap<String,Object> getSalesStatsKO(@PathVariable Long id){	
+		
+		
+		HashMap<String,Object> map = new HashMap<>();
+		List<Sale> saleNoBids= new ArrayList<>();
+		
+		try {
+			
+			Date initialDate = statServiceImpl.initDateInterval(id);			
+			List<Sale> allSalesPeriod = saleServiceImpl.saleListBetweenDates(initialDate);			
+			
+			for (Sale sale : allSalesPeriod) {
+				
+				List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);	
+					
+				if (bidsSale.size()==0) {					
+					saleNoBids.add(sale);					
+				}
+									
+			}
+			
+			map.put("total of Sale without BIDS is : ", saleNoBids.size());		
+			map.put("There the follow Sales without Bids for last "+ id +" days", saleNoBids);				
 
+		} catch (Exception e) {
+			
+			map.put("success", false);
+			map.put("message", "There were no sales in that period of time, sorry!");
+
+		}
+		
 		return map;
 	}
 
