@@ -3,6 +3,7 @@ package com.itacademy.soccer.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.itacademy.soccer.dto.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ public class BidServiceImpl implements IBidService{
 		Sale sale = iSaleDAO.findById(saleId).get();
 		bid.setSale(sale);
 		bid.setTeam(team);
+		bid.setTeam_id(team.getId());
 		
 		if (bid.getOperationDate()==null) bid.setOperationDate(new Date()); //si no hay fecha poner la actual
 		
@@ -87,4 +89,12 @@ public class BidServiceImpl implements IBidService{
 		
 	}
 
+	//TODO B29
+	@Override
+	public Bid save(Bid bid) {
+		return iBidDAO.save(bid);
+	}
+
+	@Override
+	public List<Bid> getBidsBySale (Sale sale)  { return iBidDAO.findBySaleIs(sale);}
 }

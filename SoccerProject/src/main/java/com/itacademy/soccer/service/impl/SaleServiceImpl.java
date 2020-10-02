@@ -1,6 +1,7 @@
 package com.itacademy.soccer.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,4 +81,9 @@ public class SaleServiceImpl implements ISaleService{
 		iSaleDAO.deleteById(saleId);
 	}
 
+	//B29 TODO
+	@Override
+	public List<Sale> saleListBetweenDates(Date timeago, Date now) {
+		return iSaleDAO.findByLimitDateIsBetween(timeago, now);
+	}
 }
