@@ -35,7 +35,7 @@ public class Sale {
 	private float initialPrice;
 
 	@ManyToOne
-	@JoinColumn(name="player_id")
+	@JoinColumn(name="player_id")	
 	private Player player;
 
 	@OneToMany

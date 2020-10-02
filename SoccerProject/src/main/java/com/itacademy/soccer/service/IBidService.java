@@ -19,8 +19,11 @@ public interface IBidService {
 	
 	public void deleteLastBidBySale(Long saleId) throws Exception; //Elimina la última puja (más reciente)
 
-	//TODO B29
+
 	public Bid save(Bid bid);
+	
 	public List<Bid> getBidsBySale (Sale sale);
+
+	public List<Bid> getAllBids();
 
 }

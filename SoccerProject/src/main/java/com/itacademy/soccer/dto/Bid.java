@@ -25,7 +25,7 @@ public class Bid {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	//TODO B29
+	
 	private Long team_id;
 
 	@Column(name = "bid_price")
@@ -37,9 +37,9 @@ public class Bid {
 
 	@ManyToOne
 	@JoinColumn(name = "sale_id")
+	@JsonIgnore
 	private Sale sale;
 
-	//B29
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "team_id", insertable = false, updatable = false)
 	@JsonIgnore
