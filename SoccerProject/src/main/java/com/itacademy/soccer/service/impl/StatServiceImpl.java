@@ -168,14 +168,10 @@ public class StatServiceImpl implements IStatService {
 		    		
 		    		bidsPlayer.put(sale.getPlayer().getId(), entry.getValue());
 		    	}
-				
-			}
-		  
+			}		  
 		}
 	
-		
-		return bidsPlayer;
-	
+		return bidsPlayer;	
 	}
 	
 
@@ -202,21 +198,13 @@ public class StatServiceImpl implements IStatService {
 	public HashMap<Object, Integer> getMostSeller(HashMap<Object, Integer> bidsPlayer) {
 	
 		LinkedHashMap<Object, Integer> mostPlayerBids  = new LinkedHashMap<Object, Integer>();		
-		
-	//	List<Sale> allSales = saleServiceImpl.listAllSales();			
-	//	HashMap<Object,Integer> countBidsSales = getBidsperSales(allSales);				
 		HashMap<Object, Integer> sortedByBids = sortMapbyValue(bidsPlayer);
 	
-		
-		
 		Integer bigvalue = (Integer) sortedByBids.entrySet().stream().max((a,b) -> a.getValue().compareTo(b.getValue())).get().getValue();
 		
 		System.out.println(bidsPlayer);
 		
 		for (Map.Entry<Object, Integer> entry : bidsPlayer.entrySet()) {
-		    
-	//		Team team = (Team) entry.getKey();
-	//	    Integer value = entry.getValue();
 		    
 		    if(entry.getValue().equals(bigvalue)) {
 		    	mostPlayerBids.put(entry.getKey(), entry.getValue());				

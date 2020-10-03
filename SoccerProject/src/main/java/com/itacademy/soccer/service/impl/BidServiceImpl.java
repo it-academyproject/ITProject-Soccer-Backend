@@ -89,7 +89,7 @@ public class BidServiceImpl implements IBidService{
 		
 	}
 
-	//TODO B29
+
 	@Override
 	public Bid save(Bid bid) {
 		return iBidDAO.save(bid);
@@ -111,7 +111,4 @@ public class BidServiceImpl implements IBidService{
 		return iBidDAO.findByTeamIs(team);
 	}
 
-/*	public List<Bid> getBidsByPlayer(Player player) {
-		return iBidDAO.findByPlayerIs(player);
-	}*/
 }

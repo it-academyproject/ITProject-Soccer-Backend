@@ -49,7 +49,7 @@ public class Bid {
 
 	}
 
-	//B29
+	
 	public Bid(Long id, Long team_id, float bidPrice, Date operationDate, Sale sale, Team team) {
 		this.id = id;
 		this.team_id = team_id;
@@ -107,7 +107,7 @@ public class Bid {
 		this.team = team;
 	}
 
-	//B29
+
 	public Long getTeam_id() {
 		return team_id;
 	}
