@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itacademy.soccer.dto.Bid;
+import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Sale;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.impl.BidServiceImpl;
+import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 import com.itacademy.soccer.service.impl.SaleServiceImpl;
 import com.itacademy.soccer.service.impl.StatServiceImpl;
 import com.itacademy.soccer.service.impl.TeamServiceImpl;
@@ -42,7 +44,9 @@ public class StatsController {
 	@Autowired
 	StatServiceImpl statServiceImpl;
 	
-		
+	@Autowired
+	PlayerServiceImpl playerServiceImpl;
+	
 	@GetMapping("sales/bids/days/{id}/successful")
 	public HashMap<String,Object> getSalesStatsOK(@PathVariable Long id){			
 		
@@ -127,7 +131,7 @@ public class StatsController {
 			
 			List<Sale> allSales = saleServiceImpl.listAllSales();			
 			HashMap<Object,Integer> countBidsSales = statServiceImpl.getBidsperSales(allSales);				
-			Map<Object, Integer> sortedByCount = statServiceImpl.sortMapbyValue(countBidsSales);
+			HashMap<Object, Integer> sortedByCount = statServiceImpl.sortMapbyValue(countBidsSales);
 			
 			map.put("maximum sales bids  ", sortedByCount);		
 			
@@ -139,38 +143,62 @@ public class StatsController {
 		return map;
 	}
 
-	@GetMapping("sales/bids/buyer/most")	
-	public HashMap<String,Object> getMostBuyer(){	
+	@GetMapping("sales/bids/teams/buyer/most")	
+	public HashMap<Object,Object> getMostBuyer(){	
 		
-		HashMap<String,Object> map = new HashMap<>();	
+		HashMap<Object,Object> map = new HashMap<>();				
+		try {
+			List<Bid> allBids = bidServiceImpl.getAllBids();
+			HashMap<Object, Integer> countBidsTeams = statServiceImpl.getBidsperTeams(allBids);		
 			
+			HashMap<Object, Integer>  mostBuyer = statServiceImpl.getMostBuyer(countBidsTeams);		
+		  
+			map.put( "The Most Teams Buyer " , " with numbers of BIDS" );						
+			
+			for (Map.Entry<Object, Integer> buyer : mostBuyer.entrySet()) {
+			    
+				Team team = (Team) buyer.getKey();
+			    Integer value = buyer.getValue();			
+			    map.put( team.getId(), value );		
+			}
+			
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "There were no sales in that period of time, sorry!");
+		}
+		return map;
+	}
+	
+	
+	@GetMapping("sales/bids/players/seller/most")	
+	public HashMap<Object,Object> getMostSeller(){
+		
+		HashMap<Object,Object> map = new HashMap<>();		
 		try {
 			
-			List<Bid> allBids = bidServiceImpl.getAllBids();
-			HashMap<Object, Integer> countBidsTeams = statServiceImpl.getBidsperTeams(allBids);	
+			List<Player> allPlayers = playerServiceImpl.playerList();
 			
-			HashMap<Object, Integer>  mostBuyer = statServiceImpl.getMostBuyer(countBidsTeams);			
-		
-	//		Team mostTeamBuyer =  mostBuyer.;
-			Collection<Integer> bids = mostBuyer.values();
+			HashMap<Object, Integer> countBidsSeller = statServiceImpl.getBidsperPlayers(allPlayers);
 			
-			map.put("most Buyer" ,mostBuyer );
-		//	map.put("The Most Buyer Teams is  " + mostBuyer.getId() + " named " + mostBuyer.getName() + "with one total of Bids ", countBidsTeams.size());
+			HashMap<Object, Integer>  mostSeller = statServiceImpl.getMostSeller(countBidsSeller);		
 			
-
+			System.out.println("hahmap seller"+ mostSeller);
+					
+			map.put( "The Most Player Seller " , " with numbers of BIDS" );				
+			
+			for (Map.Entry<Object, Integer> seller : mostSeller.entrySet()) {
+			    
+				Object idPlayer = seller.getKey();
+			    Integer value = seller.getValue();			
+			    map.put( idPlayer, value );		
+			}			
+	
+			
 		} catch (Exception e) {
 			map.put("success", false);
 			map.put("message", "There were no sales in that period of time, sorry!");
 
 		}
-		return map;
-	}
-	
-	@GetMapping("sales/bids/seller/most")	
-	public HashMap<String,Object> getMostSeller(){	
-		
-		HashMap<String,Object> map = new HashMap<>();		
-		
 		return map;
 	}
 	

@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itacademy.soccer.dto.Bid;
+import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Sale;
 import com.itacademy.soccer.dto.Team;
+import com.itacademy.soccer.service.ISaleService;
 import com.itacademy.soccer.service.IStatService;
 
 @Service
@@ -26,6 +28,11 @@ public class StatServiceImpl implements IStatService {
 	@Autowired
 	TeamServiceImpl teamServiceImpl;
 	
+	@Autowired
+	PlayerServiceImpl playerServiceImpl;
+	
+	@Autowired
+	SaleServiceImpl saleServiceImpl;
 
 	@Override	
 	public Date initDateInterval(Long id) {
@@ -50,6 +57,17 @@ public class StatServiceImpl implements IStatService {
 								
 		}
 		return saleNoBids;
+	}
+	
+	@Override
+	public HashMap<Object, Integer> sortMapbyValue(HashMap<Object, Integer> sortMap) {
+		
+		HashMap<Object, Integer> sortMapValue = sortMap.entrySet()
+        .stream()
+        .sorted((Map.Entry.<Object, Integer>comparingByValue().reversed()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+		return sortMapValue;
 	}
 
 	
@@ -101,76 +119,111 @@ public class StatServiceImpl implements IStatService {
 	@Override
 	public HashMap<Object, Integer> getBidsperSales(List<Sale> allSales) {
 		
-		HashMap<Object,Integer> countBidsSales = new HashMap<>();
-		
-		for (Sale sale : allSales) {
-			
-			List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);	
-			
-			if(bidsSale.size()<0) {
-				
-				countBidsSales.put(sale.getId() , 0);			
-				
-			}else {				
-					
+		HashMap<Object,Integer> countBidsSales = new HashMap<>();		
+		for (Sale sale : allSales) {			
+			List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);				
+			if(bidsSale.size()<0) {				
+				countBidsSales.put(sale.getId() , 0);					
+			}else {								
 				countBidsSales.put(sale.getId(), bidsSale.size());
 			}			
 		}
 		return countBidsSales;
 	}
 
-	@Override
-	public Map<Object, Integer> sortMapbyValue(HashMap<Object, Integer> sortMap) {
-		
-		Map<Object, Integer> sortMapValue = sortMap.entrySet()
-        .stream()
-        .sorted((Map.Entry.<Object, Integer>comparingByValue().reversed()))
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-		return sortMapValue;
-	}
+	
 
 	@Override
-	public HashMap<Object, Integer> getBidsperTeams(List<Bid> allBids) {
-		
-		HashMap<Object,Integer> countBidsTeams = new HashMap<>();
-		
-		List<Team> allTeams = teamServiceImpl.getAllTeams();
-		
-		for (Team team : allTeams) {
-			
-			List<Bid> bidsTeam = bidServiceImpl.getBidsByTeams(team);
-			
-			if(bidsTeam.size()<0) {
-				
-				countBidsTeams.put(team , 0);			
-				
-			}else {				
-					
+	public HashMap<Object, Integer> getBidsperTeams(List<Bid> allBids) {		
+		HashMap<Object,Integer> countBidsTeams = new HashMap<>();		
+		List<Team> allTeams = teamServiceImpl.getAllTeams();		
+		for (Team team : allTeams) {			
+			List<Bid> bidsTeam = bidServiceImpl.getBidsByTeams(team);			
+			if(bidsTeam.size()<0) {				
+				countBidsTeams.put(team , 0);						
+			}else {								
 				countBidsTeams.put(team, bidsTeam.size());
 			}		
-		}
-		
-	
+		}			
 		return countBidsTeams;
 	}
+	
+	@Override
+	public HashMap<Object, Integer> getBidsperPlayers(List<Player> allPlayers) {
+		
+		HashMap<Object, Integer> bidsPlayer=  new HashMap<>();
+		
+		List<Bid> allBids = bidServiceImpl.getAllBids();
+		
+		
+		List<Sale> allSales = saleServiceImpl.listAllSales();
+	
+		HashMap<Object,Integer> countBidsSales = getBidsperSales(allSales);   //has con venta y numBids.
+			
+		for (Map.Entry<Object, Integer> entry : countBidsSales.entrySet()) {
+		    
+		    for (Sale sale : allSales) {
+		    	
+		    	if (sale.getId().equals(entry.getKey())) { //si el id de la lista sales = al id del mapa es que es un registro con bbids
+		    		
+		    		bidsPlayer.put(sale.getPlayer().getId(), entry.getValue());
+		    	}
+				
+			}
+		  
+		}
+	
+		
+		return bidsPlayer;
+	
+	}
+	
 
 	@Override
 	public HashMap<Object, Integer> getMostBuyer(HashMap<Object, Integer> countBidsTeams) {
 	
-		HashMap<Object, Integer> mostTeamBids  = new HashMap<>();
+		LinkedHashMap<Object, Integer> mostTeamBids  = new LinkedHashMap<Object, Integer>();		
+		HashMap<Object, Integer> sortedByBids= sortMapbyValue(countBidsTeams);  
+		Integer bigvalue = (Integer) sortedByBids.entrySet().stream().max((a,b) -> a.getValue().compareTo(b.getValue())).get().getValue();
 		
-		Map<Object, Integer> sortedByTeams= sortMapbyValue(countBidsTeams);		
+		for (Map.Entry<Object, Integer> entry : sortedByBids.entrySet()) {
+		    
+		    
+		    if(entry.getValue().equals(bigvalue)) {
+			    mostTeamBids.put(entry.getKey(), entry.getValue());				
+		    }
+		}
 		
-	    Map.Entry<Object, Integer> entry = sortedByTeams.entrySet().iterator().next();
-	    
-	    //devuelve hash si quieres enseñar el total de bids
-	    
-	    mostTeamBids.put(entry.getKey(), entry.getValue());
-	 
-	    
-	//	return (Team)  entry.getKey();
 	    return mostTeamBids;
+	}
+
+
+	@Override
+	public HashMap<Object, Integer> getMostSeller(HashMap<Object, Integer> bidsPlayer) {
+	
+		LinkedHashMap<Object, Integer> mostPlayerBids  = new LinkedHashMap<Object, Integer>();		
+		
+	//	List<Sale> allSales = saleServiceImpl.listAllSales();			
+	//	HashMap<Object,Integer> countBidsSales = getBidsperSales(allSales);				
+		HashMap<Object, Integer> sortedByBids = sortMapbyValue(bidsPlayer);
+	
+		
+		
+		Integer bigvalue = (Integer) sortedByBids.entrySet().stream().max((a,b) -> a.getValue().compareTo(b.getValue())).get().getValue();
+		
+		System.out.println(bidsPlayer);
+		
+		for (Map.Entry<Object, Integer> entry : bidsPlayer.entrySet()) {
+		    
+	//		Team team = (Team) entry.getKey();
+	//	    Integer value = entry.getValue();
+		    
+		    if(entry.getValue().equals(bigvalue)) {
+		    	mostPlayerBids.put(entry.getKey(), entry.getValue());				
+		    }
+		}
+		
+	    return mostPlayerBids;
 	}
 	
 }
