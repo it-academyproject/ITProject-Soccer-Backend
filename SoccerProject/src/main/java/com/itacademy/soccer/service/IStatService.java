@@ -15,7 +15,7 @@ public interface IStatService {
 
 	HashMap<Object, Object> getSalesStatsOK(List<Sale> allSalesPeriod);
 
-	HashMap<Object, Object> getAverageBidsperSales(List<Sale> allSales);
+	HashMap<Sale, Object> getAverageBidsperSales(List<Sale> allSales);
 
 	HashMap<Object, Integer> sortMapbyValue(HashMap<Object, Integer> sortMap);
 

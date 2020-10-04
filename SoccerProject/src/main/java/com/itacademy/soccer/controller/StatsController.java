@@ -6,9 +6,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,19 +99,24 @@ public class StatsController {
 	
 
 	@GetMapping("sales/bids/average")	
-	public HashMap<String,Object> getAverageBidsperSales(){			
+	public HashMap<Object,Object> getAverageBidsperSales(){			
 		
-		HashMap<String,Object> map = new HashMap<>();		
+		HashMap<Object,Object> map = new HashMap<>();		
 		
 		try {
 			
 			int iTotalBids = bidServiceImpl.getAllBids().size();			
 			List<Sale> allSales = saleServiceImpl.listAllSales();			
-			HashMap<Object,Object> ratio = statServiceImpl.getAverageBidsperSales(allSales);	
+			HashMap<Sale,Object> ratio = statServiceImpl.getAverageBidsperSales(allSales);	
 			
 			map.put("total of BIDS is  ", iTotalBids);		
-			map.put("Average Bids for Sales ", ratio);		
 			
+			Set keys = ratio.keySet();
+		  	for (Iterator i = keys.iterator(); i.hasNext(); ) {		
+		  		
+		          Sale key = (Sale) i.next();		          
+		          map.put(key.getId(), ratio.get(key));
+		  	}
 			
 		} catch (Exception e) {
 			
@@ -123,17 +130,22 @@ public class StatsController {
 	
 	
 	@GetMapping("sales/bids/max")	
-	public HashMap<String,Object> getMaxBidsperSales(){			
+	public HashMap<Object,Object> getMaxBidsperSales(){					
 		
+		HashMap<Object,Object> map = new HashMap<>();	
 		
-		HashMap<String,Object> map = new HashMap<>();		
 		try {
 			
 			List<Sale> allSales = saleServiceImpl.listAllSales();			
-			HashMap<Object,Integer> countBidsSales = statServiceImpl.getBidsperSales(allSales);				
-			HashMap<Object, Integer> sortedByCount = statServiceImpl.sortMapbyValue(countBidsSales);
+			HashMap<Object,Integer> countBidsSales = statServiceImpl.getBidsperSales(allSales);					
+			HashMap<Object, Integer> sortedByCount = statServiceImpl.sortMapbyValue(countBidsSales);	
 			
-			map.put("maximum sales bids  ", sortedByCount);		
+			Set keys = sortedByCount.keySet();
+		  	for (Iterator i = keys.iterator(); i.hasNext(); ) {		
+		  		
+		          Sale key = (Sale) i.next();		          
+		          map.put(key.getId(), sortedByCount.get(key));
+		  	}
 			
 		} catch (Exception e) {
 			map.put("success", false);
@@ -188,9 +200,9 @@ public class StatsController {
 			
 			for (Map.Entry<Object, Integer> seller : mostSeller.entrySet()) {
 			    
-				Object idPlayer = seller.getKey();
+				Player player = (Player) seller.getKey();
 			    Integer value = seller.getValue();			
-			    map.put( idPlayer, value );		
+			    map.put( player.getAka(), value );		
 			}			
 	
 			

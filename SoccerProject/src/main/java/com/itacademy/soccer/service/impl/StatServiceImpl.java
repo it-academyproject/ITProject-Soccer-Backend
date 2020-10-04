@@ -89,9 +89,9 @@ public class StatServiceImpl implements IStatService {
 
 	
 	@Override
-	public HashMap<Object, Object> getAverageBidsperSales(List<Sale> allSales){
+	public HashMap<Sale, Object> getAverageBidsperSales(List<Sale> allSales){
 		
-		HashMap<Object,Object> ratio = new HashMap<>();
+		HashMap<Sale,Object> ratio = new HashMap<>();
 		
 		int iTotalBids = bidServiceImpl.getAllBids().size();
 		double isales,iratio;					
@@ -102,14 +102,13 @@ public class StatServiceImpl implements IStatService {
 			List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);	
 			
 			if(bidsSale.size()<0 && iTotalBids !=0) {
-				
-				ratio.put("Sale number " + sale.getId() + " from Player " + sale.getPlayer().getAka(), 0);			
+				ratio.put(sale , 0);
 				
 			}else {
 				
 				isales =bidsSale.size();
 				iratio=isales/iTotalBids;			
-				ratio.put("Sale number " + sale.getId() + " from Player " + sale.getPlayer().getAka(), iratio);
+				ratio.put(sale, iratio);
 			}			
 		}
 		
@@ -119,13 +118,19 @@ public class StatServiceImpl implements IStatService {
 	@Override
 	public HashMap<Object, Integer> getBidsperSales(List<Sale> allSales) {
 		
-		HashMap<Object,Integer> countBidsSales = new HashMap<>();		
-		for (Sale sale : allSales) {			
-			List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);				
-			if(bidsSale.size()<0) {				
-				countBidsSales.put(sale.getId() , 0);					
-			}else {								
-				countBidsSales.put(sale.getId(), bidsSale.size());
+		HashMap<Object, Integer> countBidsSales = new HashMap<>();		
+		
+		for (Sale sale : allSales) {	
+			
+			List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);	
+			
+			if(bidsSale.size()<0) {		
+				
+				countBidsSales.put(sale , 0);		
+				
+			}else {			
+				
+				countBidsSales.put(sale, bidsSale.size());
 			}			
 		}
 		return countBidsSales;
@@ -153,20 +158,20 @@ public class StatServiceImpl implements IStatService {
 		
 		HashMap<Object, Integer> bidsPlayer=  new HashMap<>();
 		
-		List<Bid> allBids = bidServiceImpl.getAllBids();
-		
-		
+		List<Bid> allBids = bidServiceImpl.getAllBids();		
 		List<Sale> allSales = saleServiceImpl.listAllSales();
 	
-		HashMap<Object,Integer> countBidsSales = getBidsperSales(allSales);   //has con venta y numBids.
+		HashMap<Object, Integer> countBidsSales = getBidsperSales(allSales);   //has con venta y numBids.
+		
+		System.out.println(countBidsSales);
 			
 		for (Map.Entry<Object, Integer> entry : countBidsSales.entrySet()) {
 		    
 		    for (Sale sale : allSales) {
 		    	
-		    	if (sale.getId().equals(entry.getKey())) { //si el id de la lista sales = al id del mapa es que es un registro con bbids
+		    	if (sale.equals(entry.getKey())) { //si el id de la lista sales = al id del mapa es que es un registro con bbids
 		    		
-		    		bidsPlayer.put(sale.getPlayer().getId(), entry.getValue());
+		    		bidsPlayer.put(sale.getPlayer(), entry.getValue());
 		    	}
 			}		  
 		}
