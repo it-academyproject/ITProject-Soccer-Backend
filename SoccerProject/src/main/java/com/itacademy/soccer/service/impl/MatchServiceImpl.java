@@ -77,11 +77,4 @@ public class MatchServiceImpl implements IMatchService {
 		
 		return iMatchDAO.save(matchToSave);
 	}
-
-	@Override
-	public Optional<Match> findById(Long id) {
-		return iMatchDAO.findById(id);
-	}
-
-
 }

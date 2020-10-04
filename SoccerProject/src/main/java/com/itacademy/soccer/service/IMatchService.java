@@ -14,5 +14,4 @@ public interface IMatchService {
 	
 	public Match createMatch( Long localTeamId, Long visitorTeamId, Date date);
 
-	Optional<Match> findById(Long id);
 }
