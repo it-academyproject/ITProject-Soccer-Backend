@@ -50,9 +50,7 @@ public class MatchController {
 			map.put("success", false);
 			map.put("message", "Matches NOT Found ! :" + e.getMessage());
 		}
-
 		return map;
-
 	}
 
 	// A list of all matches of all teams
@@ -69,7 +67,6 @@ public class MatchController {
 			map.put("message", "Matches NOT Found ! :" + e.getMessage());
 		}
 		return map;
-
 	}
 
 	// Create a new match between 2 teams
@@ -96,9 +93,7 @@ public class MatchController {
 			map.put("message", "Match NOT Created ! :" + e.getMessage());
 		}
 		return map;
-
 	}
-
 
 	// TO DO: Only allow acces to ADMIN users
 	// In case match should have been generated but it is not
@@ -119,7 +114,5 @@ public class MatchController {
 			map.put("message", "Match NOT Played ! :" + e.getMessage());
 		}
 		return map;
-
 	}
-	
 }

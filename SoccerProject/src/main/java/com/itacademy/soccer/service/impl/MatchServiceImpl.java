@@ -90,9 +90,6 @@ public class MatchServiceImpl implements IMatchService {
 			playerActionsService.createActionsForPLayers(matchToSave, localTeam.getPlayersList());
 			playerActionsService.createActionsForPLayers(matchToSave, visitorTeam.getPlayersList());
 
-
-			// Call info method
-
 			// ****createMatchAcionsForMatch(matchToSave.getId());
 			logger.info("message: CREATED ACTIONS ...........................................................");
 		}catch (Exception e){

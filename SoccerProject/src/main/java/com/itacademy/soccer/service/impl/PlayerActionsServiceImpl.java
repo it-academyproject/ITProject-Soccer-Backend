@@ -43,9 +43,6 @@ public class PlayerActionsServiceImpl implements IPlayerActionsService{
 			for (Player player : playersList) {
 				initializeActionsInMatch(match, player);
 				// guardar actions tambien en List de player.... inncesario
-//				player.getPlayerActions().add(actions);
-//				iPlayerDAO.save(player);
-				//	iPlayerActionsDAO.save(actions);
 			}
 		}catch (Exception e){
 			e.printStackTrace();
