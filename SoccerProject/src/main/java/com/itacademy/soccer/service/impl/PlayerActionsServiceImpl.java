@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.itacademy.soccer.dto.lineup.Lineup.KEEPER;
+import static com.itacademy.soccer.dto.lineup.Lineup.NOT_ALIGNED;
 
 @Service
 public class PlayerActionsServiceImpl implements IPlayerActionsService{
@@ -64,7 +65,7 @@ public class PlayerActionsServiceImpl implements IPlayerActionsService{
 		actions.setRedCards(0);
 		actions.setYellowCards(0);
 		actions.setSaves(0);
-		actions.setLineup(null);
+		actions.setLineup(NOT_ALIGNED);
 		actions.setPlayer(player);
 		actions.setMatch(match);
 

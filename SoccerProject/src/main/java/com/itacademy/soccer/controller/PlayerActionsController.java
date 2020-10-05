@@ -96,7 +96,7 @@ public class PlayerActionsController {
 	HashMap<String,Object> postLineUpInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
 		// condicional verifica entrada de LINEUP
-		if ( p.getAction().equals("KEEPER") || p.getAction().equals("DEFENDER") || p.getAction().equals("MIDFIELDER") || p.getAction().equals("FORWARD")){
+		if ( p.getAction().equals("KEEPER") || p.getAction().equals("DEFENDER") || p.getAction().equals("MIDFIELDER") || p.getAction().equals("FORWARD") || p.getAction().equals("NOT_ALIGNED")){
 			Lineup lineup = Lineup.valueOf(p.getAction());
 			map = playerActionsService.verifyIds(p.getPlayerId(), p.getMatchId(), map);
 
