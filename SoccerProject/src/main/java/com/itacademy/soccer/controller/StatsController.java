@@ -49,20 +49,16 @@ public class StatsController {
 	@Autowired
 	PlayerServiceImpl playerServiceImpl;
 	
-	@GetMapping("sales/bids/days/{id}/successful")
-	public HashMap<String,Object> getSalesStatsOK(@PathVariable Long id){			
-		
+	
+	@GetMapping("sales/bids/days/{n_day}/successful")
+	public HashMap<String,Object> getSalesStatsOK(@PathVariable Long n_day){			
 		HashMap<String,Object> map = new HashMap<>();		
 		
-		try {
+		try {			
+			List<Sale>  sale_Bids =  statServiceImpl.getSalesStats(n_day, true); 		
 			
-			Date initialDate = statServiceImpl.initDateInterval(id);			
-			List<Sale> allSalesPeriod = saleServiceImpl.saleListBetweenDates(initialDate);				
-			HashMap<Object,Object> salewithBids =  statServiceImpl.getSalesStatsOK(allSalesPeriod); 		
-			
-			
-			map.put("total of Sale with BIDS is : ", salewithBids.size());		
-			map.put("Total of " +salewithBids.size()+ " Sales with Bids for last "+ id +" days", salewithBids);				
+			map.put("Sales : ", sale_Bids.size());		
+			map.put("Total of " + sale_Bids.size()+ " Sales with Bids for last "+ n_day +" days", sale_Bids);				
 
 		} catch (Exception e) {
 			
@@ -73,19 +69,17 @@ public class StatsController {
 		return map;
 	}
 	
-	@GetMapping("sales/bids/days/{id}/failed")	
-	public HashMap<String,Object> getSalesStatsKO(@PathVariable Long id){	
-		
+	
+	
+	@GetMapping("sales/bids/days/{n_day}/failed")	
+	public HashMap<String,Object> getSalesStatsKO(@PathVariable Long n_day){			
 		HashMap<String,Object> map = new HashMap<>();
 		
-		try {
+		try {						
+			List<Sale>  sale_Bids =  statServiceImpl.getSalesStats(n_day, false); 		
 			
-			Date initialDate = statServiceImpl.initDateInterval(id);			
-			List<Sale> allSalesPeriod = saleServiceImpl.saleListBetweenDates(initialDate);				
-			List<Sale> saleNoBids= statServiceImpl.getSalesStatsKO(allSalesPeriod);
-			
-			map.put("total of Sale without BIDS is  ", saleNoBids.size());		
-			map.put("There the follow Sales without Bids for last "+ id +" days", saleNoBids);				
+			map.put("Sales  ", sale_Bids.size());		
+			map.put("There the follow Sales without Bids for last "+ n_day +" days", sale_Bids);				
 
 		} catch (Exception e) {
 			
@@ -155,7 +149,7 @@ public class StatsController {
 		return map;
 	}
 
-	@GetMapping("sales/bids/teams/buyer/most")	
+	@GetMapping("sales/bids/buyer/most")	
 	public HashMap<Object,Object> getMostBuyer(){	
 		
 		HashMap<Object,Object> map = new HashMap<>();				

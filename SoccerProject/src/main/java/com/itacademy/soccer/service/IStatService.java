@@ -10,26 +10,24 @@ import com.itacademy.soccer.dto.Team;
 public interface IStatService {
 
 	Date initDateInterval(Long id);
-
-	List<Sale> getSalesStatsKO(List<Sale> allSalesPeriod);
-
-	HashMap<Object, Object> getSalesStatsOK(List<Sale> allSalesPeriod);
-
-	HashMap<Sale, Object> getAverageBidsperSales(List<Sale> allSales);
-
 	HashMap<Object, Integer> sortMapbyValue(HashMap<Object, Integer> sortMap);
-
-	HashMap<Object, Integer> getBidsperSales(List<Sale> allSales);
-
-	HashMap<Object, Integer> getBidsperTeams(List<Bid> allBids);
 	
+	HashMap<Object, Integer> getBidsperSales(List<Sale> allSales);
+	HashMap<Object, Integer> getBidsperTeams(List<Bid> allBids);	
 	HashMap<Object, Integer> getBidsperPlayers(List<Player> allPlayers);
 	
+	
+	
+	HashMap<Sale, Object> getAverageBidsperSales(List<Sale> allSales);	
 	
 
 	HashMap<Object, Integer> getMostBuyer(HashMap<Object, Integer> countBidsTeams);
 	
-	HashMap<Object, Integer> getMostSeller(HashMap<Object, Integer> countBidsPlayers);
+	HashMap<Object, Integer> getMostSeller(HashMap<Object, Integer> countBidsPlayers);	
+	
+
+	List<Sale> getSalesStats(Long id, boolean state);
+
 	
 	
 

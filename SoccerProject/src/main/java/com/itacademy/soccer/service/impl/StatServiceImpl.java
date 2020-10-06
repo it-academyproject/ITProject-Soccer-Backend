@@ -46,18 +46,43 @@ public class StatServiceImpl implements IStatService {
 	
 	}
 
+	
 	@Override
-	public List<Sale> getSalesStatsKO(List<Sale> allSalesPeriod) {		
-		List<Sale> saleNoBids= new ArrayList<>();	
-		for (Sale sale : allSalesPeriod) {			
-			List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);				
-			if (bidsSale.size()==0) {			
-				saleNoBids.add(sale);					
+	public List<Sale> getSalesStats(Long id, boolean state) {			
+		
+		Date initial_date = initDateInterval(id);			
+		List<Sale> all_sales_period = saleServiceImpl.saleListBetweenDates(initial_date);		
+		
+		List<Sale> sale_no_bids= new ArrayList<>();	
+		List<Sale> sale_yes_bids= new ArrayList<>();		
+		List<Sale> result_sale= new ArrayList<>();	
+		List<Bid> bids_sale = new ArrayList<>();	
+		
+		result_sale=null;
+		
+		for (Sale sale : all_sales_period) {			
+			
+			bids_sale = bidServiceImpl.getBidsBySale(sale);		
+			
+			if (bids_sale.size()>0) {					
+				sale_yes_bids.add(sale);				
+			}else {				
+				sale_no_bids.add(sale);
 			}
-								
+			
 		}
-		return saleNoBids;
+				
+		
+		if (state== true) {			
+			result_sale = sale_yes_bids;				
+		}else {			
+			result_sale = sale_no_bids;		
+		}
+				
+		
+		return result_sale;
 	}
+	
 	
 	@Override
 	public HashMap<Object, Integer> sortMapbyValue(HashMap<Object, Integer> sortMap) {
@@ -70,24 +95,7 @@ public class StatServiceImpl implements IStatService {
 		return sortMapValue;
 	}
 
-	
-	@Override
-	public HashMap<Object, Object> getSalesStatsOK(List<Sale> allSalesPeriod) {
 		
-		HashMap<Object,Object> salewithBids = new HashMap<>();
-		for (Sale sale : allSalesPeriod) {
-			
-			List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);	
-				
-			if (bidsSale.size()>0) {					
-				salewithBids.put("Sale " + sale.getId() + " with player " + sale.getPlayer().getAka() + " for Initial Price : " + sale.getInitialPrice() + " Euros has the follows Bids " ,bidsSale);					
-			}
-								
-		}
-		return salewithBids;
-	}
-
-	
 	@Override
 	public HashMap<Sale, Object> getAverageBidsperSales(List<Sale> allSales){
 		
