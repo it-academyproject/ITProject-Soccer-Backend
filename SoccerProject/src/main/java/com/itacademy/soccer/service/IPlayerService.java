@@ -3,6 +3,7 @@ package com.itacademy.soccer.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.itacademy.soccer.controller.json.PlayerJson;
 import com.itacademy.soccer.dto.Player;
 
 public interface IPlayerService {
@@ -14,8 +15,8 @@ public interface IPlayerService {
 	public Player playerByName(String playerName);
 	
 	public Player playerById(Long playerId);
-	
-	public Player updatePlayer(Player player);
+
+	public Player updatePlayer(PlayerJson player);
 
 	Optional<Player> findById(Long playerId);
 

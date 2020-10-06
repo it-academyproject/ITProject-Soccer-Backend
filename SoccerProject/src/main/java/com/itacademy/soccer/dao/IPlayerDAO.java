@@ -31,9 +31,10 @@ public interface IPlayerDAO extends JpaRepository<Player, Long> {
 
 	List<Player> findByTeamIdAndAttack(Long teamId, int attackTop);
 
+	/*
 	default Optional<Player> findById(Long playerId) {
 		return findById(playerId);
-	}
+	}*/
 
 
 	//Player save (Player player);
