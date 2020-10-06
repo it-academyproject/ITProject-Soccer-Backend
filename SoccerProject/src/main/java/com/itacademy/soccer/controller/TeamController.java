@@ -5,6 +5,7 @@
 package com.itacademy.soccer.controller;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.itacademy.soccer.game.VerifyDataPlayer;
@@ -124,6 +125,25 @@ public class TeamController {
 		} catch (Exception e) {
 			map.put("success", false);
 			map.put("message", "No team deleted! :" + e.getMessage());
+		}
+		return map;
+	}
+
+	@GetMapping(path = "/bests")
+	public LinkedHashMap<String, Object> getTeamsByMaxWLD(){
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+		try{
+			map.put("success", true);
+			map.put("message", "Max W/L/D");
+			map.put("wins", teamServiceImpl.getMaxWinsTeam());
+			map.put("losses", teamServiceImpl.getMaxLossesTeam());
+			map.put("draws", teamServiceImpl.getMaxDrawsTeam());
+
+		}catch (Exception e){
+			map.put("success", false);
+			map.put("message", "error message :" + e.getMessage());
 		}
 		return map;
 	}

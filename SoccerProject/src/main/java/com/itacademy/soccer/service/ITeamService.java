@@ -4,6 +4,7 @@
  */
 package com.itacademy.soccer.service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.itacademy.soccer.dto.Team;
@@ -26,5 +27,10 @@ public interface ITeamService {
 
 	public void deleteOneTeamById(Long id);	
 
+	public List<LinkedHashMap<String, String>> getMaxWinsTeam();
+
+	public List<LinkedHashMap<String, String>> getMaxLossesTeam();
+
+	public List<LinkedHashMap<String, String>> getMaxDrawsTeam();
 
 }
