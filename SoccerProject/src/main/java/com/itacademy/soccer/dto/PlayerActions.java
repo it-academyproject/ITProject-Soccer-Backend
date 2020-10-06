@@ -24,7 +24,7 @@ public class PlayerActions  {
 	@JsonIgnore
 	@MapsId("matchId")
 	@JoinColumn(name = "matchId")
-	@ManyToOne ( fetch = FetchType.LAZY, optional = false )
+	@ManyToOne
 	private Match match;
 	
 	

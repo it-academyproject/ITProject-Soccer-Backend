@@ -77,19 +77,27 @@ public class PlayerActionsServiceImpl implements IPlayerActionsService{
 	}
 	public int getOnePlayerActionsInOneMatch(PlayerActions playerActions, String action){
 		int data = 0;
-
-		if ( action.equalsIgnoreCase("goals")) data = playerActions.getGoals();
-		else
-		if ( action.equalsIgnoreCase("assists")) data = playerActions.getAssists();
-		else
-		if ( action.equalsIgnoreCase("fouls")) data = playerActions.getFouls();
-		else
-		if ( action.equalsIgnoreCase("red_cards")) data = playerActions.getRedCards();
-		else
-		if ( action.equalsIgnoreCase("yellow_cards")) data = playerActions.getYellowCards();
-		else
-		if ( action.equalsIgnoreCase("saves")) data = playerActions.getSaves();
-		else return -1;
+		switch (action){
+			case "goals":
+				data = playerActions.getGoals();
+				break;
+			case "assists":
+				data = playerActions.getAssists();
+				break;
+			case "fouls":
+				data = playerActions.getFouls();
+				break;
+			case "red_cards":
+				data = playerActions.getRedCards();
+				break;
+			case "yellow_cards":
+				data = playerActions.getYellowCards();
+				break;
+			case "saves":
+				data = playerActions.getSaves();
+				break;
+			default: return -1;
+		}
 		return data;
 	}
 	public HashMap<String,Object> verifyIds(String ids, String id2, HashMap<String, Object> map){
