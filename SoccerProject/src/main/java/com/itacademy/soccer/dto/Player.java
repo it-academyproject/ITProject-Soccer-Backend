@@ -26,6 +26,8 @@ public class Player {
 	private int defense;
 	private int pass;
 	private int attack;
+	@Transient
+	private int totalSkills;
 	private Long team_id;
 
 	//Error! duplicated declaration of team object
@@ -136,6 +138,14 @@ public class Player {
 		this.attack = attack;
 	}
 
+	public int getTotalSkills() {
+		return totalSkills;
+	}
+
+	public void setTotalSkills(int totalSkills) {
+		this.totalSkills = totalSkills;
+	}
+
 	public Team getTeam() {
 
 		return team;
@@ -159,6 +169,12 @@ public class Player {
 	public String toString() {
 		return "Player [id=" + id + ", name=" + name + ", age=" + age + ", aka=" + aka + ", keeper=" + keeper
 				+ ", defense=" + defense + ", pass=" + pass + ", attack=" + attack + ", team=" + team + "]";
+	}
+
+	@PostLoad
+	public void calculateTotalSkills (){
+		int calculatedTotalSkills = getPass() + getDefense() + getKeeper() + getAttack();
+		setTotalSkills(calculatedTotalSkills);
 	}
 
 	
