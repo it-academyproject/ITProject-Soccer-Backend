@@ -5,7 +5,6 @@ import java.util.*;
 
 import com.itacademy.soccer.controller.json.StatSaleJson;
 import com.itacademy.soccer.controller.json.StatTeamJson;
-import com.itacademy.soccer.dto.Bid;
 
 import com.itacademy.soccer.dto.Sale;
 

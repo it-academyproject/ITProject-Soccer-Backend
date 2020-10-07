@@ -97,8 +97,7 @@ public class StatServiceImpl implements IStatService {
 			}else {				
 				sale_no_bids.add(sale);
 			}
-		}
-				
+		}				
 		
 		if (state== true) {			
 			result_sale = sale_yes_bids;				
@@ -188,9 +187,7 @@ public class StatServiceImpl implements IStatService {
 	public List<StatTeamJson> getBidsperTeamsJson() {
 		
 		int i_total_bids = bidServiceImpl.getAllBids().size();			
-		
-		List<Bid> all_bids = bidServiceImpl.getAllBids();
-		
+				
 		List<Team> all_teams = teamServiceImpl.getAllTeams();
 		
 		List<StatTeamJson> list_team_bids = new ArrayList<>();
