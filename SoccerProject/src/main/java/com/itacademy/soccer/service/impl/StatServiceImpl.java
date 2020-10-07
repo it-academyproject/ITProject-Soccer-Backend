@@ -78,8 +78,9 @@ public class StatServiceImpl implements IStatService {
 	@Override
 	public List<Sale> getSalesStats(Long id, boolean state) {			
 		
+		Date now = new Date();		
 		Date initial_date = initDateInterval(id);			
-		List<Sale> all_sales_period = saleServiceImpl.saleListBetweenDates(initial_date);		
+		List<Sale> all_sales_period = saleServiceImpl.saleListFromDates(initial_date);		
 		
 		List<Sale> sale_no_bids= new ArrayList<>();	
 		List<Sale> sale_yes_bids= new ArrayList<>();		
@@ -88,16 +89,16 @@ public class StatServiceImpl implements IStatService {
 		
 		result_sale=null;
 		
-		for (Sale sale : all_sales_period) {			
-			
-			bids_sale = bidServiceImpl.getBidsBySale(sale);		
-			
-			if (bids_sale.size()>0) {					
-				sale_yes_bids.add(sale);				
-			}else {				
-				sale_no_bids.add(sale);
+		for (Sale sale : all_sales_period) {		
+		
+				bids_sale = bidServiceImpl.getBidsBySale(sale);
+				
+				if (bids_sale.size()>0) {					
+					sale_yes_bids.add(sale);				
+				}else {				
+					sale_no_bids.add(sale);
+				}
 			}
-		}				
 		
 		if (state== true) {			
 			result_sale = sale_yes_bids;				
@@ -133,7 +134,8 @@ public class StatServiceImpl implements IStatService {
 	@Override
 	public List<StatSaleJson> getBidsperSalesJson() {
 	
-		int i_total_bids = bidServiceImpl.getAllBids().size();			
+		int i_total_bids = bidServiceImpl.getAllBids().size();	
+		Date now = new Date();
 		List<Sale> all_sales = saleServiceImpl.listAllSales();			
 		List<StatSaleJson> list_sale_bids = new ArrayList<>(); 		
 		
@@ -141,21 +143,24 @@ public class StatServiceImpl implements IStatService {
 		
 		for (Sale sale : all_sales) {
 			
-			List<Bid> bids_sale = bidServiceImpl.getBidsBySale(sale);	
-			SaleJson sale_json = new SaleJson();			
+			if (sale.getLimitDate().after(now)) {			
 			
-			sale_json.setId(sale.getId());				
-			sale_json.setLimit_date(sale.getLimitDate());				
-			sale_json.setInitial_price(sale.getInitialPrice());				
-			sale_json.setPlayer_id(sale.getPlayer().getId());		
+				List<Bid> bids_sale = bidServiceImpl.getBidsBySale(sale);	
+				SaleJson sale_json = new SaleJson();			
+			
+				sale_json.setId(sale.getId());				
+				sale_json.setLimit_date(sale.getLimitDate());				
+				sale_json.setInitial_price(sale.getInitialPrice());				
+				sale_json.setPlayer_id(sale.getPlayer().getId());		
 				
-			if(bids_sale.size()<0 && i_total_bids !=0) {
-				stats_json = new StatSaleJson(sale_json,0);
-				list_sale_bids.add(stats_json);				
-			}else {							
-				stats_json = new StatSaleJson(sale_json , bids_sale.size());
-				list_sale_bids.add(stats_json);				
-			}			
+				if(bids_sale.size()<0 && i_total_bids !=0) {
+					stats_json = new StatSaleJson(sale_json,0);
+					list_sale_bids.add(stats_json);				
+				}else {							
+					stats_json = new StatSaleJson(sale_json , bids_sale.size());
+					list_sale_bids.add(stats_json);				
+				}
+			}
 		}		
 
 		return list_sale_bids;
@@ -186,19 +191,20 @@ public class StatServiceImpl implements IStatService {
 	@Override
 	public List<StatTeamJson> getBidsperTeamsJson() {
 		
-		int i_total_bids = bidServiceImpl.getAllBids().size();			
-				
-		List<Team> all_teams = teamServiceImpl.getAllTeams();
-		
-		List<StatTeamJson> list_team_bids = new ArrayList<>();
-		
+		List<StatTeamJson> list_team_bids = new ArrayList<>();		
 		StatTeamJson stats_json = new StatTeamJson();
+	
+		int i_total_bids = bidServiceImpl.getAllBids().size();			
+		
+		List<Team> all_teams = teamServiceImpl.getAllTeams();		
 		
 		for (Team team : all_teams) {
 			
-			List<Bid> bids_team = bidServiceImpl.getBidsByTeams(team);	
+			List<Bid> bids_team = bidServiceImpl.getBidsByTeams(team);		
 			
-			TeamJson team_json = new TeamJson();
+			
+			TeamJson team_json = new TeamJson();			
+			
 			team_json.setId(team.getId());
 			team_json.setName(team.getName());
 			team_json.setFoundation_date(team.getFoundation_date());
@@ -208,11 +214,18 @@ public class StatServiceImpl implements IStatService {
 			team_json.setLosses(team.getLosses());
 			team_json.setDraws(team.getDraws());
 			
-			if(bids_team.size()<0 && i_total_bids !=0) {				
-				stats_json = new StatTeamJson(team_json,0);
+			System.out.println("size bids " + bids_team.size());
+			System.out.println("itotalbids " + i_total_bids);
+			
+			
+			if(bids_team.size()<=0 || bids_team==null) {				
+				stats_json = new StatTeamJson(team_json,0,0);
 				list_team_bids.add(stats_json);				
-			}else {							
-				stats_json = new StatTeamJson(team_json , bids_team.size());
+			}else {			
+				Collections.sort(bids_team, Comparator.comparing(Bid::getBidPrice).reversed());				
+				float i_max_price = bids_team.get(0).getBidPrice();	
+				
+				stats_json = new StatTeamJson(team_json , bids_team.size(), i_max_price);
 				list_team_bids.add(stats_json);				
 			}						
 		}			

@@ -47,8 +47,8 @@ public class StatsController {
 	
 	
 	@GetMapping("sales/bids/days/{n_day}/successful")
-	public HashMap<String,Object> getSalesStatsOK(@PathVariable Long n_day){			
-		HashMap<String,Object> map = new HashMap<>();		
+	public LinkedHashMap<String,Object> getSalesStatsOK(@PathVariable Long n_day){			
+		LinkedHashMap<String,Object> map = new LinkedHashMap<>();		
 		
 		try {			
 			List<Sale>  sale_Bids =  statServiceImpl.getSalesStats(n_day, true); 		
@@ -70,8 +70,8 @@ public class StatsController {
 	
 	
 	@GetMapping("sales/bids/days/{n_day}/failed")	
-	public HashMap<String,Object> getSalesStatsKO(@PathVariable Long n_day){			
-		HashMap<String,Object> map = new HashMap<>();
+	public LinkedHashMap<String,Object> getSalesStatsKO(@PathVariable Long n_day){			
+		LinkedHashMap<String,Object> map = new LinkedHashMap<>();
 		
 		try {						
 			List<Sale>  sale_Bids =  statServiceImpl.getSalesStats(n_day, false); 		
@@ -132,8 +132,8 @@ public class StatsController {
 			
 			map.put("Total_bids", (int) i_total_bids);	
 			map.put("Total_sales", (int) i_total_sales);
-			map.put("Maximum_bids", (int) i_max_bids);			
-			map.put("Maximum_sales", list_stat_max_bids);			
+			map.put("Maximum_bid", (int) i_max_bids);			
+			map.put("Maximum_sale", list_stat_max_bids);			
 			map.put("Sales",list_count_bids_sale_stats );	
 	      	map.put("success", true);			
 		} catch (Exception e) {			
@@ -148,6 +148,26 @@ public class StatsController {
 	public LinkedHashMap<Object,Object> getMostBuyer(){				
 		LinkedHashMap<Object,Object> map = new LinkedHashMap<>();		
 		
+		try {
+			
+				List<StatTeamJson> list_count_bids_team_stats = statServiceImpl.getBidsperTeamsJson();
+				List<StatTeamJson>  list_stat_max_bids = statServiceImpl.getMostBuyer();			
+		
+				map.put("success", true);	
+				
+			} catch (Exception e) {
+				
+				map.put("success", false);
+				map.put("message", "There were no sales in that period of time, sorry!");
+			}
+		
+		return map;
+	}
+	
+	@GetMapping("sales/bids/buyer/most/bidder")	
+	public LinkedHashMap<Object,Object> getMostBuyerBidder(){				
+		LinkedHashMap<Object,Object> map = new LinkedHashMap<>();		
+		
 		try {		
 			List<StatTeamJson> list_count_bids_team_stats = statServiceImpl.getBidsperTeamsJson();
 			List<StatTeamJson>  list_stat_max_bids = statServiceImpl.getMostBuyer();			
@@ -158,7 +178,7 @@ public class StatsController {
 			
 			map.put("Total_bids", (int) i_total_bids);	
 			map.put("Maximum_bids", (int) i_max_bids);			
-			map.put("Most_buyer", list_stat_max_bids);			
+			map.put("Most_bidder", list_stat_max_bids);			
 			map.put("Bids",list_count_bids_team_stats );		      
 		    map.put("success", true);		
 		} catch (Exception e) {

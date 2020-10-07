@@ -1,5 +1,6 @@
 package com.itacademy.soccer.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -109,6 +110,22 @@ public class BidServiceImpl implements IBidService{
 	public List<Bid> getBidsByTeams(Team team) {
 		
 		return iBidDAO.findByTeamIs(team);
+	}
+	
+	
+	
+
+	public List<Bid> getBidsBySaleDate(Sale sale) {
+		
+		List<Bid> all_bids = getAllBids();
+		List<Bid> all_bids_date_sale = new ArrayList<>();
+		
+		for (Bid bid : all_bids) {			
+			if (sale.getLimitDate().after(bid.getOperationDate())) {				
+				all_bids_date_sale.add(bid);
+			}	
+		}				
+		return all_bids_date_sale;
 	}
 
 }

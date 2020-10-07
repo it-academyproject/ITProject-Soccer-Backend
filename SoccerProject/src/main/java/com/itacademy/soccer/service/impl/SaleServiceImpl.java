@@ -53,7 +53,7 @@ public class SaleServiceImpl implements ISaleService{
 	}
 
 
-	@Override
+	//@Override
 	public List<Sale> getSalesByPlayer(Long playerId) {
 		
 //		Player player = iPlayerDAO.findById(playerId).get();
@@ -88,4 +88,19 @@ public class SaleServiceImpl implements ISaleService{
 		return iSaleDAO.findByLimitDateIsBetween(initialDate, now);
 	
 	}
+	
+	
+	public List<Sale> saleListFromDates(Date initialDate) {
+		List <Sale> all_sales = listAllSales();
+		List<Sale> sale_from_date = new ArrayList<>();
+		
+		for (Sale sale : all_sales) {
+			
+			if (sale.getLimitDate().after(initialDate)) {
+				sale_from_date.add(sale);
+			}		
+		}
+		return sale_from_date;	
+	}
+
 }
