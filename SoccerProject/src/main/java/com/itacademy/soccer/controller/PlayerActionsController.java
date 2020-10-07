@@ -8,6 +8,7 @@ import com.itacademy.soccer.dto.lineup.Lineup;
 import com.itacademy.soccer.service.IPlayerActionsService;
 import com.itacademy.soccer.service.impl.PlayerActionsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import com.itacademy.soccer.dto.PlayerActions;
@@ -16,6 +17,8 @@ import com.itacademy.soccer.dto.PlayerActions;
 @RequestMapping("/api/playeractions")
 public class PlayerActionsController {
 
+
+	@Qualifier("IPlayerActionsDAO")
 	@Autowired
 	IPlayerActionsDAO iPlayerActionsDAO;
 	@Autowired

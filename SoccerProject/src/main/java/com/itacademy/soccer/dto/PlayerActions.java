@@ -18,13 +18,13 @@ public class PlayerActions  {
 
 	@JsonIgnore
 	@MapsId("playerId")
-	@ManyToOne
+	@ManyToOne( fetch = FetchType.EAGER)
 	private Player player;
 
 	@JsonIgnore
 	@MapsId("matchId")
 	@JoinColumn(name = "matchId")
-	@ManyToOne
+	@ManyToOne( fetch = FetchType.EAGER)
 	private Match match;
 	
 	

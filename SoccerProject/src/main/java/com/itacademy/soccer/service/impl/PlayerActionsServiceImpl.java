@@ -23,17 +23,15 @@ public class PlayerActionsServiceImpl implements IPlayerActionsService{
 	@Autowired
 	IPlayerActionsDAO iPlayerActionsDAO;
 
-	//Este método no lo veo bien.
-	//find by playerMatchId
 
-	public PlayerActions findByIdPlayerIdAndIdMatchId(Long playerId, Long matchId) {
-
-		/*PlayerMatchId playerMatchId = iPlayerActionsDAO.findById(playerMatchId);
-
-		return iPlayerActionsDAO.findById(playerMatchId);*/
-
-		return iPlayerActionsDAO.findByIdPlayerIdAndIdMatchId(playerId, matchId);
-	}
+//	public PlayerActions findByIdPlayerIdAndIdMatchId(Long playerId, Long matchId) {
+//
+//		/*PlayerMatchId playerMatchId = iPlayerActionsDAO.findById(playerMatchId);
+//
+//		return iPlayerActionsDAO.findById(playerMatchId);*/
+//
+//		return iPlayerActionsDAO.findByIdPlayerIdAndIdMatchId(playerId, matchId);
+//	}
 
 	public List<PlayerActions> findByIdPlayerId(Long playerId) {
 		return iPlayerActionsDAO.findByIdPlayerId(playerId);
