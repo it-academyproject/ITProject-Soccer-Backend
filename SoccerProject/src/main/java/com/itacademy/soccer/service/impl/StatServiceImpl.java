@@ -2,50 +2,78 @@ package com.itacademy.soccer.service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.itacademy.soccer.controller.json.SaleJson;
+import com.itacademy.soccer.controller.json.StatSaleJson;
+import com.itacademy.soccer.controller.json.StatTeamJson;
+import com.itacademy.soccer.controller.json.TeamJson;
 import com.itacademy.soccer.dto.Bid;
-import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Sale;
 import com.itacademy.soccer.dto.Team;
-import com.itacademy.soccer.service.ISaleService;
 import com.itacademy.soccer.service.IStatService;
 
 @Service
 public class StatServiceImpl implements IStatService {
 	
 	@Autowired
-	BidServiceImpl bidServiceImpl;
-	
+	BidServiceImpl bidServiceImpl;	
 	@Autowired
-	TeamServiceImpl teamServiceImpl;
-	
+	TeamServiceImpl teamServiceImpl;	
 	@Autowired
-	PlayerServiceImpl playerServiceImpl;
-	
+	PlayerServiceImpl playerServiceImpl;	
 	@Autowired
 	SaleServiceImpl saleServiceImpl;
 
 	@Override	
 	public Date initDateInterval(Long id) {
-		Date now = new Date();
-		
+		Date now = new Date();		
 		Calendar c = Calendar.getInstance();
 		c.setTime(now);		
-		c.add(Calendar.DATE, (int) -id);		
-
-		return  c.getTime();
+		c.add(Calendar.DATE, (int) -id);	
+		return  c.getTime();	
+	}
 	
+	@Override
+	public double average(double i_total_bids, double i_total_sales) {
+		double i_average=0;				
+		if (i_total_sales!=0) {			//CONTROL DIVISION ENTRE CERO				
+			i_average = i_total_bids/i_total_sales; 				
+		}
+		return i_average;
+	}
+	
+	@Override
+	public double getTotalSalesBid(List<StatSaleJson> list_average_stats) {		
+		int i_total_sales_bids=0;
+		for (StatSaleJson statJson : list_average_stats) {				
+			if( statJson.getTotal_bids() !=0 ){									
+				i_total_sales_bids++;						
+				}
+		}
+		return i_total_sales_bids;
+	}
+	
+
+	@Override
+	public HashMap<Object, Integer> sortMapbyValue(HashMap<Object, Integer> sortMap) {		
+		HashMap<Object, Integer> sortMapValue = sortMap.entrySet()
+        .stream()
+        .sorted((Map.Entry.<Object, Integer>comparingByValue().reversed()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		return sortMapValue;
 	}
 
+		
+	//GET TO SALES SUCCESSFUL / FAILED
 	
 	@Override
 	public List<Sale> getSalesStats(Long id, boolean state) {			
@@ -69,7 +97,6 @@ public class StatServiceImpl implements IStatService {
 			}else {				
 				sale_no_bids.add(sale);
 			}
-			
 		}
 				
 		
@@ -77,154 +104,121 @@ public class StatServiceImpl implements IStatService {
 			result_sale = sale_yes_bids;				
 		}else {			
 			result_sale = sale_no_bids;		
-		}
-				
-		
+		}					
 		return result_sale;
 	}
 	
+
+	//GET -- MAXIMUM BIDS
 	
 	@Override
-	public HashMap<Object, Integer> sortMapbyValue(HashMap<Object, Integer> sortMap) {
+	public List<StatSaleJson> maximumSaleBids() {		
 		
-		HashMap<Object, Integer> sortMapValue = sortMap.entrySet()
-        .stream()
-        .sorted((Map.Entry.<Object, Integer>comparingByValue().reversed()))
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-		return sortMapValue;
-	}
-
+		List<StatSaleJson> list_stat_max_bids = new ArrayList<>();			
+		List<StatSaleJson> list_count_bids_sale_stats =  getBidsperSalesJson();			
 		
-	@Override
-	public HashMap<Sale, Object> getAverageBidsperSales(List<Sale> allSales){
+		Collections.sort(list_count_bids_sale_stats, Comparator.comparing(StatSaleJson::getTotal_bids).reversed());		
+		double i_max_bids=list_count_bids_sale_stats.get(0).getTotal_bids();
 		
-		HashMap<Sale,Object> ratio = new HashMap<>();
-		
-		int iTotalBids = bidServiceImpl.getAllBids().size();
-		double isales,iratio;					
-
-		
-		for (Sale sale : allSales) {
+		for (StatSaleJson statJson : list_count_bids_sale_stats) {
 			
-			List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);	
-			
-			if(bidsSale.size()<0 && iTotalBids !=0) {
-				ratio.put(sale , 0);
-				
-			}else {
-				
-				isales =bidsSale.size();
-				iratio=isales/iTotalBids;			
-				ratio.put(sale, iratio);
+			if(statJson.getTotal_bids()==i_max_bids) {				
+				StatSaleJson stat_sale_max_bids = statJson;
+				list_stat_max_bids.add(stat_sale_max_bids);				
 			}			
-		}
-		
-		return ratio;
+		}				
+		return list_stat_max_bids;
 	}
-
-	@Override
-	public HashMap<Object, Integer> getBidsperSales(List<Sale> allSales) {
-		
-		HashMap<Object, Integer> countBidsSales = new HashMap<>();		
-		
-		for (Sale sale : allSales) {	
-			
-			List<Bid> bidsSale = bidServiceImpl.getBidsBySale(sale);	
-			
-			if(bidsSale.size()<0) {		
-				
-				countBidsSales.put(sale , 0);		
-				
-			}else {			
-				
-				countBidsSales.put(sale, bidsSale.size());
-			}			
-		}
-		return countBidsSales;
-	}
-
 	
+	
+	@Override
+	public List<StatSaleJson> getBidsperSalesJson() {
+	
+		int i_total_bids = bidServiceImpl.getAllBids().size();			
+		List<Sale> all_sales = saleServiceImpl.listAllSales();			
+		List<StatSaleJson> list_sale_bids = new ArrayList<>(); 		
+		
+		StatSaleJson stats_json = new StatSaleJson();		
+		
+		for (Sale sale : all_sales) {
+			
+			List<Bid> bids_sale = bidServiceImpl.getBidsBySale(sale);	
+			SaleJson sale_json = new SaleJson();			
+			
+			sale_json.setId(sale.getId());				
+			sale_json.setLimit_date(sale.getLimitDate());				
+			sale_json.setInitial_price(sale.getInitialPrice());				
+			sale_json.setPlayer_id(sale.getPlayer().getId());		
+				
+			if(bids_sale.size()<0 && i_total_bids !=0) {
+				stats_json = new StatSaleJson(sale_json,0);
+				list_sale_bids.add(stats_json);				
+			}else {							
+				stats_json = new StatSaleJson(sale_json , bids_sale.size());
+				list_sale_bids.add(stats_json);				
+			}			
+		}		
+
+		return list_sale_bids;
+	}
+	
+	//GET -- MOST BUYER (TEAMS WITH MAX BIDS)	
 
 	@Override
-	public HashMap<Object, Integer> getBidsperTeams(List<Bid> allBids) {		
-		HashMap<Object,Integer> countBidsTeams = new HashMap<>();		
-		List<Team> allTeams = teamServiceImpl.getAllTeams();		
-		for (Team team : allTeams) {			
-			List<Bid> bidsTeam = bidServiceImpl.getBidsByTeams(team);			
-			if(bidsTeam.size()<0) {				
-				countBidsTeams.put(team , 0);						
-			}else {								
-				countBidsTeams.put(team, bidsTeam.size());
-			}		
+	public List<StatTeamJson> getMostBuyer() {
+		
+		List<StatTeamJson> list_stat_max_bids = new ArrayList<>();			
+		List<StatTeamJson> list_count_bids_team_stats =  getBidsperTeamsJson();		
+		
+		Collections.sort(list_count_bids_team_stats, Comparator.comparing(StatTeamJson::getTotal_bids).reversed());				
+		double i_max_bids=list_count_bids_team_stats.get(0).getTotal_bids();
+		
+		for (StatTeamJson statJson : list_count_bids_team_stats) {
+			
+			if(statJson.getTotal_bids()==i_max_bids) {				
+				StatTeamJson stat_sale_max_bids = statJson;
+				list_stat_max_bids.add(stat_sale_max_bids);				
+			}			
+		}				
+		return list_stat_max_bids;
+	}
+	
+	
+	@Override
+	public List<StatTeamJson> getBidsperTeamsJson() {
+		
+		int i_total_bids = bidServiceImpl.getAllBids().size();			
+		
+		List<Bid> all_bids = bidServiceImpl.getAllBids();
+		
+		List<Team> all_teams = teamServiceImpl.getAllTeams();
+		
+		List<StatTeamJson> list_team_bids = new ArrayList<>();
+		
+		StatTeamJson stats_json = new StatTeamJson();
+		
+		for (Team team : all_teams) {
+			
+			List<Bid> bids_team = bidServiceImpl.getBidsByTeams(team);	
+			
+			TeamJson team_json = new TeamJson();
+			team_json.setId(team.getId());
+			team_json.setName(team.getName());
+			team_json.setFoundation_date(team.getFoundation_date());
+			team_json.setBadge(team.getBadge());
+			team_json.setBudget(team.getBudget());
+			team_json.setWins(team.getWins());
+			team_json.setLosses(team.getLosses());
+			team_json.setDraws(team.getDraws());
+			
+			if(bids_team.size()<0 && i_total_bids !=0) {				
+				stats_json = new StatTeamJson(team_json,0);
+				list_team_bids.add(stats_json);				
+			}else {							
+				stats_json = new StatTeamJson(team_json , bids_team.size());
+				list_team_bids.add(stats_json);				
+			}						
 		}			
-		return countBidsTeams;
+		return list_team_bids;
 	}
-	
-	@Override
-	public HashMap<Object, Integer> getBidsperPlayers(List<Player> allPlayers) {
-		
-		HashMap<Object, Integer> bidsPlayer=  new HashMap<>();
-		
-		List<Bid> allBids = bidServiceImpl.getAllBids();		
-		List<Sale> allSales = saleServiceImpl.listAllSales();
-	
-		HashMap<Object, Integer> countBidsSales = getBidsperSales(allSales);   //has con venta y numBids.
-		
-		System.out.println(countBidsSales);
-			
-		for (Map.Entry<Object, Integer> entry : countBidsSales.entrySet()) {
-		    
-		    for (Sale sale : allSales) {
-		    	
-		    	if (sale.equals(entry.getKey())) { //si el id de la lista sales = al id del mapa es que es un registro con bbids
-		    		
-		    		bidsPlayer.put(sale.getPlayer(), entry.getValue());
-		    	}
-			}		  
-		}
-	
-		return bidsPlayer;	
-	}
-	
-
-	@Override
-	public HashMap<Object, Integer> getMostBuyer(HashMap<Object, Integer> countBidsTeams) {
-	
-		LinkedHashMap<Object, Integer> mostTeamBids  = new LinkedHashMap<Object, Integer>();		
-		HashMap<Object, Integer> sortedByBids= sortMapbyValue(countBidsTeams);  
-		Integer bigvalue = (Integer) sortedByBids.entrySet().stream().max((a,b) -> a.getValue().compareTo(b.getValue())).get().getValue();
-		
-		for (Map.Entry<Object, Integer> entry : sortedByBids.entrySet()) {
-		    
-		    
-		    if(entry.getValue().equals(bigvalue)) {
-			    mostTeamBids.put(entry.getKey(), entry.getValue());				
-		    }
-		}
-		
-	    return mostTeamBids;
-	}
-
-
-	@Override
-	public HashMap<Object, Integer> getMostSeller(HashMap<Object, Integer> bidsPlayer) {
-	
-		LinkedHashMap<Object, Integer> mostPlayerBids  = new LinkedHashMap<Object, Integer>();		
-		HashMap<Object, Integer> sortedByBids = sortMapbyValue(bidsPlayer);
-	
-		Integer bigvalue = (Integer) sortedByBids.entrySet().stream().max((a,b) -> a.getValue().compareTo(b.getValue())).get().getValue();
-		
-		System.out.println(bidsPlayer);
-		
-		for (Map.Entry<Object, Integer> entry : bidsPlayer.entrySet()) {
-		    
-		    if(entry.getValue().equals(bigvalue)) {
-		    	mostPlayerBids.put(entry.getKey(), entry.getValue());				
-		    }
-		}
-		
-	    return mostPlayerBids;
-	}
-	
 }

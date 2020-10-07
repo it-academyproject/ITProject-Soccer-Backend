@@ -1,17 +1,14 @@
 package com.itacademy.soccer.controller;
 
 
-import java.util.Collection;
+
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
+
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +16,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itacademy.soccer.dto.Bid;
-import com.itacademy.soccer.dto.Player;
+
+import com.itacademy.soccer.controller.json.StatSaleJson;
+import com.itacademy.soccer.controller.json.StatTeamJson;
+
+
 import com.itacademy.soccer.dto.Sale;
-import com.itacademy.soccer.dto.Team;
+
 import com.itacademy.soccer.service.impl.BidServiceImpl;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 import com.itacademy.soccer.service.impl.SaleServiceImpl;
@@ -36,16 +36,12 @@ public class StatsController {
 	
 	@Autowired
 	BidServiceImpl bidServiceImpl;
-
 	@Autowired
 	SaleServiceImpl saleServiceImpl;
-
 	@Autowired
-	TeamServiceImpl teamServiceImpl;
-	
+	TeamServiceImpl teamServiceImpl;	
 	@Autowired
-	StatServiceImpl statServiceImpl;
-	
+	StatServiceImpl statServiceImpl;	
 	@Autowired
 	PlayerServiceImpl playerServiceImpl;
 	
@@ -57,8 +53,10 @@ public class StatsController {
 		try {			
 			List<Sale>  sale_Bids =  statServiceImpl.getSalesStats(n_day, true); 		
 			
-			map.put("Sales : ", sale_Bids.size());		
-			map.put("Total of " + sale_Bids.size()+ " Sales with Bids for last "+ n_day +" days", sale_Bids);				
+			map.put("success", true);			
+			map.put("Total_Sales", sale_Bids.size());		
+			map.put("From_Date", statServiceImpl.initDateInterval(n_day) );				
+			map.put("Sale" , sale_Bids);
 
 		} catch (Exception e) {
 			
@@ -78,96 +76,91 @@ public class StatsController {
 		try {						
 			List<Sale>  sale_Bids =  statServiceImpl.getSalesStats(n_day, false); 		
 			
-			map.put("Sales  ", sale_Bids.size());		
-			map.put("There the follow Sales without Bids for last "+ n_day +" days", sale_Bids);				
-
+			map.put("success", true);			
+			map.put("Total_Sales", sale_Bids.size());		
+			map.put("From_Date", statServiceImpl.initDateInterval(n_day) );		
+			map.put("Sale" , sale_Bids);
+			
 		} catch (Exception e) {
 			
 			map.put("success", false);
 			map.put("message", "There were no sales in that period of time, sorry!");
-
-		}
-		
+		}		
 		return map;
 	}
 	
 
 	@GetMapping("sales/bids/average")	
-	public HashMap<Object,Object> getAverageBidsperSales(){			
-		
-		HashMap<Object,Object> map = new HashMap<>();		
+	public LinkedHashMap<Object,Object> getAverageBidsperSales(){				
+		LinkedHashMap<Object,Object> map = new LinkedHashMap<>();	
 		
 		try {
 			
-			int iTotalBids = bidServiceImpl.getAllBids().size();			
-			List<Sale> allSales = saleServiceImpl.listAllSales();			
-			HashMap<Sale,Object> ratio = statServiceImpl.getAverageBidsperSales(allSales);	
+			List<StatSaleJson>list_average_stats =  statServiceImpl.getBidsperSalesJson();	
 			
-			map.put("total of BIDS is  ", iTotalBids);		
+			double i_total_bids = bidServiceImpl.getAllBids().size();	
+			double i_total_sales = saleServiceImpl.listAllSales().size();			
+			double i_average= statServiceImpl.average(i_total_bids,i_total_sales);			
+			double i_total_sales_bids=statServiceImpl.getTotalSalesBid(list_average_stats) ;			
 			
-			Set keys = ratio.keySet();
-		  	for (Iterator i = keys.iterator(); i.hasNext(); ) {		
-		  		
-		          Sale key = (Sale) i.next();		          
-		          map.put(key.getId(), ratio.get(key));
-		  	}
-			
-		} catch (Exception e) {
-			
+			map.put("Total_bids", (int) i_total_bids);	
+			map.put("Total_sales", (int) i_total_sales);
+			map.put("Total_sales_bids", (int) i_total_sales_bids);			
+			map.put("Average", i_average);
+			map.put("Sales",list_average_stats );	
+	      	map.put("success", true);	   			
+		} catch (Exception e) {			
 			map.put("success", false);
 			map.put("message", "There were no sales in that period of time, sorry!");
-
-		}
-				
+		}	
 		return map;
 	}
+	
 	
 	
 	@GetMapping("sales/bids/max")	
-	public HashMap<Object,Object> getMaxBidsperSales(){					
+	public LinkedHashMap<Object,Object> getMaxBidsperSales(){			
+		LinkedHashMap<Object,Object> map = new LinkedHashMap<>();	
 		
-		HashMap<Object,Object> map = new HashMap<>();	
-		
-		try {
+		try {			
+			List<StatSaleJson> list_count_bids_sale_stats =  statServiceImpl.getBidsperSalesJson();				
+			List<StatSaleJson>  list_stat_max_bids = statServiceImpl.maximumSaleBids();		
 			
-			List<Sale> allSales = saleServiceImpl.listAllSales();			
-			HashMap<Object,Integer> countBidsSales = statServiceImpl.getBidsperSales(allSales);					
-			HashMap<Object, Integer> sortedByCount = statServiceImpl.sortMapbyValue(countBidsSales);	
+			double i_total_bids = bidServiceImpl.getAllBids().size();	
+			double i_total_sales = saleServiceImpl.listAllSales().size();				
+			double i_max_bids=list_count_bids_sale_stats.get(0).getTotal_bids();			
 			
-			Set keys = sortedByCount.keySet();
-		  	for (Iterator i = keys.iterator(); i.hasNext(); ) {		
-		  		
-		          Sale key = (Sale) i.next();		          
-		          map.put(key.getId(), sortedByCount.get(key));
-		  	}
-			
-		} catch (Exception e) {
+			map.put("Total_bids", (int) i_total_bids);	
+			map.put("Total_sales", (int) i_total_sales);
+			map.put("Maximum_bids", (int) i_max_bids);			
+			map.put("Maximum_sales", list_stat_max_bids);			
+			map.put("Sales",list_count_bids_sale_stats );	
+	      	map.put("success", true);			
+		} catch (Exception e) {			
 			map.put("success", false);
 			map.put("message", "There were no sales in that period of time, sorry!");
-
-		}
+		}	
 		return map;
 	}
-
+	
+	
 	@GetMapping("sales/bids/buyer/most")	
-	public HashMap<Object,Object> getMostBuyer(){	
+	public LinkedHashMap<Object,Object> getMostBuyer(){				
+		LinkedHashMap<Object,Object> map = new LinkedHashMap<>();		
 		
-		HashMap<Object,Object> map = new HashMap<>();				
-		try {
-			List<Bid> allBids = bidServiceImpl.getAllBids();
-			HashMap<Object, Integer> countBidsTeams = statServiceImpl.getBidsperTeams(allBids);		
+		try {		
+			List<StatTeamJson> list_count_bids_team_stats = statServiceImpl.getBidsperTeamsJson();
+			List<StatTeamJson>  list_stat_max_bids = statServiceImpl.getMostBuyer();			
 			
-			HashMap<Object, Integer>  mostBuyer = statServiceImpl.getMostBuyer(countBidsTeams);		
-		  
-			map.put( "The Most Teams Buyer " , " with numbers of BIDS" );						
+			double i_total_bids = bidServiceImpl.getAllBids().size();					
+			Collections.sort(list_count_bids_team_stats, Comparator.comparing(StatTeamJson::getTotal_bids).reversed());		
+			double i_max_bids=list_count_bids_team_stats.get(0).getTotal_bids();			
 			
-			for (Map.Entry<Object, Integer> buyer : mostBuyer.entrySet()) {
-			    
-				Team team = (Team) buyer.getKey();
-			    Integer value = buyer.getValue();			
-			    map.put( team.getId(), value );		
-			}
-			
+			map.put("Total_bids", (int) i_total_bids);	
+			map.put("Maximum_bids", (int) i_max_bids);			
+			map.put("Most_buyer", list_stat_max_bids);			
+			map.put("Bids",list_count_bids_team_stats );		      
+		    map.put("success", true);		
 		} catch (Exception e) {
 			map.put("success", false);
 			map.put("message", "There were no sales in that period of time, sorry!");
@@ -175,36 +168,17 @@ public class StatsController {
 		return map;
 	}
 	
-	
-	@GetMapping("sales/bids/players/seller/most")	
-	public HashMap<Object,Object> getMostSeller(){
+	@GetMapping("sales/bids/seller/most")	
+	public LinkedHashMap<Object,Object> getMostSeller(){
+		LinkedHashMap<Object,Object> map = new LinkedHashMap<>();		
 		
-		HashMap<Object,Object> map = new HashMap<>();		
-		try {
-			
-			List<Player> allPlayers = playerServiceImpl.playerList();
-			
-			HashMap<Object, Integer> countBidsSeller = statServiceImpl.getBidsperPlayers(allPlayers);
-			
-			HashMap<Object, Integer>  mostSeller = statServiceImpl.getMostSeller(countBidsSeller);		
-			
-			System.out.println("hahmap seller"+ mostSeller);
-					
-			map.put( "The Most Player Seller " , " with numbers of BIDS" );				
-			
-			for (Map.Entry<Object, Integer> seller : mostSeller.entrySet()) {
-			    
-				Player player = (Player) seller.getKey();
-			    Integer value = seller.getValue();			
-			    map.put( player.getAka(), value );		
-			}			
-	
-			
+		try {				      
+		    map.put("success", true);		
 		} catch (Exception e) {
 			map.put("success", false);
 			map.put("message", "There were no sales in that period of time, sorry!");
-
 		}
+	
 		return map;
 	}
 	
