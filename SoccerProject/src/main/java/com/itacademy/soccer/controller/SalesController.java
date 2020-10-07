@@ -3,7 +3,9 @@ package com.itacademy.soccer.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
+import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ public class SalesController {
 
 	//B26
 	@Autowired
-	PlayerServiceImpl playerServiceImpl;
+	IPlayerDAO iPlayerDAO;
 	
 	@GetMapping("/sales")
 	public HashMap<String,Object> listAllSales(){
@@ -74,8 +76,8 @@ public class SalesController {
 	HashMap<String,Object> getSalesByPlayer(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
-			Player myplayer = playerServiceImpl.playerById(id);
-			List<Sale> allSalesByPlayer = saleServiceImpl.saleListByPlayer(myplayer);
+			Optional<Player> myplayer = iPlayerDAO.findById(id);
+			List<Sale> allSalesByPlayer = saleServiceImpl.saleListByPlayer(myplayer.get());
 
 			if(allSalesByPlayer.size() > 0) {
 				map.put("success", true);

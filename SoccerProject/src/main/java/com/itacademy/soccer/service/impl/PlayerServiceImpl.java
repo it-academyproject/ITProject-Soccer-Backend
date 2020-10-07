@@ -3,6 +3,7 @@ package com.itacademy.soccer.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import com.itacademy.soccer.controller.json.PlayerJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,33 +26,18 @@ public class PlayerServiceImpl implements IPlayerService{
 		return iPlayerDAO.findByteamId(teamId);
 	}
 
-	@Override
-	public Player playerByName(String playerName) {
-		return iPlayerDAO.findByName(playerName);
-	}
-	
-	@Override
-	public Player playerById(Long playerId) {
-		return iPlayerDAO.findById(playerId).get();
-	}
 
 	@Override
-	public Player save(Player player) {
-		return iPlayerDAO.save(player);
-	}
+	public Player updatePlayer(PlayerJson player) {
 
-	@Override
-	public Player updatePlayer(Player player) {
-		return iPlayerDAO.save(player);
+		Optional<Player> playerLocalized = iPlayerDAO.findById(Long.parseLong(player.getIdPlayer()));
+		if ( playerLocalized.isPresent()) {
+			if (player.getAka().length() == 0) playerLocalized.get().setAka(null);
+			else playerLocalized.get().setAka(player.getAka());
+			return iPlayerDAO.save(playerLocalized);
+		}
+		return null;
 	}
-
-	@Override
-	public Optional<Player> findById(Long playerId) {
-		return iPlayerDAO.findById(playerId);
-	}
-
-	@Override
-	public void deletePlayerById(Long id) { iPlayerDAO.deleteById(id);}
 
 	public Player assignInitialValues(Player player ){
 

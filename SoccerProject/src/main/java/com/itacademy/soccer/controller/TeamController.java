@@ -5,6 +5,7 @@
 package com.itacademy.soccer.controller;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +123,33 @@ public class TeamController {
 			map.put("success", false);
 			map.put("message", "No team deleted! :" + e.getMessage());
 		}
+		return map;
+	}
+
+	@GetMapping("/{id}/bests")
+	public LinkedHashMap<String,Object> bestPlayersInTeam(@PathVariable Long id){
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		try{
+			teamServiceImpl.getOneTeamById(id);
+		} catch (Exception e){
+			map.put("success", false);
+			map.put("message", "team not found! :" + e.getMessage());
+		}
+
+		try{
+			List<String> bestKeeperTop = teamServiceImpl.getNameBestKeeperInTeam(id);
+			List<String> bestDefenderTop = teamServiceImpl.getNameBestDefenderInTeam(id);
+			List<String> bestPasserTop = teamServiceImpl.getNameBestPasserInTeam(id);
+			List<String> bestShooterTop = teamServiceImpl.getNameBestShooterInTeam(id);
+			map.put("success", true);
+			map.put("keeper:", bestKeeperTop);
+			map.put("defender:", bestDefenderTop);
+			map.put("passer:", bestPasserTop);
+			map.put("shooter:", bestShooterTop);
+		} catch (Exception e) {
+		map.put("success", false);
+		map.put("message", "no result to be shown! :" + e.getMessage());
+	}
 		return map;
 	}
 
