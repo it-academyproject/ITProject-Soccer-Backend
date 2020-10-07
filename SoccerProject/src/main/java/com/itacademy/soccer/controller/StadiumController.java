@@ -25,6 +25,7 @@ public class StadiumController {
     @Autowired
     StadiumService stadiumService;
     HashMap<String,Object> map = new HashMap<>();
+
     @GetMapping
     HashMap<String,Object> getAllStadium(){
         map.clear();
@@ -82,7 +83,7 @@ public class StadiumController {
         }
         return map;
     }
-    @PutMapping()
+    @PutMapping
     public HashMap<String,Object> updateStadium(@RequestBody StadiumJson stadium){
         map.clear();
 
