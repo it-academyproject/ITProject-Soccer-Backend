@@ -13,24 +13,35 @@ public interface IStatService {
 
 	// AUXILIARS METHODS
 	
-	Date initDateInterval(Long id);
-	HashMap<Object, Integer> sortMapbyValue(HashMap<Object, Integer> sortMap);
+
+	public Date initDateInterval(Long id);
+
+	public HashMap<Object, Integer> sortMapbyValue(HashMap<Object, Integer> sortMap);
 
 	// AVERAGE BIDS - SALES
-	double average(double i_total_bids, double i_total_sales);
+
+	public double average(double i_total_bids, double i_total_sales);
 	// MAX BID
-	double getTotalSalesBid(List<StatSaleJson> list_average_stats);	
+
+	public double getTotalSalesBid(List<StatSaleJson> list_average_stats);	
 
 	
 	// SUCCESS OR FAIL SALES
-	List<Sale> getSalesStats(Long id, boolean state);
+
+	public List<Sale> getSalesStats(Long id, boolean state);
 	
 	// MAXIMUM BIDS - SALES
-	List<StatSaleJson> getBidsperSalesJson();
-	List<StatSaleJson> maximumSaleBids();
+
+	public List<StatSaleJson> getBidsperSalesJson();
+
+	public List<StatSaleJson> maximumSaleBids();
 	
 	// MOST BUYER - TEAMS
-	List<StatTeamJson> getBidsperTeamsJson();		
-	List<StatTeamJson> getMostBuyer();
+
+	public List<StatTeamJson> getBidsperTeamsJson();		
+
+	public List<StatTeamJson> getMostBuyer();
+
+	public List<StatTeamJson> getMostBuyerBids();
 	
 }

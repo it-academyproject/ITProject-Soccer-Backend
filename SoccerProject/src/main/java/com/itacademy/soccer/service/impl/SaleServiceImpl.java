@@ -89,7 +89,7 @@ public class SaleServiceImpl implements ISaleService{
 	
 	}
 	
-	
+	@Override
 	public List<Sale> saleListFromDates(Date initialDate) {
 		List <Sale> all_sales = listAllSales();
 		List<Sale> sale_from_date = new ArrayList<>();
@@ -102,5 +102,20 @@ public class SaleServiceImpl implements ISaleService{
 		}
 		return sale_from_date;	
 	}
-
+	
+	
+	@Override
+	public List<Sale> listAllSalesClosed() {
+		Date now = new Date();
+		List <Sale> all_sales = listAllSales();			
+		List<Sale> all_sale_closed = new ArrayList<>();
+		
+		for (Sale sale : all_sales) {					
+			if (sale.getLimitDate().before(now)) {	
+				all_sale_closed.add(sale);
+			}
+		}		
+		return all_sale_closed;		
+	}
+	
 }

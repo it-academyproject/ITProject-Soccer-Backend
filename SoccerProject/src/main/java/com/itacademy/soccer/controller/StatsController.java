@@ -54,8 +54,8 @@ public class StatsController {
 			List<Sale>  sale_Bids =  statServiceImpl.getSalesStats(n_day, true); 		
 			
 			map.put("success", true);			
-			map.put("Total_Sales", sale_Bids.size());		
-			map.put("From_Date", statServiceImpl.initDateInterval(n_day) );				
+			map.put("Total_sales_closed", sale_Bids.size());		
+			map.put("From_date", statServiceImpl.initDateInterval(n_day) );				
 			map.put("Sale" , sale_Bids);
 
 		} catch (Exception e) {
@@ -77,8 +77,8 @@ public class StatsController {
 			List<Sale>  sale_Bids =  statServiceImpl.getSalesStats(n_day, false); 		
 			
 			map.put("success", true);			
-			map.put("Total_Sales", sale_Bids.size());		
-			map.put("From_Date", statServiceImpl.initDateInterval(n_day) );		
+			map.put("Total_sales_closed", sale_Bids.size());		
+			map.put("From_date", statServiceImpl.initDateInterval(n_day) );		
 			map.put("Sale" , sale_Bids);
 			
 		} catch (Exception e) {
@@ -97,14 +97,14 @@ public class StatsController {
 		try {
 			
 			List<StatSaleJson>list_average_stats =  statServiceImpl.getBidsperSalesJson();	
+			double i_total_bids = bidServiceImpl.getAllBidsClosed().size();	
+			double i_total_sales = saleServiceImpl.listAllSalesClosed().size();	
 			
-			double i_total_bids = bidServiceImpl.getAllBids().size();	
-			double i_total_sales = saleServiceImpl.listAllSales().size();			
-			double i_average= statServiceImpl.average(i_total_bids,i_total_sales);			
+			double i_average= statServiceImpl.average(i_total_bids,i_total_sales);	
 			double i_total_sales_bids=statServiceImpl.getTotalSalesBid(list_average_stats) ;			
 			
-			map.put("Total_bids", (int) i_total_bids);	
-			map.put("Total_sales", (int) i_total_sales);
+			map.put("Total_bids_closed", (int) i_total_bids);	
+			map.put("Total_sales_closed", (int) i_total_sales);
 			map.put("Total_sales_bids", (int) i_total_sales_bids);			
 			map.put("Average", i_average);
 			map.put("Sales",list_average_stats );	
@@ -126,12 +126,12 @@ public class StatsController {
 			List<StatSaleJson> list_count_bids_sale_stats =  statServiceImpl.getBidsperSalesJson();				
 			List<StatSaleJson>  list_stat_max_bids = statServiceImpl.maximumSaleBids();		
 			
-			double i_total_bids = bidServiceImpl.getAllBids().size();	
-			double i_total_sales = saleServiceImpl.listAllSales().size();				
+			double i_total_bids = bidServiceImpl.getAllBidsClosed().size();				
+			double i_total_sales = saleServiceImpl.listAllSalesClosed().size();			
 			double i_max_bids=list_count_bids_sale_stats.get(0).getTotal_bids();			
 			
-			map.put("Total_bids", (int) i_total_bids);	
-			map.put("Total_sales", (int) i_total_sales);
+			map.put("Total_bids_closed", (int) i_total_bids);	
+			map.put("Total_sales_closed", (int) i_total_sales);			
 			map.put("Maximum_bid", (int) i_max_bids);			
 			map.put("Maximum_sale", list_stat_max_bids);			
 			map.put("Sales",list_count_bids_sale_stats );	
@@ -151,8 +151,19 @@ public class StatsController {
 		try {
 			
 				List<StatTeamJson> list_count_bids_team_stats = statServiceImpl.getBidsperTeamsJson();
-				List<StatTeamJson>  list_stat_max_bids = statServiceImpl.getMostBuyer();			
-		
+				List<StatTeamJson>  list_stat_max_bids_price = statServiceImpl.getMostBuyer();			
+				double i_total_sales = saleServiceImpl.listAllSalesClosed().size();			
+				
+				double i_total_bids = bidServiceImpl.getAllBidsClosed().size();					
+				Collections.sort(list_count_bids_team_stats, Comparator.comparing(StatTeamJson::getMax_price).reversed());		
+				double i_max_bids=list_count_bids_team_stats.get(0).getMax_price();			
+			
+				map.put("Total_bids_closed", (int) i_total_bids);	
+				map.put("Total_sales_closed", (int) i_total_sales);					
+				map.put("Maximum_price_bids", i_max_bids);			
+				map.put("Most_buyer", list_stat_max_bids_price);			
+				map.put("Bids",list_count_bids_team_stats );		      
+			
 				map.put("success", true);	
 				
 			} catch (Exception e) {
@@ -170,9 +181,9 @@ public class StatsController {
 		
 		try {		
 			List<StatTeamJson> list_count_bids_team_stats = statServiceImpl.getBidsperTeamsJson();
-			List<StatTeamJson>  list_stat_max_bids = statServiceImpl.getMostBuyer();			
+			List<StatTeamJson>  list_stat_max_bids = statServiceImpl.getMostBuyerBids();			
 			
-			double i_total_bids = bidServiceImpl.getAllBids().size();					
+			double i_total_bids = bidServiceImpl.getAllBidsClosed().size();					
 			Collections.sort(list_count_bids_team_stats, Comparator.comparing(StatTeamJson::getTotal_bids).reversed());		
 			double i_max_bids=list_count_bids_team_stats.get(0).getTotal_bids();			
 			

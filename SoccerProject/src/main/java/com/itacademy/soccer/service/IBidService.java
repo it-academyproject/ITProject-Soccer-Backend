@@ -29,4 +29,8 @@ public interface IBidService {
 
 	public List<Bid> getBidsByTeams(Team team);
 
+	public List<Bid> getBidsBySaleDate(Sale sale);
+
+	public List<Bid> getAllBidsClosed();
+
 }

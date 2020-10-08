@@ -78,9 +78,8 @@ public class StatServiceImpl implements IStatService {
 	@Override
 	public List<Sale> getSalesStats(Long id, boolean state) {			
 		
-		Date now = new Date();		
 		Date initial_date = initDateInterval(id);			
-		List<Sale> all_sales_period = saleServiceImpl.saleListFromDates(initial_date);		
+		List<Sale> all_sales_period = saleServiceImpl.saleListBetweenDates(initial_date);		
 		
 		List<Sale> sale_no_bids= new ArrayList<>();	
 		List<Sale> sale_yes_bids= new ArrayList<>();		
@@ -114,7 +113,8 @@ public class StatServiceImpl implements IStatService {
 	@Override
 	public List<StatSaleJson> maximumSaleBids() {		
 		
-		List<StatSaleJson> list_stat_max_bids = new ArrayList<>();			
+		List<StatSaleJson> list_stat_max_bids = new ArrayList<>();		
+		
 		List<StatSaleJson> list_count_bids_sale_stats =  getBidsperSalesJson();			
 		
 		Collections.sort(list_count_bids_sale_stats, Comparator.comparing(StatSaleJson::getTotal_bids).reversed());		
@@ -134,16 +134,13 @@ public class StatServiceImpl implements IStatService {
 	@Override
 	public List<StatSaleJson> getBidsperSalesJson() {
 	
-		int i_total_bids = bidServiceImpl.getAllBids().size();	
-		Date now = new Date();
-		List<Sale> all_sales = saleServiceImpl.listAllSales();			
-		List<StatSaleJson> list_sale_bids = new ArrayList<>(); 		
+		int i_total_bids = bidServiceImpl.getAllBidsClosed().size();			
+		List<Sale> all_sales = saleServiceImpl.listAllSalesClosed();	
 		
+		List<StatSaleJson> list_sale_bids = new ArrayList<>(); 		
 		StatSaleJson stats_json = new StatSaleJson();		
 		
-		for (Sale sale : all_sales) {
-			
-			if (sale.getLimitDate().after(now)) {			
+		for (Sale sale : all_sales) {			
 			
 				List<Bid> bids_sale = bidServiceImpl.getBidsBySale(sale);	
 				SaleJson sale_json = new SaleJson();			
@@ -161,15 +158,15 @@ public class StatServiceImpl implements IStatService {
 					list_sale_bids.add(stats_json);				
 				}
 			}
-		}		
-
+		Collections.sort(list_sale_bids, Comparator.comparing(StatSaleJson::getTotal_bids).reversed());		
+		
 		return list_sale_bids;
 	}
 	
-	//GET -- MOST BUYER (TEAMS WITH MAX BIDS)	
+	//GET -- MOST BUYER (TEAMS WITH MAX PRICE)	
 
 	@Override
-	public List<StatTeamJson> getMostBuyer() {
+	public List<StatTeamJson> getMostBuyerBids() {
 		
 		List<StatTeamJson> list_stat_max_bids = new ArrayList<>();			
 		List<StatTeamJson> list_count_bids_team_stats =  getBidsperTeamsJson();		
@@ -187,6 +184,27 @@ public class StatServiceImpl implements IStatService {
 		return list_stat_max_bids;
 	}
 	
+	//GET -- MOST BUYER (TEAMS WITH MAX BIDS)	
+	
+	@Override
+	public List<StatTeamJson> getMostBuyer() {
+		
+		List<StatTeamJson> list_stat_max_price = new ArrayList<>();			
+		List<StatTeamJson> list_count_bids_team_stats =  getBidsperTeamsJson();		
+		
+		Collections.sort(list_count_bids_team_stats, Comparator.comparing(StatTeamJson::getMax_price).reversed());				
+		double i_max_bids=list_count_bids_team_stats.get(0).getMax_price();
+		
+		for (StatTeamJson statJson : list_count_bids_team_stats) {
+			
+			if(statJson.getMax_price()==i_max_bids) {				
+				StatTeamJson stat_sale_max_price = statJson;
+				list_stat_max_price.add(stat_sale_max_price);				
+			}			
+		}				
+		return list_stat_max_price;
+	}
+	
 	
 	@Override
 	public List<StatTeamJson> getBidsperTeamsJson() {
@@ -194,16 +212,15 @@ public class StatServiceImpl implements IStatService {
 		List<StatTeamJson> list_team_bids = new ArrayList<>();		
 		StatTeamJson stats_json = new StatTeamJson();
 	
-		int i_total_bids = bidServiceImpl.getAllBids().size();			
+		int i_total_bids = bidServiceImpl.getAllBidsClosed().size();
 		
 		List<Team> all_teams = teamServiceImpl.getAllTeams();		
+		
 		
 		for (Team team : all_teams) {
 			
 			List<Bid> bids_team = bidServiceImpl.getBidsByTeams(team);		
-			
-			
-			TeamJson team_json = new TeamJson();			
+			TeamJson team_json = new TeamJson();	
 			
 			team_json.setId(team.getId());
 			team_json.setName(team.getName());

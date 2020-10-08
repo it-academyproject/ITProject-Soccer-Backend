@@ -66,6 +66,9 @@ public class BidsController {
 
 		//player = verifyDataPlayer.assignInitialValues(player);
 		// TODO Comprobar si existe la Sale y/o el equipo
+		
+		
+		
 		// TODO Marcar la fecha de creacion del BID
 		newBid.setSale(saleServiceImpl.getSaleById(id));
 
