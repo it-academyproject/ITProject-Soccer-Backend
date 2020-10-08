@@ -135,7 +135,7 @@ public class PlayerController {
 	@PutMapping
 	HashMap<String,Object> putPlayersAka(@RequestBody PlayerJson player){
 		HashMap<String,Object> map = new HashMap<>();
-
+		System.out.println("updaet.....................................   " +  player.getName());
 		try {
 			Player updatedPlayer = playerServiceImpl.updatePlayer(player);
 

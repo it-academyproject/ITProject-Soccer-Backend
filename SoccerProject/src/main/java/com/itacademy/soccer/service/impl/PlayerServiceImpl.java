@@ -30,11 +30,15 @@ public class PlayerServiceImpl implements IPlayerService{
 	@Override
 	public Player updatePlayer(PlayerJson player) {
 
-		Optional<Player> playerLocalized = iPlayerDAO.findById(Long.parseLong(player.getIdPlayer()));
-		if ( playerLocalized.isPresent()) {
-			if (player.getAka().length() == 0) playerLocalized.get().setAka(null);
-			else playerLocalized.get().setAka(player.getAka());
-			return iPlayerDAO.save(playerLocalized);
+		try {
+			Optional<Player> playerLocalized = iPlayerDAO.findById(Long.parseLong(player.getIdPlayer()));
+			if (playerLocalized.isPresent()) {
+				if (player.getAka().length() == 0) playerLocalized.get().setAka(null);
+				else playerLocalized.get().setAka(player.getAka());
+				return iPlayerDAO.save(playerLocalized.get());
+			}
+		}catch (Exception e){
+			e.printStackTrace();
 		}
 		return null;
 	}

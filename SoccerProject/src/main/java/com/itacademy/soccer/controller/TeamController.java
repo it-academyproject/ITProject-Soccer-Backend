@@ -126,6 +126,26 @@ public class TeamController {
 		return map;
 	}
 
+
+	@GetMapping(path = "/bests")
+	public LinkedHashMap<String, Object> getTeamsByMaxWLD(){
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+		try{
+			map.put("success", true);
+			map.put("message", "Max W/L/D");
+			map.put("wins", teamServiceImpl.getMaxWinsTeam());
+			map.put("losses", teamServiceImpl.getMaxLossesTeam());
+			map.put("draws", teamServiceImpl.getMaxDrawsTeam());
+
+		}catch (Exception e){
+			map.put("success", false);
+			map.put("message", "error message :" + e.getMessage());
+		}
+		return map;
+	}
+
 	@GetMapping("/{id}/bests")
 	public LinkedHashMap<String,Object> bestPlayersInTeam(@PathVariable Long id){
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
