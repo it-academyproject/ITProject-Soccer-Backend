@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.dto.Sale;
+import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.impl.SaleServiceImpl;
 import com.itacademy.soccer.service.impl.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,30 +63,83 @@ public class BidsController {
 
 	//TODO B29
 	@PostMapping("/bids/sales/{id}")
-	public HashMap<String, Object> createBid(@PathVariable(name="id") Long id, @RequestBody Bid newBid) {
+	public HashMap<String, Object> createBid(@PathVariable Long id, @RequestBody Bid bid) {
+		
+		
 		HashMap<String, Object> map = new HashMap<>();
-
-		//player = verifyDataPlayer.assignInitialValues(player);
-		// TODO Comprobar si existe la Sale y/o el equipo
-		
-		
-		
-		// TODO Marcar la fecha de creacion del BID
-		newBid.setSale(saleServiceImpl.getSaleById(id));
-
-		//System.out.println(newBid.getTeam_id());
-		newBid.setTeam(teamServiceImpl.getOneTeamById(newBid.getTeam_id()));
 		Date now = new Date();
-		newBid.setOperationDate(now);
-		try {
-			Bid NewlyCreatedBid = bidServiceImpl.save(newBid);
-			map.put("success", true);
-			map.put("message", "Bid Created");
-			map.put("bid", NewlyCreatedBid);
-		} catch (Exception e) {
-			map.put("success", false);
-			map.put("message", "Bid NOT Created ! :" + e.getMessage());
+		String msj  ="";
+		
+		Bid newBid = new Bid();
+		
+		newBid= bid;
+		System.out.println("id_teamd "+bid.getTeam_id());
+		System.out.println("price_bid "+bid.getBid_price());
+		
+		newBid.setBid_price(bid.getBid_price());
+
+		Sale sale = saleServiceImpl.getSaleById(id);
+		
+		//SALE IS CLOSED
+		if (sale.getLimitDate().before(now)) {
+			
+			msj= "Sale " + sale.getId() + " is closed" ;		
+			map.put("message", msj);
+			map.put("Date_limit", sale.getLimitDate());
+			
+		//SALE IS OPEN	
+		}else {
+			
+			newBid.setSale(sale);
+				
+			Team team = teamServiceImpl.getOneTeamById(newBid.getTeam_id());		
+			
+			//TEAM BUDGET INFERIOR TO PRICE'S BID
+			if (newBid.getBid_price()> team.getBudget()) {
+				
+				msj ="Team " + team.getId() +" doesn't have enough budget";
+				map.put("message", msj);
+				map.put("Team_budget", team.getBudget());
+				map.put("Sale_price", sale.getInitialPrice());
+				
+				
+			}else {
+				// PRICE'S BID INFERIOR TO PRICE'S SALE
+				if(sale.getInitialPrice()> newBid.getBid_price()) {
+					
+					msj ="BID " + newBid.getBid_price() +" the offer is less than the sale price";
+					map.put("message", msj);
+					map.put("Team_budget", team.getBudget());
+					map.put("Sale_price", sale.getInitialPrice());
+			
+					
+				}else {
+					//System.out.println(newBid.getTeam_id());
+					newBid.setTeam(teamServiceImpl.getOneTeamById(newBid.getTeam_id()));
+				//	Date now = new Date();
+					newBid.setOperationDate(now);
+					try {
+						Bid NewlyCreatedBid = bidServiceImpl.save(newBid);
+						map.put("success", true);
+						map.put("message", "Bid Created");
+						map.put("bid", NewlyCreatedBid);
+					} catch (Exception e) {
+						map.put("success", false);
+						map.put("message", "Bid NOT Created ! :" + e.getMessage());
+					}
+					
+				}
+				
+				
+
+			
+				
+			}
+			
+			
 		}
+		
+	
 		return map;
 	}
 

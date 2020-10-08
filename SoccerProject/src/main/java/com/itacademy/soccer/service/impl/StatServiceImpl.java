@@ -239,8 +239,8 @@ public class StatServiceImpl implements IStatService {
 				stats_json = new StatTeamJson(team_json,0,0);
 				list_team_bids.add(stats_json);				
 			}else {			
-				Collections.sort(bids_team, Comparator.comparing(Bid::getBidPrice).reversed());				
-				float i_max_price = bids_team.get(0).getBidPrice();	
+				Collections.sort(bids_team, Comparator.comparing(Bid::getBid_price).reversed());				
+				float i_max_price = bids_team.get(0).getBid_price();	
 				
 				stats_json = new StatTeamJson(team_json , bids_team.size(), i_max_price);
 				list_team_bids.add(stats_json);				

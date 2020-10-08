@@ -29,7 +29,7 @@ public class Bid {
 	private Long team_id;
 
 	@Column(name = "bid_price")
-	private float bidPrice;
+	private float bid_price;
 
 	@Column(name = "operation_date")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -50,10 +50,10 @@ public class Bid {
 	}
 
 	
-	public Bid(Long id, Long team_id, float bidPrice, Date operationDate, Sale sale, Team team) {
+	public Bid(Long id, Long team_id, float bid_price, Date operationDate, Sale sale, Team team) {
 		this.id = id;
 		this.team_id = team_id;
-		this.bidPrice = bidPrice;
+		this.bid_price = bid_price;
 		this.operationDate = operationDate;
 		this.sale = sale;
 		this.team = team;
@@ -61,7 +61,7 @@ public class Bid {
 
 	public Bid(Long id, float bidPrice, Date operationDate) {
 		this.id = id;
-		this.bidPrice = bidPrice;
+		this.bid_price = bid_price;
 		this.operationDate = operationDate;
 	}
 
@@ -73,13 +73,16 @@ public class Bid {
 		this.id = id;
 	}
 
-	public float getBidPrice() {
-		return bidPrice;
+	
+	public float getBid_price() {
+		return bid_price;
 	}
 
-	public void setBidPrice(float bidPrice) {
-		this.bidPrice = bidPrice;
+
+	public void setBid_price(float bid_price) {
+		this.bid_price = bid_price;
 	}
+
 
 	public Date getOperationDate() {
 		return operationDate;

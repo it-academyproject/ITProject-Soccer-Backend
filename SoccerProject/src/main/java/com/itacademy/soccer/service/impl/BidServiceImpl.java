@@ -57,7 +57,7 @@ public class BidServiceImpl implements IBidService{
 
 		Bid updatedBid = iBidDAO.findById(bidId).get();
 		
-		updatedBid.setBidPrice(bid.getBidPrice());
+		updatedBid.setBid_price(bid.getBid_price());
 		
 		return iBidDAO.save(updatedBid);
 	}
