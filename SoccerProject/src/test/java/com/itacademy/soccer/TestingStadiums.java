@@ -57,16 +57,16 @@ public class TestingStadiums {
                 //.andExpect(jsonPath("$.success", is(true)));
 
     }
-//    @Test
-//    public void postStadiumTest() throws Exception {
-//        mockMvc.perform( MockMvcRequestBuilders
-//                .post("/api/stadiums")
-//                .content(asJsonString(new Stadium( "testName", "testCity", 0, 0)))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.success").exists());
-//    }
+    @Test
+    public void postStadiumTest() throws Exception {
+        mockMvc.perform( MockMvcRequestBuilders
+                .post("/api/stadiums")
+                .content(asJsonString(new Stadium( "testName", "testCity", 0, 0)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.success").exists());
+    }
     public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
