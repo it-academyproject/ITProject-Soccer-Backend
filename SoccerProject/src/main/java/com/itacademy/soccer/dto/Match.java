@@ -49,8 +49,7 @@ public class Match {
 
 	@JsonIgnore
 	@OneToOne(mappedBy="match", fetch = FetchType.LAZY) //fetch = FetchType.LAZY resolves error
-														//Hibernate: More than one row with the given identifier was found error
-	private MatchActions match_actions;
+	private MatchActions match_actions;     //Hibernate: More than one row with the given identifier was found error
 
 //	@OneToMany
 //	@JoinColumn(name="match_id")

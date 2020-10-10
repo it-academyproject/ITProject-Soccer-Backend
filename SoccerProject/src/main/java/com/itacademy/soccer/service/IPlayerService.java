@@ -11,16 +11,8 @@ public interface IPlayerService {
 	public List<Player> playerList();
 	
 	public List<Player> playerListByTeam(Long teamId);
-	
-	public Player playerByName(String playerName);
-	
-	public Player playerById(Long playerId);
 
 	public Player updatePlayer(PlayerJson player);
 
-	Optional<Player> findById(Long playerId);
-
-	Player save(Player player);
-
-	void deletePlayerById(Long id);
+	Player assignInitialValues(Player player );
 }

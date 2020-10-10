@@ -24,6 +24,13 @@ public class Stadium {
     @OneToMany(mappedBy="stadiumMany" )
     private List<Match> matchList;
 
+    public Stadium(@Size(min = 1, max = 50) String name, @Size(min = 1, max = 50) String city, int capacity, double annual_income) {
+        this.name = name;
+        this.city = city;
+        this.capacity = capacity;
+        this.annual_income = annual_income;
+    }
+
     public Stadium(Long stadiumId, String name, String city, int capacity, double annual_income, List<Match> matchList) {
         this.stadiumId = stadiumId;
         this.name = name;

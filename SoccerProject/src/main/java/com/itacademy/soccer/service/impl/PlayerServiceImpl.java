@@ -26,37 +26,26 @@ public class PlayerServiceImpl implements IPlayerService{
 		return iPlayerDAO.findByteamId(teamId);
 	}
 
-	@Override
-	public Player playerByName(String playerName) {
-		return iPlayerDAO.findByName(playerName);
-	}
-	
-	@Override
-	public Player playerById(Long playerId) {
-		return iPlayerDAO.findById(playerId).get();
-	}
-
-	@Override
-	public Player save(Player player) {
-		return iPlayerDAO.save(player);
-	}
 
 	@Override
 	public Player updatePlayer(PlayerJson player) {
 
-		Player playerLocalized = playerById(Long.parseLong(player.getIdPlayer()));
-		if(player.getAka().length()==0) playerLocalized.setAka(null);
-		else playerLocalized.setAka(player.getAka());
-		return iPlayerDAO.save(playerLocalized);
+		try {
+			Optional<Player> playerLocalized = iPlayerDAO.findById(Long.parseLong(player.getIdPlayer()));
+			if (playerLocalized.isPresent()) {
+				if (player.getAka().length() == 0) playerLocalized.get().setAka(null);
+				else playerLocalized.get().setAka(player.getAka());
+				return iPlayerDAO.save(playerLocalized.get());
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	@Override
-	public Optional<Player> findById(Long playerId) {
-		return iPlayerDAO.findById(playerId);
+	public Player assignInitialValues(Player player ){
+
+		if (player.getTeam_id() == null) player.setTeam_id(1L);
+		return player;
 	}
-
-
-	@Override
-	public void deletePlayerById(Long id) { iPlayerDAO.deleteById(id);}
-
 }
