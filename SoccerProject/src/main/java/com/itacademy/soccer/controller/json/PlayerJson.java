@@ -12,6 +12,8 @@ public class PlayerJson {
     private String pass;
     private String attack;
 
+    public PlayerJson() {
+    }
 
     public PlayerJson(String idPlayer, String aka){
         this.idPlayer = idPlayer;

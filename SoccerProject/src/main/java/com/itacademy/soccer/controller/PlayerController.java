@@ -2,9 +2,10 @@ package com.itacademy.soccer.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import com.itacademy.soccer.controller.json.PlayerJson;
-import com.itacademy.soccer.game.VerifyDataPlayer;
+import com.itacademy.soccer.dao.IPlayerDAO;
 import org.dom4j.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.NumberUtils;
@@ -20,7 +21,9 @@ public class PlayerController {
 
 	@Autowired
 	PlayerServiceImpl playerServiceImpl;
-	VerifyDataPlayer verifyDataPlayer = new VerifyDataPlayer();
+	@Autowired
+	IPlayerDAO iPlayerDAO;
+
 
 	//get all players
 	@GetMapping()
@@ -49,9 +52,9 @@ public class PlayerController {
 	@PostMapping()
 	public HashMap<String, Object> createPlayer(@RequestBody Player player) {
 		HashMap<String, Object> map = new HashMap<>();
-		player = verifyDataPlayer.assignInitialValues(player);
+		player = playerServiceImpl.assignInitialValues(player);
 		try {
-			Player NewlyCreatedPlayer = playerServiceImpl.save(player);
+			Player NewlyCreatedPlayer = iPlayerDAO.save(player);
 			map.put("success", true);
 			map.put("message", "Player Created");
 			map.put("player", NewlyCreatedPlayer);
@@ -91,9 +94,9 @@ public class PlayerController {
 	HashMap<String,Object> getPlayerById(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
-			Player player = playerServiceImpl.playerById(id);
+			Optional<Player> player = iPlayerDAO.findById(id);
 			map.put("success", true);
-			map.put("player", player);
+			map.put("player", player.get());
 			map.put("message", "get one players by id");
 		}
 		catch (Exception e) {
@@ -108,7 +111,7 @@ public class PlayerController {
 	HashMap<String,Object> getPlayersByName(@PathVariable String name){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
-			Player player = playerServiceImpl.playerByName(name);
+			Player player = iPlayerDAO.findByName(name);
 			if (player != null) {
 				map.put("success", true);
 				map.put("player", player);
@@ -132,12 +135,12 @@ public class PlayerController {
 	@PutMapping
 	HashMap<String,Object> putPlayersAka(@RequestBody PlayerJson player){
 		HashMap<String,Object> map = new HashMap<>();
-
+		System.out.println("updaet.....................................   " +  player.getName());
 		try {
 			Player updatedPlayer = playerServiceImpl.updatePlayer(player);
 
 			map.put("success", true);
-			map.put("player with new Aka", playerServiceImpl.playerById(updatedPlayer.getId()));
+			map.put("player with new Aka", iPlayerDAO.findById(updatedPlayer.getId()));
 			map.put("message", "AKA modified");
 		}
 		catch (Exception e) {
@@ -149,7 +152,7 @@ public class PlayerController {
 	}
 	@DeleteMapping("/{id}")
 	public void deleteUser(@PathVariable long id){
-		playerServiceImpl.deletePlayerById(id);
+		iPlayerDAO. deleteById(id);
 	}
 
 }

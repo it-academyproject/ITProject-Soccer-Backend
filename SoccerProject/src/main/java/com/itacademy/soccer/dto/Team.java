@@ -57,7 +57,7 @@ public class Team {
 
 	
 	@JsonIgnore
-	@OneToMany(mappedBy="team")
+	@OneToMany(mappedBy="team", fetch = FetchType.EAGER)
 	private List<Player> playersList ;
 
 	@OneToMany

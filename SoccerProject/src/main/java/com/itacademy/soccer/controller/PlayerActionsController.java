@@ -1,39 +1,37 @@
 package com.itacademy.soccer.controller;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import com.itacademy.soccer.controller.json.PlayerActionsJson;
-import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dto.lineup.Lineup;
-import com.itacademy.soccer.dto.serializable.PlayerMatchId;
-import com.itacademy.soccer.game.DataForPlayerActions;
-import com.itacademy.soccer.service.impl.PlayerServiceImpl;
+import com.itacademy.soccer.service.IPlayerActionsService;
+import com.itacademy.soccer.service.impl.PlayerActionsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import com.itacademy.soccer.dto.PlayerActions;
-import com.itacademy.soccer.service.impl.PlayerActionsServiceImpl;
-
-import static com.itacademy.soccer.dto.lineup.Lineup.*;
 
 @RestController
 @RequestMapping("/api/playeractions")
 public class PlayerActionsController {
 
-	@Autowired
-	PlayerActionsServiceImpl playerActionsServiceImpl;
 
-	DataForPlayerActions dataForPlayerActions = new DataForPlayerActions();
+	@Qualifier("IPlayerActionsDAO")
+	@Autowired
+	IPlayerActionsDAO iPlayerActionsDAO;
+	@Autowired
+	PlayerActionsServiceImpl playerActionsService;
 
 	//Get playerActions by player id and match id (TO DO)
 	@GetMapping("/{id}/matches/{id2}")
 	HashMap<String,Object> getPlayerActionsByPlayerIdInMatch(@PathVariable String id, @PathVariable String id2 ){
 		HashMap<String,Object> map = new HashMap<>();
-		map = dataForPlayerActions.verifyIds(id, id2, map);
+		map = playerActionsService.verifyIds(id, id2, map);
 
 		if ( map.size() == 0) {
-			PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(Long.parseLong(id), Long.parseLong(id2));
+			PlayerActions playerActions = iPlayerActionsDAO.findByIdPlayerIdAndIdMatchId(Long.parseLong(id), Long.parseLong(id2));
 
 			if (playerActions != null) {
 				map.put("success", true);
@@ -49,11 +47,11 @@ public class PlayerActionsController {
 	@GetMapping("/{id}/matches/{id2}/{action}")
 	HashMap<String,Object> getOnePlayerActionsInMatch(@PathVariable String id, @PathVariable String id2, @PathVariable String action){
 		HashMap<String,Object> map = new HashMap<>();
-		map = dataForPlayerActions.verifyIds(id, id2, map);
-		PlayerActions playerActions = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(Long.parseLong(id), Long.parseLong(id2));
+		map = playerActionsService.verifyIds(id, id2, map);
+		PlayerActions playerActions = iPlayerActionsDAO.findByIdPlayerIdAndIdMatchId(Long.parseLong(id), Long.parseLong(id2));
 
 		if (playerActions != null ) {
-			int data = dataForPlayerActions.getOnePlayerActionsInOneMatch(playerActions, action);
+			int data = playerActionsService.getOnePlayerActionsInOneMatch(playerActions, action);
 
 			if (data != -1) {
 				map.put("success", true);
@@ -72,10 +70,10 @@ public class PlayerActionsController {
 	@GetMapping("/{id}")
 	HashMap<String,Object> getPlayerActionsByPlayerIdInAllMatches(@PathVariable String id ){
 		HashMap<String,Object> map = new HashMap<>();
-		map = dataForPlayerActions.verifyIds(id, null, map); // null para aprovechar el mismo método existente
+		map = playerActionsService.verifyIds(id, null, map); // null para aprovechar el mismo método existente
 
 		if ( map.size() == 0) {
-			List<PlayerActions> playerActions = playerActionsServiceImpl.findByIdPlayerId(Long.parseLong(id));
+			List<PlayerActions> playerActions = iPlayerActionsDAO.findByIdPlayerId(Long.parseLong(id));
 
 			if (playerActions.size() > 0) {
 				map.put("success", true);
@@ -101,13 +99,13 @@ public class PlayerActionsController {
 	HashMap<String,Object> postLineUpInMatch(@RequestBody PlayerActionsJson p){
 		HashMap<String,Object> map = new HashMap<>();
 		// condicional verifica entrada de LINEUP
-		if ( p.getAction().equals("KEEPER") || p.getAction().equals("DEFENDER") || p.getAction().equals("MIDFIELDER") || p.getAction().equals("FORWARD")){
+		if ( p.getAction().equals("KEEPER") || p.getAction().equals("DEFENDER") || p.getAction().equals("MIDFIELDER") || p.getAction().equals("FORWARD") || p.getAction().equals("NOT_ALIGNED")){
 			Lineup lineup = Lineup.valueOf(p.getAction());
-			map = dataForPlayerActions.verifyIds(p.getPlayerId(), p.getMatchId(), map);
+			map = playerActionsService.verifyIds(p.getPlayerId(), p.getMatchId(), map);
 
 			if (map.size() == 0) {
 				try {
-					PlayerActions playerActionsById = playerActionsServiceImpl.findByIdPlayerIdAndIdMatchId(Long.parseLong(p.getPlayerId()), Long.parseLong(p.getMatchId()));
+					PlayerActions playerActionsById = iPlayerActionsDAO.findByIdPlayerIdAndIdMatchId(Long.parseLong(p.getPlayerId()), Long.parseLong(p.getMatchId()));
 
 					if (playerActionsById != null) {
 						playerActionsById.setLineup(lineup);
@@ -116,7 +114,7 @@ public class PlayerActionsController {
 						map.put("match_id", playerActionsById.getId().getMatchId());
 						map.put("lineUp ", playerActionsById.getLineup());
 						map.put("message", "LineUp modified");
-						playerActionsServiceImpl.save(playerActionsById);
+						iPlayerActionsDAO.save(playerActionsById);
 					} else {
 						map.put("success", false);
 						map.put("message", "player with id " + p.getPlayerId() + " or match with id " + p.getMatchId() + " not found ");

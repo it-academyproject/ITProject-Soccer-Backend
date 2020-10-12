@@ -13,12 +13,9 @@ import java.util.List;
 public interface IPlayerActionsDAO extends JpaRepository<PlayerActions, PlayerMatchId> {
 
 
+
     PlayerActions findByIdPlayerIdAndIdMatchId(Long playerId, Long matchId);
 
     List<PlayerActions> findByIdPlayerId (Long playerId);
 
-    @Override
-    default <S extends PlayerActions> S save(S playerActions) {
-        return save(playerActions);
-    }
 }
