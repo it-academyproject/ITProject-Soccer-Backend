@@ -13,39 +13,55 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="bid")
 public class Bid {
-	
+
 	@Id
-	@GeneratedValue ( strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	
-	@Column(name="bid_price")
-	private float bidPrice;
-	
-	@Column(name="operation_date")
-	@Temporal(TemporalType.TIMESTAMP) 
+	private Long team_id;
+
+	@Column(name = "bid_price")
+	private float bid_price;
+
+	@Column(name = "operation_date")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date operationDate;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "sale_id")
+	@JsonIgnore
 	private Sale sale;
-	
-	@ManyToOne
-	@JoinColumn(name = "team_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "team_id", insertable = false, updatable = false)
+	@JsonIgnore
 	private Team team;
 
 	public Bid() {
-		
+
 	}
+
 	
+	public Bid(Long id, Long team_id, float bid_price, Date operationDate, Sale sale, Team team) {
+		this.id = id;
+		this.team_id = team_id;
+		this.bid_price = bid_price;
+		this.operationDate = operationDate;
+		this.sale = sale;
+		this.team = team;
+	}
+
 	public Bid(Long id, float bidPrice, Date operationDate) {
 		this.id = id;
-		this.bidPrice = bidPrice;
+		this.bid_price = bid_price;
 		this.operationDate = operationDate;
 	}
 
@@ -57,13 +73,16 @@ public class Bid {
 		this.id = id;
 	}
 
-	public float getBidPrice() {
-		return bidPrice;
+	
+	public float getBid_price() {
+		return bid_price;
 	}
 
-	public void setBidPrice(float bidPrice) {
-		this.bidPrice = bidPrice;
+
+	public void setBid_price(float bid_price) {
+		this.bid_price = bid_price;
 	}
+
 
 	public Date getOperationDate() {
 		return operationDate;
@@ -90,7 +109,18 @@ public class Bid {
 	public void setTeam(Team team) {
 		this.team = team;
 	}
-	
-	
+
+
+	public Long getTeam_id() {
+		return team_id;
+	}
+
+	public void setTeam_id(Long team_id) {
+		this.team_id = team_id;
+	}
 
 }
+
+
+
+

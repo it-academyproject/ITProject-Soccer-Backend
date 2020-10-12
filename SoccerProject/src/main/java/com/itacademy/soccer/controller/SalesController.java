@@ -1,5 +1,9 @@
 package com.itacademy.soccer.controller;
 
+import java.util.*;
+
+import com.itacademy.soccer.dto.Bid;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -7,6 +11,7 @@ import java.util.Optional;
 
 import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.service.impl.BidServiceImpl;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -32,7 +37,14 @@ public class SalesController {
 
 	//B26
 	@Autowired
+	PlayerServiceImpl playerServiceImpl;
+
+	//B29
+	@Autowired
+	BidServiceImpl bidServiceImpl;
+
 	IPlayerDAO iPlayerDAO;
+
 	
 	@GetMapping("/sales")
 	public HashMap<String,Object> listAllSales(){
@@ -175,5 +187,5 @@ public class SalesController {
 		
 		return map;
 	}
-	
+
 }

@@ -1,6 +1,7 @@
 package com.itacademy.soccer.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class SaleServiceImpl implements ISaleService{
 	}
 
 
-	@Override
+	//@Override
 	public List<Sale> getSalesByPlayer(Long playerId) {
 		
 //		Player player = iPlayerDAO.findById(playerId).get();
@@ -80,4 +81,41 @@ public class SaleServiceImpl implements ISaleService{
 		iSaleDAO.deleteById(saleId);
 	}
 
+		
+	@Override
+	public List<Sale> saleListBetweenDates(Date initialDate) {
+		Date now = new Date();
+		return iSaleDAO.findByLimitDateIsBetween(initialDate, now);
+	
+	}
+	
+	@Override
+	public List<Sale> saleListFromDates(Date initialDate) {
+		List <Sale> all_sales = listAllSales();
+		List<Sale> sale_from_date = new ArrayList<>();
+		
+		for (Sale sale : all_sales) {
+			
+			if (sale.getLimitDate().after(initialDate)) {
+				sale_from_date.add(sale);
+			}		
+		}
+		return sale_from_date;	
+	}
+	
+	
+	@Override
+	public List<Sale> listAllSalesClosed() {
+		Date now = new Date();
+		List <Sale> all_sales = listAllSales();			
+		List<Sale> all_sale_closed = new ArrayList<>();
+		
+		for (Sale sale : all_sales) {					
+			if (sale.getLimitDate().before(now)) {	
+				all_sale_closed.add(sale);
+			}
+		}		
+		return all_sale_closed;		
+	}
+	
 }

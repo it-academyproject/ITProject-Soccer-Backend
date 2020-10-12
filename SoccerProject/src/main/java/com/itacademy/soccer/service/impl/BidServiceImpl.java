@@ -1,8 +1,10 @@
 package com.itacademy.soccer.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.itacademy.soccer.dto.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +38,14 @@ public class BidServiceImpl implements IBidService{
 	}
 
 	@Override
-	public Bid createBidBySale(Long saleId, Bid bid) { //El id del team esta incluido en "bid.getTeam().getId()"
+	public Bid createBidBySale(Long saleId, Bid bid) { 
 
 		Team team = iTeamDAO.findById( bid.getTeam().getId() ).get();
 		Sale sale = iSaleDAO.findById(saleId).get();
 		bid.setSale(sale);
 		bid.setTeam(team);
+		bid.setTeam_id(team.getId());
+	
 		
 		if (bid.getOperationDate()==null) bid.setOperationDate(new Date()); //si no hay fecha poner la actual
 		
@@ -53,7 +57,7 @@ public class BidServiceImpl implements IBidService{
 
 		Bid updatedBid = iBidDAO.findById(bidId).get();
 		
-		updatedBid.setBidPrice(bid.getBidPrice());
+		updatedBid.setBid_price(bid.getBid_price());
 		
 		return iBidDAO.save(updatedBid);
 	}
@@ -85,6 +89,60 @@ public class BidServiceImpl implements IBidService{
 		//elimina la última puja
 		iBidDAO.deleteById(lastBid.getId());
 		
+	}
+
+
+	@Override
+	public Bid save(Bid bid) {
+		return iBidDAO.save(bid);
+	}
+
+	@Override
+	public List<Bid> getBidsBySale (Sale sale)  { return iBidDAO.findBySaleIs(sale);}
+
+
+	@Override
+	public List<Bid> getAllBids() {
+		
+		return iBidDAO.findAll();
+	}
+
+	@Override
+	public List<Bid> getBidsByTeams(Team team) {
+		
+		return iBidDAO.findByTeamIs(team);
+	}
+	
+	
+	
+	@Override
+	public List<Bid> getBidsBySaleDate(Sale sale) {
+		
+		List<Bid> all_bids = getAllBids();
+		List<Bid> all_bids_date_sale = new ArrayList<>();
+		
+		for (Bid bid : all_bids) {			
+			if (sale.getLimitDate().before(bid.getOperationDate())) {				
+				all_bids_date_sale.add(bid);
+			}	
+		}				
+		return all_bids_date_sale;
+	}
+
+	
+	@Override
+	public List<Bid>  getAllBidsClosed() {
+		
+		Date now = new Date();
+		List<Bid> all_bids = getAllBids();	
+		List<Bid> all_bids_closed = new ArrayList<>();
+		
+		for (Bid bid : all_bids) {			
+			if (bid.getOperationDate().before(now)) {				
+				all_bids_closed.add(bid);
+			}	
+		}				
+		return all_bids_closed;
 	}
 
 }

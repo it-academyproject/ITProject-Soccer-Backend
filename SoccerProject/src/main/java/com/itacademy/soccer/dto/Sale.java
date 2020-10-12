@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name="sale")
 public class Sale {
 	
+	
 	@Id
 	@GeneratedValue( strategy=GenerationType.IDENTITY )
 	private Long id;
@@ -34,7 +35,7 @@ public class Sale {
 	private float initialPrice;
 
 	@ManyToOne
-	@JoinColumn(name="player_id")
+	@JoinColumn(name="player_id")	
 	private Player player;
 
 	@OneToMany
@@ -91,5 +92,13 @@ public class Sale {
 	public void setBids(List<Bid> bids) {
 		this.bids = bids;
 	}
+
+	@Override
+	public String toString() {
+		return "Sale [id=" + id + ", limitDate=" + limitDate + ", initialPrice=" + initialPrice + ", player=" + player
+				+ ", bids=" + bids + "]";
+	}
 	
+	
+
 }
