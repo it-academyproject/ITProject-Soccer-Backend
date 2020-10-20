@@ -142,18 +142,17 @@ public class SalesController {
 		return map;
 	}
 	
-	@PutMapping("/sales/{id}") 
-	public HashMap<String,Object> updateSale(@PathVariable(name="id") Long saleId, 
-											 @RequestBody SaleJson saleJson){
+	@PutMapping("/sales") 
+	public HashMap<String,Object> updateSale(@RequestBody SaleJson saleJson){
 		
 		Sale p_sale = saleJson.setJsonToObject();
 		
 		Sale updatedSale = null;
 		HashMap<String,Object> map = new HashMap<>();
-		map.put("saleId", saleId);
+		map.put("saleId", saleJson.getId());
 
 		try {
-			updatedSale = saleServiceImpl.updateSale(saleId, p_sale);
+			updatedSale = saleServiceImpl.updateSale(saleJson.getId(), p_sale);
 			SaleJson json = SaleJson.parseObjectToJson(updatedSale);
 			
 			map.put("sale", json);
@@ -162,11 +161,12 @@ public class SalesController {
 		}catch(NoSuchElementException e) {
 			map.put("sale", null);
 			map.put("success", false);
-			map.put("message", "Sale with id "+saleId+" doesn't exist.");
+			map.put("message", "Sale with id "+saleJson.getId()+" doesn't exist.");
 		}
 		
 		return map;
 	}
+
 	
 	@DeleteMapping("/sales/{id}") 
 	public HashMap<String,Object> deleteSale(@PathVariable(name="id") Long saleId){
