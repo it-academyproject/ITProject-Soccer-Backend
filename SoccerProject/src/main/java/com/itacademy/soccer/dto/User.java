@@ -16,7 +16,7 @@ public class User
 
     @Column(name="type")
     @Enumerated(EnumType.STRING) // IMPORTANT: This converts 0 or 1 to Manager or Admin (INTEGER TO STRING)
-    private TypeUser typeUser;
+    private TypeUser type_user;
 
     @Column(name="email")
     private String email; // User Email = Name User
@@ -45,12 +45,12 @@ public class User
 
     public TypeUser getTypeUser()
     {
-        return typeUser;
+        return type_user;
     }
 
-    public void setTypeUser(TypeUser typeUser)
+    public void setTypeUser(TypeUser type_user)
     {
-        this.typeUser = typeUser;
+        this.type_user = type_user;
     }
 
     public String getEmail()
