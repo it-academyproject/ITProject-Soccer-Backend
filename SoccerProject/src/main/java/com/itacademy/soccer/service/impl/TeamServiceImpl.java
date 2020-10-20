@@ -15,7 +15,7 @@ import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-
+import com.itacademy.soccer.controller.json.TeamJson;
 import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dto.Player;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +72,23 @@ public class TeamServiceImpl implements ITeamService {
 	}
 
 	@Override
-	public Team modifyOneTeamById(Long id, Team team) {
-		return iTeamsDao.save(team);
+	public Team modifyOneTeamById(TeamJson team) {
+		try {
+			Optional<Team> teamLocalized = iTeamsDao.findById(team.getId());
+			if(teamLocalized.isPresent()) {
+				teamLocalized.get().setId(team.getId());
+				teamLocalized.get().setName(team.getName());
+				teamLocalized.get().setFoundation_date(team.getFoundation_date());
+				teamLocalized.get().setBadge(team.getBadge());
+				teamLocalized.get().setWins(team.getWins());
+				teamLocalized.get().setLosses(team.getLosses());
+				teamLocalized.get().setDraws(team.getDraws());
+				return iTeamsDao.save(teamLocalized.get());
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override

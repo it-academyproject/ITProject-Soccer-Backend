@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.itacademy.soccer.dto.Team;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author KevHaes
@@ -17,6 +18,6 @@ import java.util.List;
  */
 public interface ITeamDAO extends JpaRepository<Team, Long> {
 
-
+	Optional<Team> findById(Long teamID);
 
 }
