@@ -1,6 +1,7 @@
 package com.itacademy.soccer.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itacademy.soccer.dto.typeUser.TypeUser;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class User
     private Long id; // Id User Auto-Generated
 
     @Column(name="type")
+    @JsonProperty("type_user") // Change the field name to "type_user" in JSON Response 
     @Enumerated(EnumType.STRING) // IMPORTANT: This converts 0 or 1 to Manager or Admin (INTEGER TO STRING)
     private TypeUser typeUser;
 
