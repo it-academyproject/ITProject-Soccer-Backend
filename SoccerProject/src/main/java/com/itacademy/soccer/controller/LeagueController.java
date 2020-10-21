@@ -130,39 +130,35 @@ public class LeagueController {
 	
 	
 	@PutMapping("/leagues/teams/{id}") // INSERT ONE TEAM IN ONE LEAGUE ONLY BY ADMIN	
-	public HashMap<String,Object> insertTeamintoLeague(@PathVariable Long id, @RequestBody Team team){
+	public HashMap<String,Object> insertTeamintoLeague(@PathVariable Long id, @RequestBody League league){
 		
-		Team teamSelected =new Team();
+		Team teamSelected = new Team();
 		League leagueSelected = new League();		
-		
 		HashMap<String,Object> map = new HashMap<>();	
 		
 		try {
+			teamSelected= iTeamService.getOneTeamById(id);	
+			leagueSelected = leagueServiceImpl.getOneLeagueById(league.getId()); 
 			
-			teamSelected= iTeamService.getOneTeamById(id);			
-			leagueSelected = leagueServiceImpl.getOneLeagueById(team.getLeague().getId());
-			
-			if (teamSelected != null && leagueSelected != null) {				
+			if (teamSelected != null && leagueSelected != null) { 		
 				
-					if (teamSelected.getLeague() == null || teamSelected.getLeague().getId() != leagueSelected.getId()) {	
-						
+				if (teamSelected.getLeague() == null || teamSelected.getLeague().getId() != leagueSelected.getId()) { 
 						teamSelected.setLeague(leagueSelected);						
-						leagueServiceImpl.insertTeamintoLeague(teamSelected);
+						leagueServiceImpl.insertTeamintoLeague(teamSelected); 
 						map.put("success", true);
-						map.put("The Team called " + teamSelected.getName() + " with id :" + id + " has signed up for league ", leagueSelected);						
-					}else {
+						map.put("The Team called " + teamSelected.getName() + " with id :" + teamSelected.getId() + " has signed up for league ", leagueSelected);						
+					}else {  
 						map.put("success", true);
-						map.put("The Team called " + teamSelected.getName() + " is already in the league ", team.getLeague().getId());		
+						map.put("The Team called " + teamSelected.getName() + " is already in the league ", teamSelected.getLeague().getId());		
 					}	
 				
-			}else {					
-				map.put("success", false);				
+			}else {	 				
+				map.put("success", false);
 			}			
 			
 		} catch (Exception e) {
-			
 			map.put("success", false);
-		  	map.put("message","Make sure The Team "+ id + " exists or the league "+ team.getLeague().getId() +" exists");        
+		  	map.put("message","Make sure The Team "+ id + " exists or the league "+ league.getId() +" exists");        
 		}
 		
 		return map;
