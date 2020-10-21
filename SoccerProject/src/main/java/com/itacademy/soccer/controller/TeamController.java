@@ -80,7 +80,7 @@ public class TeamController {
 		return map;
 	}
 
-	//delete id parameter
+	//B-44
 	@PutMapping
 	public HashMap<String, Object> modifyOneTeamById(@RequestBody TeamJson team) {
 		HashMap<String, Object> map = new HashMap<>();

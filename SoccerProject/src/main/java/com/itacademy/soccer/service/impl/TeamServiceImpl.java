@@ -73,6 +73,7 @@ public class TeamServiceImpl implements ITeamService {
 
 	@Override
 	public Team modifyOneTeamById(TeamJson team) {
+		//B-44
 		try {
 			Optional<Team> teamLocalized = iTeamsDao.findById(team.getId());
 			if(teamLocalized.isPresent()) {

@@ -25,6 +25,7 @@ public interface ITeamService {
 
 	public Team getOneTeamById(Long id);
 
+	//B-44
 	public Team modifyOneTeamById(TeamJson team);
 
 	public Team getOneTeamByIdResults(Long id);
