@@ -20,42 +20,6 @@ public class UserController {
     @Autowired
     IUserService iUserService;
 
-    @GetMapping("/login") // LOGIN ALL USERS (MANAGERS/ADMINS)
-    public HashMap <String,Object> loginUser(@RequestBody User user)
-    {
-        HashMap<String, Object> map = new HashMap();
-        try
-        {
-            for (User userChecker: iUserService.showAllUsers())
-            {
-                if(userChecker.getEmail().equals(user.getEmail()))
-                {
-                    if(userChecker.getPassword().equals(user.getPassword()))
-                    {
-                        map.put("message", "All correct!");
-                        map.put("email:", user.getEmail());
-                        map.put("type User:", userChecker.getTypeUser());
-                        map.put("success:", true);
-                    }
-                    else
-                    {
-                        map.put("message", "Mail address or Password not correct");
-                        map.put("success:", false);
-                    }
-                }
-                else
-                {
-                    map.put("message", "Mail address or Password not correct");
-                    map.put("success:", false);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            map.put("message", "something went wrong! :" + e.getMessage());
-        }
-        return map;
-    }
 
     @GetMapping("/users") // SHOW ALL USERS FOR ADMIN
     public List<User> showAllUsers()
@@ -106,6 +70,53 @@ public class UserController {
     
     
 // POSTS
+    
+	@PostMapping("/login") // LOGIN USERS (MANAGERS/ADMINS)
+	public HashMap<String, Object> loginUser(@RequestBody User user) {
+		HashMap<String, Object> map = new HashMap();
+		
+		try {
+			boolean userMatch = false; // Variable to check if user and password match
+
+			// Check that email and password are given
+			if (user.getEmail() == null) { // Email not given
+				map.put("message", "Email not given");
+				map.put("success:", false);
+
+			} else if (user.getPassword() == null) { // Password not given
+				map.put("message", "Password not given");
+				map.put("success:", false);
+
+			} else { // Email and password are given
+
+				for (User userChecker : iUserService.showAllUsers()) { // Compare existing users with user and password given
+
+					if (userChecker.getEmail().equals(user.getEmail()) && userChecker.getPassword().equals(user.getPassword())) {
+						user = userChecker; // Update user
+						userMatch = true; // User name and password matches
+					}
+				}
+
+				if (userMatch) { // Login successful - user matches
+					map.put("message", "Login succesful");
+					map.put("email:", user.getEmail());
+					map.put("type_user:", user.getTypeUser());
+					map.put("team_id:", user.getTeam().getId());
+					map.put("success:", true);
+
+				} else { // Login not successful - email and password do not match
+					map.put("message", "Email or Password not correct");
+					map.put("success:", false);
+				}
+			}
+		}
+
+		catch (Exception e) {
+			map.put("message", "something went wrong! :" + e.getMessage());
+		}
+
+		return map;
+	}
 
     @PostMapping("/users/managers") // CREATE USERS/MANAGERS
     public HashMap <String, Object> createUserManager(@RequestBody User user)
