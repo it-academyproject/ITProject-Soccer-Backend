@@ -31,10 +31,18 @@ public class PlayerServiceImpl implements IPlayerService{
 	public Player updatePlayer(PlayerJson player) {
 
 		try {
-			Optional<Player> playerLocalized = iPlayerDAO.findById(Long.parseLong(player.getIdPlayer()));
+			Optional<Player> playerLocalized = iPlayerDAO.findById(Long.parseLong(player.getId()));
 			if (playerLocalized.isPresent()) {
-				if (player.getAka().length() == 0) playerLocalized.get().setAka(null);
-				else playerLocalized.get().setAka(player.getAka());
+				if (player.getAka() != null) playerLocalized.get().setAka(player.getAka());
+				if (player.getName() != null) playerLocalized.get().setName(player.getName());;
+				if (player.getAge() != null) playerLocalized.get().setAge(Integer.parseInt(player.getAge()));
+				if (player.getKeeper() != null) playerLocalized.get().setKeeper(Integer.parseInt(player.getKeeper()));
+				if (player.getDefense() != null) playerLocalized.get().setDefense(Integer.parseInt(player.getDefense()));
+				if (player.getPass() != null) playerLocalized.get().setPass(Integer.parseInt(player.getPass()));
+				if (player.getAttack() != null) playerLocalized.get().setAttack(Integer.parseInt(player.getAttack()));
+				if (player.getTeam_id() != null) playerLocalized.get().setTeam_id(Long.parseLong(player.getTeam_id()));
+
+
 				return iPlayerDAO.save(playerLocalized.get());
 			}
 		}catch (Exception e){

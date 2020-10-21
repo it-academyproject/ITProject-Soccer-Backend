@@ -2,8 +2,8 @@ package com.itacademy.soccer.controller.json;
 
 public class PlayerJson {
 
-    private String idPlayer;
-    private String idTeam;
+    private String id;
+    private String team_id;
     private String name;
     private String age;
     private String aka;
@@ -15,25 +15,34 @@ public class PlayerJson {
     public PlayerJson() {
     }
 
-    public PlayerJson(String idPlayer, String aka){
-        this.idPlayer = idPlayer;
+    public PlayerJson(String id, String aka, String name, String age,
+                      String keeper, String defense, String pass, String attack, String team_id){
+        this.id = id;
         this.aka = aka;
+        this.name = name;
+        this.age = age;
+        this.keeper = keeper;
+        this.defense = defense;
+        this.pass = pass;
+        this.attack = attack;
+        this.team_id = team_id;
+
     }
 
-    public String getIdPlayer() {
-        return idPlayer;
+    public String getId() {
+        return id;
     }
 
-    public void setIdPlayer(String idPlayer) {
-        this.idPlayer = idPlayer;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getIdTeam() {
-        return idTeam;
+    public String getTeam_id() {
+        return team_id;
     }
 
-    public void setIdTeam(String idTeam) {
-        this.idTeam = idTeam;
+    public void setTeam_id(String team_id) {
+        this.team_id = team_id;
     }
 
     public String getName() {
