@@ -101,7 +101,9 @@ public class UserController {
 					map.put("message", "Login succesful");
 					map.put("email:", user.getEmail());
 					map.put("type_user:", user.getTypeUser());
-					map.put("team_id:", user.getTeam().getId());
+					if(user.getTeam()!=null) { //If user has team then show
+						map.put("team_id:", user.getTeam().getId());
+					}
 					map.put("success:", true);
 
 				} else { // Login not successful - email and password do not match
