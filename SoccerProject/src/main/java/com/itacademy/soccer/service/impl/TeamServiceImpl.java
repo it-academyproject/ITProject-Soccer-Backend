@@ -76,7 +76,6 @@ public class TeamServiceImpl implements ITeamService {
 		try {
 			Optional<Team> teamLocalized = iTeamsDao.findById(team.getId());
 			if(teamLocalized.isPresent()) {
-				teamLocalized.get().setId(team.getId());
 				teamLocalized.get().setName(team.getName());
 				teamLocalized.get().setFoundation_date(team.getFoundation_date());
 				teamLocalized.get().setBadge(team.getBadge());
