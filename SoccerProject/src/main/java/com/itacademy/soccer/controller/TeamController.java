@@ -117,12 +117,11 @@ public class TeamController {
 		return map;
 	}
 
-	//B-50
-	@DeleteMapping
-	public HashMap<String, Object> deleteOneTeamById(@RequestBody TeamJson team) {
+	@DeleteMapping(path = "/{id}")
+	public HashMap<String, Object> deleteOneTeamById(@PathVariable Long id) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			teamServiceImpl.deleteOneTeamById(team.getId());
+			teamServiceImpl.deleteOneTeamById(id);
 			map.put("success", true);
 			map.put("message", "One team deleted");
 		} catch (Exception e) {
