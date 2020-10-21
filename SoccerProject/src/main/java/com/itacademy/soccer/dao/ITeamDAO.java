@@ -18,7 +18,5 @@ import java.util.Optional;
  */
 public interface ITeamDAO extends JpaRepository<Team, Long> {
 
-	//B-44
-	Optional<Team> findById(Long teamID);
 
 }

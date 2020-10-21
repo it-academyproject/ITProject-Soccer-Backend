@@ -83,9 +83,12 @@ public class TeamController {
 	//B-44
 	@PutMapping
 	public HashMap<String, Object> modifyOneTeamById(@RequestBody TeamJson team) {
+		
+		Team teamToUpdate = team.setTeamJsonToObject();
+		
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			Team toShowTeam = teamServiceImpl.modifyOneTeamById(team);
+			Team toShowTeam = teamServiceImpl.modifyOneTeamById(teamToUpdate);
 			map.put("success", true);
 			map.put("message", "One team modified");
 			map.put("team", toShowTeam);
@@ -114,11 +117,12 @@ public class TeamController {
 		return map;
 	}
 
-	@DeleteMapping(path = "/{id}")
-	public HashMap<String, Object> deleteOneTeamById(@PathVariable Long id) {
+	//B-50
+	@DeleteMapping
+	public HashMap<String, Object> deleteOneTeamById(@RequestBody TeamJson team) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			teamServiceImpl.deleteOneTeamById(id);
+			teamServiceImpl.deleteOneTeamById(team.getId());
 			map.put("success", true);
 			map.put("message", "One team deleted");
 		} catch (Exception e) {

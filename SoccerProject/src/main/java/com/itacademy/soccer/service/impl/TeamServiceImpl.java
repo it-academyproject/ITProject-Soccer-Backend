@@ -72,23 +72,22 @@ public class TeamServiceImpl implements ITeamService {
 	}
 
 	@Override
-	public Team modifyOneTeamById(TeamJson team) {
+	public Team modifyOneTeamById(Team team) {
 		//B-44
+		Optional<Team> teamLocalized = iTeamsDao.findById(team.getId());
 		try {
-			Optional<Team> teamLocalized = iTeamsDao.findById(team.getId());
-			if(teamLocalized.isPresent()) {
+			if(teamLocalized != null) {
 				teamLocalized.get().setName(team.getName());
 				teamLocalized.get().setFoundation_date(team.getFoundation_date());
 				teamLocalized.get().setBadge(team.getBadge());
 				teamLocalized.get().setWins(team.getWins());
 				teamLocalized.get().setLosses(team.getLosses());
 				teamLocalized.get().setDraws(team.getDraws());
-				return iTeamsDao.save(teamLocalized.get());
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return iTeamsDao.save(teamLocalized.get());
 	}
 
 	@Override
