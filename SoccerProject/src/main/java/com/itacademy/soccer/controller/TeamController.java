@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -119,7 +120,7 @@ public class TeamController {
 
 	//B-50
 	@DeleteMapping
-	public HashMap<String, Object> deleteOneTeamById(@RequestBody TeamJson team) {
+	public HashMap<String, Object> deleteOneTeamById(@RequestBody TeamJson team)  {
 				
 		HashMap<String, Object> map = new HashMap<>();
 		try {
@@ -128,8 +129,13 @@ public class TeamController {
 			map.put("message", "One team deleted");
 		} catch (Exception e) {
 			map.put("success", false);
-			map.put("message", "No team deleted! :" + e.getMessage());
-		}
+			
+			if(e.getMessage().contains("org.hibernate.exception.ConstraintViolationException")) {
+				map.put("message", "No team deleted! : This Team has associated players!" );
+			}
+			
+			else map.put("message", "No team deleted! :" + e.getMessage());
+		} 
 		return map;
 	}
 
