@@ -134,7 +134,7 @@ public class TeamController {
 				map.put("message", "No team deleted! : This Team has associated players!" );
 			}
 			
-			else map.put("message", "No team deleted! :" + e.getMessage());
+			else map.put("message", "No team deleted! : This Team does not exist!");
 		} 
 		return map;
 	}
