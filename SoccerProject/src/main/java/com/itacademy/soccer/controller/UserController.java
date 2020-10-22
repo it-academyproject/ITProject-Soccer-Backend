@@ -98,7 +98,7 @@ public class UserController {
 				}
 
 				if (userMatch) { // Login successful - user matches
-					map.put("message", "Login succesful");
+					map.put("message", "Login successful");
 					map.put("email:", user.getEmail());
 					map.put("type_user:", user.getTypeUser());
 					if(user.getTeam()!=null) { //If user has team then show
