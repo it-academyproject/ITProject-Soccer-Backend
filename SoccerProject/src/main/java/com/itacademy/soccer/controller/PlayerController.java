@@ -131,21 +131,21 @@ public class PlayerController {
 		return map;
 	}
 	
-	//edit Aka in player
+	//edit attributes in player
 	@PutMapping
-	HashMap<String,Object> putPlayersAka(@RequestBody PlayerJson player){
+	HashMap<String,Object> putPlayer(@RequestBody PlayerJson player){
 		HashMap<String,Object> map = new HashMap<>();
-		System.out.println("updaet.....................................   " +  player.getName());
+		System.out.println("update.....................................   " +  player.getName());
 		try {
 			Player updatedPlayer = playerServiceImpl.updatePlayer(player);
 
 			map.put("success", true);
-			map.put("player with new Aka", iPlayerDAO.findById(updatedPlayer.getId()));
-			map.put("message", "AKA modified");
+			map.put("player with new attributes", iPlayerDAO.findById(updatedPlayer.getId()));
+			map.put("message", "attributes modified");
 		}
 		catch (Exception e) {
 			map.put("success", false);
-			map.put("message", "something went wrong: It seems Player with Id "+player.getIdPlayer() +" does not exist");
+			map.put("message", "something went wrong: It seems Player with Id "+player.getId() +" does not exist");
 		}
 				
 		return map;
