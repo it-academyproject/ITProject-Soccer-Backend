@@ -2,6 +2,8 @@ package com.itacademy.soccer.controller.json;
 
 import java.util.Date;
 
+import com.itacademy.soccer.dto.Team;
+
 
 public class TeamJson {
 	
@@ -84,7 +86,22 @@ public class TeamJson {
 		this.draws = draws;
 	}
 	
-	
+	//B-44
+	public Team setTeamJsonToObject() {
+		
+		Team team = new Team();
+		
+		team.setId(this.id);
+		team.setName(this.name);
+		team.setFoundation_date(this.foundation_date);
+		team.setBadge(this.badge);
+		team.setBudget(this.budget);
+		team.setWins(this.wins);
+		team.setLosses(this.losses);
+		team.setDraws(this.draws);
+		
+		return team;
+	}
 
 
 }

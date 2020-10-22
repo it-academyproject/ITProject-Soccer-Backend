@@ -7,6 +7,7 @@ package com.itacademy.soccer.service;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.itacademy.soccer.controller.json.TeamJson;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.impl.TeamServiceImpl;
@@ -24,7 +25,7 @@ public interface ITeamService {
 
 	public Team getOneTeamById(Long id);
 
-	public Team modifyOneTeamById(Long id, Team team);
+	public Team modifyOneTeamById(Team team);
 
 	public Team getOneTeamByIdResults(Long id);
 

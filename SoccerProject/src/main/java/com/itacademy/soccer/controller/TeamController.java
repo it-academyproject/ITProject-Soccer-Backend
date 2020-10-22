@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itacademy.soccer.controller.json.TeamJson;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.impl.TeamServiceImpl;
 
@@ -79,11 +80,15 @@ public class TeamController {
 		return map;
 	}
 
-	@PutMapping(path = "/{id}")
-	public HashMap<String, Object> modifyOneTeamById(@PathVariable Long id, @RequestBody Team team) {
+	//B-44
+	@PutMapping
+	public HashMap<String, Object> modifyOneTeamById(@RequestBody TeamJson team) {
+		
+		Team teamToUpdate = team.setTeamJsonToObject();
+		
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			Team toShowTeam = teamServiceImpl.modifyOneTeamById(id, team);
+			Team toShowTeam = teamServiceImpl.modifyOneTeamById(teamToUpdate);
 			map.put("success", true);
 			map.put("message", "One team modified");
 			map.put("team", toShowTeam);
