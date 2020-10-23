@@ -181,17 +181,24 @@ public class UserController {
 					for (int i = 0; i < playersStringList.length; i++) { // Get and add players to the list
 						playersStringList[i] = playersStringList[i].replaceAll("\\D+", ""); // Use regex to delete non-digits																							
 						playersIds[i] = Long.parseLong(playersStringList[i]); 
-						Player player = iPlayerService.findById(playersIds[i]).orElse(null); // Find player by id - if not found set as null
+						//Player player = iPlayerService.findById(playersIds[i]).orElse(null); // Find player by id - if not found set as null
+						Optional<Player> playerOptional = iPlayerService.findById(playersIds[i]);
+						if (playerOptional.isPresent()) { // Player exists
+							Player player = playerOptional.get();
+							
+							if (player.getTeam_id() == null) { // Check if player is free -- team_id is null
+								player.setTeam_id(team.getId()); // Update team id in Player
+								// TODO Update player team_id in DB --- might need to create new method in PlayerController due to update() works with JSON
+								teamPlayers.add(player); // Add player to list
+								System.out.println(player.getName() +" with id="+ player.getId() +" has signed with "+ team.getName()); // Info sign player
 
-						if (player.getTeam_id() == null) { // Check if player is free -- team_id is null
-							player.setTeam_id(team.getId()); // Update team id in Player
-							// TODO Update player team_id in DB --- might need to create new method in PlayerController due to update() works with JSON
-							teamPlayers.add(player); // Add player to list
-							System.out.println(player.getName() +" with id="+ player.getId() +" has signed with "+ team.getName()); // Info sign player
-
-						} else { // Player belongs to a team
-							System.out.println(player.getName() + " belongs to team " + player.getTeam().getName());
+							} else { // Player belongs to a team
+								System.out.println(player.getName() + " belongs to team " + player.getTeam().getName());
+							}
+						} else {
+							System.out.println( "player with id="+ playersIds[i] +" not found!");
 						}
+
 					}
 
 					team.setPlayersList(teamPlayers); // Add players to team
