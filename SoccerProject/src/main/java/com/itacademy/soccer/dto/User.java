@@ -1,11 +1,8 @@
 package com.itacademy.soccer.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itacademy.soccer.dto.typeUser.TypeUser;
-
 import javax.persistence.*;
-import java.lang.reflect.Type;
 
 @Entity
 @Table(name="user") // Tab User
@@ -29,13 +26,20 @@ public class User
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="team_id")
-    @JsonIgnore
+    //@JsonIgnore 
     private Team team;  // User Team Relation One To One (STANDBY)*/
    
     
     public User() { } // Constructor
 
-    public Long getId()
+    public User(String email, String password) {
+		super();
+		this.email = email;
+		this.password = password;
+	}
+
+
+	public Long getId()
     {
         return id;
     }

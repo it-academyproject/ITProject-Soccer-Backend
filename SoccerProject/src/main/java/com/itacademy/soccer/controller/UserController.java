@@ -1,13 +1,21 @@
 package com.itacademy.soccer.controller;
 
+import com.itacademy.soccer.controller.json.UserJson;
+import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.dto.User;
 import com.itacademy.soccer.dto.typeUser.TypeUser;
+import com.itacademy.soccer.service.IPlayerService;
+import com.itacademy.soccer.service.ITeamService;
 import com.itacademy.soccer.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @RestController
@@ -19,6 +27,12 @@ public class UserController {
 
     @Autowired
     IUserService iUserService;
+    
+    @Autowired 
+    ITeamService iTeamService;
+    
+    @Autowired 
+    IPlayerService iPlayerService;
 
 
     @GetMapping("/users") // SHOW ALL USERS FOR ADMIN
@@ -120,50 +134,86 @@ public class UserController {
 		return map;
 	}
 
-    @PostMapping("/users/managers") // CREATE USERS/MANAGERS
-    public HashMap <String, Object> createUserManager(@RequestBody User user)
-    {
-       HashMap<String, Object> map = new HashMap<>();
+	@PostMapping("/users/managers") // CREATE USERS/MANAGERS
+	public HashMap<String, Object> createUserManager(@RequestBody UserJson userJson) {
 
-        try
-        {
-            if(user.getEmail() == null || user.getPassword() == null)
-            {
-                map.put("message", "Please, write an email and password.");
-                map.put("success:", false);
-                //throw new Exception();
-            }
-            else if(user.getEmail().equals("") || user.getPassword().equals(""))
-            {
-                map.put("message", "Please, write an email and password.");
-                map.put("success:", false);
-                //throw new Exception();
-            }
-            else
-            {
-                String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z" + "A-Z]{2,7}$";
-                Pattern pat = Pattern.compile(emailRegex);
+		HashMap<String, Object> map = new HashMap<>();
 
-                if(pat.matcher(user.getEmail()).matches())
-                {
-                    iUserService.saveNewUser(user);
-                    map.put("message:", "All correct!");
-                    map.put("type User:",user.getTypeUser());
-                    map.put("success:", true);
-                }
-                else
-                {
-                    map.put("message", "Please, write a valid email.");
-                    map.put("success:", false);
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            map.put("message", "something went wrong! :" + e.getMessage());
-        }
-        return map;
-    }
+		try {
+			if (userJson.getEmail() == null || userJson.getPassword() == null) { // Checks if email or password are null
+				map.put("message", "Please, write an email and password.");
+				map.put("success:", false);
+
+			} else if (userJson.getEmail().equals("") || userJson.getPassword().equals("")) { // Checks if email or
+																								// password are empty
+				map.put("message", "Please, write an email and password.");
+				map.put("success:", false);
+
+			} else { // Checks if email is valid and then CREATE user, team, and add players
+				String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
+						+ "A-Z]{2,7}$";
+				Pattern pat = Pattern.compile(emailRegex);
+
+				if (pat.matcher(userJson.getEmail()).matches()) { // Checks if email is valid
+
+					// Create User
+					User user = new User(userJson.getEmail(), userJson.getPassword()); // Creates new User from userJson
+					iUserService.saveNewUser(user); // Creates User as Manager
+
+					// Create Team
+					Team team = new Team(); // Creates new Team from userJson
+					team.setName(userJson.getTeam_name()); // Adds team name from userJson
+					team.setFoundation_date(new Date());
+					team.setBadge(null);
+					team.setBudget(300000F);
+					team.setWins(0);
+					team.setLosses(0);
+					team.setDraws(0);
+
+					user.setTeam(team); // Add team created to User
+					iTeamService.createTeam(team); // Create team and adds it to User
+
+					// Add Players
+					String[] playersStringList = userJson.getPlayers().split(","); // Split Json String with list of players												
+					Long[] playersIds = new Long[playersStringList.length];// List to store player ids
+					List<Player> teamPlayers = new ArrayList<Player>(); // List to store players
+
+					for (int i = 0; i < playersStringList.length; i++) { // Get and add players to the list
+						playersStringList[i] = playersStringList[i].replaceAll("\\D+", ""); // Use regex to delete non-digits																							
+						playersIds[i] = Long.parseLong(playersStringList[i]); 
+						Player player = iPlayerService.findById(playersIds[i]).orElse(null); // Find player by id - if not found set as null
+
+						if (player.getTeam_id() == null) { // Check if player is free -- team_id is null
+							player.setTeam_id(team.getId()); // Update team id in Player
+							// TODO Update player team_id in DB --- might need to create new method in PlayerController due to update() works with JSON
+							teamPlayers.add(player); // Add player to list
+							System.out.println(player.getName() +" with id="+ player.getId() +" has signed with "+ team.getName()); // Info sign player
+
+						} else { // Player belongs to a team
+							System.out.println(player.getName() + " belongs to team " + player.getTeam().getName());
+						}
+					}
+
+					team.setPlayersList(teamPlayers); // Add players to team
+
+					// JSON Response
+					map.put("message:", userJson.getEmail() + " Manager created!");
+					map.put("success:", true);
+					map.put("list of players added", teamPlayers); // show list of players added
+
+				} else { // Email not valid
+					map.put("message", "Please, write a valid email.");
+					map.put("success:", false);
+				}
+			}
+		}
+
+		catch (Exception e) {
+			map.put("message", "something went wrong! :" + e.getMessage());
+		}
+
+		return map;
+	}
 
     @PostMapping("/users/admins") // CREATE USERS/ADMINS
     public HashMap <String, Object> createUserAdmin(@RequestBody User user)

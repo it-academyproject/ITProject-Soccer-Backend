@@ -56,4 +56,9 @@ public class PlayerServiceImpl implements IPlayerService{
 		if (player.getTeam_id() == null) player.setTeam_id(1L);
 		return player;
 	}
+	
+	@Override
+	public Optional<Player> findById(Long playerId) { // Created to find players by id at UserController.java to assign players when creating manager
+	 return iPlayerDAO.findById(playerId);	
+	} 
 }

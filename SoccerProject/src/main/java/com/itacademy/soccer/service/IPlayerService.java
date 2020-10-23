@@ -15,4 +15,6 @@ public interface IPlayerService {
 	public Player updatePlayer(PlayerJson player);
 
 	Player assignInitialValues(Player player );
+	
+	public Optional<Player> findById(Long playerId); // Created to find players by id at UserController.java to assign players when creating manager
 }

@@ -7,6 +7,8 @@ public class UserJson {
 	private String email;
 	private String password;
 	private String team_id;
+	private String team_name;
+	private String players;
 	
 	
 	public UserJson() {
@@ -17,6 +19,13 @@ public class UserJson {
 		this.password = password;
 	}
 	
+	public UserJson(String email, String password, String team_name, String players) { // Create Manager Constructor 
+		this.email = email;
+		this.password = password;
+		this.team_name = team_name;
+		this.players = players;
+	}
+
 	public UserJson(String id, String type_user, String email, String password, String team_id) {
 		this.id = id;
 		this.type_user = type_user;
@@ -64,6 +73,22 @@ public class UserJson {
 
 	public void setTeam_id(String team_id) {
 		this.team_id = team_id;
+	}
+
+	public String getTeam_name() {
+		return team_name;
+	}
+
+	public void setTeam_name(String team_name) {
+		this.team_name = team_name;
+	}
+
+	public String getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(String players) {
+		this.players = players;
 	}
 
 }
