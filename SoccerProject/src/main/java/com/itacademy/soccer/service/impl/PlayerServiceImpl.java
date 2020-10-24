@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.IPlayerService;
 
 @Service
@@ -60,5 +61,12 @@ public class PlayerServiceImpl implements IPlayerService{
 	@Override
 	public Optional<Player> findById(Long playerId) { // Created to find players by id at UserController.java to assign players when creating manager
 	 return iPlayerDAO.findById(playerId);	
-	} 
+	}
+	
+	@Override 
+	public void changeTeam (Player player, Team team) { // Created to change team_id when player  signs for a team
+		player.setTeam_id(team.getId()); // Update team id in Player
+		iPlayerDAO.save(player); // Update player
+	}
+	
 }

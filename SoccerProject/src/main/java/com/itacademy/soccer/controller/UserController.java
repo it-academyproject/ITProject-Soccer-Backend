@@ -139,7 +139,7 @@ public class UserController {
 
 		HashMap<String, Object> map = new HashMap<>();
 
-		try { // Fields validation
+		try { // Fields validation first -- Then create user + team + add players
 			
 			if ((userJson.getEmail() == null || userJson.getPassword() == null) || 
 					(userJson.getEmail().equals("") || userJson.getPassword().equals(""))) { // Checks if email or password are null or empty
@@ -190,14 +190,13 @@ public class UserController {
 				for (int i = 0; i < playersStringList.length; i++) { // Get and add players to the list
 					playersStringList[i] = playersStringList[i].replaceAll("\\D+", ""); // Use regex to delete non-digits																							
 					playersIds[i] = Long.parseLong(playersStringList[i]); 
-					//Player player = iPlayerService.findById(playersIds[i]).orElse(null); // Find player by id - if not found set as null
-					Optional<Player> playerOptional = iPlayerService.findById(playersIds[i]);
+					
+					Optional<Player> playerOptional = iPlayerService.findById(playersIds[i]); //Find player by id
 					if (playerOptional.isPresent()) { // Player by id found
 						Player player = playerOptional.get();
 
 						if (player.getTeam_id() == null) { // Check if player is free -- team_id is null
-							player.setTeam_id(team.getId()); // Update team id in Player
-							// TODO Update player team_id in DB --- might need to create new method in PlayerController due to update() works with JSON
+							iPlayerService.changeTeam(player, team); // Change player team
 							teamPlayers.add(player); // Add player to list
 							System.out.println(player.getName() +" with id="+ player.getId() +" has signed with "+ team.getName()); // Info sign player
 
@@ -215,7 +214,6 @@ public class UserController {
 				map.put("message:", userJson.getEmail() + " Manager created!");
 				map.put("success:", true);
 				map.put("list of players added", teamPlayers); // show list of players added
-
 			}
 		}
 
