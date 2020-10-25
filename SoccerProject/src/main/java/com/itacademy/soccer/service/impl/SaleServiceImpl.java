@@ -31,7 +31,6 @@ public class SaleServiceImpl implements ISaleService{
 		sale.setPlayer(player);
 		
 		return iSaleDAO.save(sale);
-		
 	}
 
 	@Override
@@ -52,7 +51,6 @@ public class SaleServiceImpl implements ISaleService{
 		return iSaleDAO.findSalesByPlayer(player);
 	}
 
-
 	//@Override
 	public List<Sale> getSalesByPlayer(Long playerId) {
 		
@@ -72,7 +70,6 @@ public class SaleServiceImpl implements ISaleService{
 		sale.setLimitDate(p_sale.getLimitDate());
 		
 		return iSaleDAO.save(sale);
-		
 	}
 
 	@Override
@@ -80,13 +77,11 @@ public class SaleServiceImpl implements ISaleService{
 
 		iSaleDAO.deleteById(saleId);
 	}
-
 		
 	@Override
 	public List<Sale> saleListBetweenDates(Date initialDate) {
 		Date now = new Date();
 		return iSaleDAO.findByLimitDateIsBetween(initialDate, now);
-	
 	}
 	
 	@Override
@@ -103,7 +98,6 @@ public class SaleServiceImpl implements ISaleService{
 		return sale_from_date;	
 	}
 	
-	
 	@Override
 	public List<Sale> listAllSalesClosed() {
 		Date now = new Date();
@@ -118,4 +112,5 @@ public class SaleServiceImpl implements ISaleService{
 		return all_sale_closed;		
 	}
 	
+
 }

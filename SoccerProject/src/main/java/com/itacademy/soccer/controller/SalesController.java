@@ -3,12 +3,6 @@ package com.itacademy.soccer.controller;
 import java.util.*;
 
 import com.itacademy.soccer.dto.Bid;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.service.impl.BidServiceImpl;
@@ -22,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itacademy.soccer.controller.json.SaleJson;
@@ -107,7 +102,6 @@ public class SalesController {
 			map.put("success", false);
 			map.put("message", "something went wrong: " + e.getMessage());
 		}
-
 		return map;
 	}
 
@@ -125,6 +119,55 @@ public class SalesController {
 		
 	//	return map;
 	//}
+	
+	
+	// http://localhost:8181/api/sales/players/filter?maxPlAge={maxPlAge}&minPlAge={minPlAge}&defLev={defLev}&attLev={attLev}&keepLev={keepLev}&passLev={passLev} 
+	@GetMapping("/sales/players/filter")
+	HashMap<String,Object> getFilteredSales(
+			@RequestParam(value="maxPlAge") int maxPlAge, 
+			@RequestParam(value="minPlAge") int minPlAge,
+			@RequestParam(value="defLev") int defLev, 
+			@RequestParam(value="attLev") int attLev,
+			@RequestParam(value="keepLev") int keepLev,
+			@RequestParam(value="passLev") int passLev) {
+		
+		HashMap<String,Object> map = new HashMap<>();
+		
+		try {
+			List<Sale> allSales = saleServiceImpl.listAllSales();
+			List<Sale> filteredSales = new ArrayList<>();
+						
+			/*
+			 * I go through the available sales and compare the attributes of the players sent by URL.
+			 * The filter parameters received by URL will be interpreted as minimum requirements in the attributes of the players that are for sale.
+			 */
+			for (Sale sale : allSales) {
+				if ( (sale.getPlayer().getAge()<=maxPlAge && sale.getPlayer().getAge()>=minPlAge) 
+						&& sale.getPlayer().getDefense()>=defLev
+						&& sale.getPlayer().getAttack()>=attLev
+						&& sale.getPlayer().getKeeper()>=keepLev
+						&& sale.getPlayer().getPass()>=passLev) {
+					filteredSales.add(sale);					
+				}				
+			}
+			
+			if(!filteredSales.isEmpty()) {
+				map.put("success", true);
+				map.put("message", "get all sales by player skills");
+				map.put("filtered sales", filteredSales);
+			}
+			else {
+				map.put("success", false);
+				map.put("message", "Error getting sales: there is no player with those specifications");				
+			}
+		}
+		catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
+		return map;
+	}
+	
 	
 	@PostMapping("/sales") //@RequestBody Sale p_sale
 	public HashMap<String,Object> createSale(@RequestBody SaleJson saleJson){
