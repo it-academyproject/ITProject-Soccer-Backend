@@ -153,7 +153,6 @@ public class UserController {
 			} else if (!availableEmail(userJson.getEmail())){ // Checks if email is available with availableEmail()		
 				map.put("message", userJson.getEmail()+" email already exists.");
 				map.put("success:", false);	
-			//TODO B-53 one email/user can have more than one team?
 			
 			} else if (userJson.getTeam_name() == null || userJson.getTeam_name().equals("")){	// Checks if team name is null or empty
 				map.put("message", "Please, write a name for your team.");
@@ -169,7 +168,7 @@ public class UserController {
 				User user = new User(userJson.getEmail(), userJson.getPassword()); // Creates new User from userJson
 				iUserService.saveNewUser(user); // Creates User as Manager
 
-				// Create Team //TODO B-53 modify method create new team at TeamController
+				// Create Team 
 				Team team = new Team(); // Creates new Team from userJson
 				team.setName(userJson.getTeam_name()); // Adds team name from userJson
 				team.setFoundation_date(new Date());
