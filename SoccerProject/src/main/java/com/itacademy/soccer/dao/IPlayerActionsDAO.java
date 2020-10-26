@@ -1,5 +1,6 @@
 package com.itacademy.soccer.dao;
 
+import com.itacademy.soccer.dto.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.itacademy.soccer.dto.PlayerActions;
@@ -17,5 +18,7 @@ public interface IPlayerActionsDAO extends JpaRepository<PlayerActions, PlayerMa
     PlayerActions findByIdPlayerIdAndIdMatchId(Long playerId, Long matchId);
 
     List<PlayerActions> findByIdPlayerId (Long playerId);
+
+    List<PlayerActions> findByIdMatchId (Long matchId);
 
 }
