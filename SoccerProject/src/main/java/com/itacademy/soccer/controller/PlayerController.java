@@ -6,13 +6,17 @@ import java.util.Optional;
 
 import com.itacademy.soccer.controller.json.PlayerJson;
 import com.itacademy.soccer.dao.IPlayerDAO;
+import com.itacademy.soccer.dao.ITeamDAO;
+
 import org.dom4j.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
+import com.itacademy.soccer.service.impl.TeamServiceImpl;
 
 @RestController
 @RequestMapping("/api/players")
@@ -24,6 +28,11 @@ public class PlayerController {
 	@Autowired
 	IPlayerDAO iPlayerDAO;
 
+	@Autowired
+	TeamServiceImpl teamServiceImpl;
+	@Autowired
+	ITeamDAO iTeamDAO;
+	
 
 	//get all players
 	@GetMapping()
@@ -155,4 +164,25 @@ public class PlayerController {
 		iPlayerDAO. deleteById(id);
 	}
 
+	@GetMapping("/player")
+	HashMap<String,Object> getTeamByPlayerName(@RequestParam(name="name") String name){
+		HashMap<String,Object> map = new HashMap<>();
+		String teamName;
+		try {
+			Player playerSelected = iPlayerDAO.findByName(name);
+			Long id = playerSelected.getTeam_id();
+			Team teamSelected = teamServiceImpl.getOneTeamById(id);
+			teamName = teamSelected.getName();
+			map.put("success", true);
+			map.put("message", "Get team name");
+			map.put("team", teamName);
+		}
+		catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "no teams to be shown!: " + e.getMessage());
+		}
+		
+		return map;
+	}
+	
 }
