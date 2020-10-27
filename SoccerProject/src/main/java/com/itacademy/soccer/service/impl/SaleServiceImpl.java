@@ -144,7 +144,6 @@ public class SaleServiceImpl implements ISaleService{
 		List<Sale> allSales = this.listAllSales();
 		List<Sale> filteredSales = new ArrayList<>();
 		Date Now = new Date();
-		System.out.println(Now);
 		
 		for (Sale sale : allSales) {
 			if ( (sale.getPlayer().getAge()<=maxage && sale.getPlayer().getAge()>=minage) 

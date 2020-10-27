@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -122,7 +123,8 @@ public class SalesController {
 	
 	
 	// http://localhost:8181/api/sales/filter?max-age={max-age}&min-age={min-age}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
-	@GetMapping("/sales/filter")
+//	@GetMapping("/sales")
+	@RequestMapping(value = "/sales", params= {"max-age", "min-age", "defense", "attack", "keeper", "pass"} , method = RequestMethod.GET)
 	HashMap<String,Object> getFilteredSales(
 			@RequestParam(value="max-age", defaultValue="100") int maxage, 
 			@RequestParam(value="min-age", defaultValue="1") int minage,
