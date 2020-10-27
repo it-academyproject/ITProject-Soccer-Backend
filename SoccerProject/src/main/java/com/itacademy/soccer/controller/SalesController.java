@@ -121,15 +121,15 @@ public class SalesController {
 	//}
 	
 	
-	// http://localhost:8181/api/sales/players/filter?maxPlAge={maxPlAge}&minPlAge={minPlAge}&defLev={defLev}&attLev={attLev}&keepLev={keepLev}&passLev={passLev} 
-	@GetMapping("/sales/players/filter")
+	// http://localhost:8181/api/sales/filter?maxage={maxage}&minage={minage}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
+	@GetMapping("/sales/filter")
 	HashMap<String,Object> getFilteredSales(
-			@RequestParam(value="maxPlAge") int maxPlAge, 
-			@RequestParam(value="minPlAge") int minPlAge,
-			@RequestParam(value="defLev") int defLev, 
-			@RequestParam(value="attLev") int attLev,
-			@RequestParam(value="keepLev") int keepLev,
-			@RequestParam(value="passLev") int passLev) {
+			@RequestParam(value="maxage") int maxage, 
+			@RequestParam(value="minage") int minage,
+			@RequestParam(value="defense") int defense, 
+			@RequestParam(value="attack") int attack,
+			@RequestParam(value="keeper") int keeper,
+			@RequestParam(value="pass") int pass) {
 		
 		HashMap<String,Object> map = new HashMap<>();
 		
@@ -142,11 +142,11 @@ public class SalesController {
 			 * The filter parameters received by URL will be interpreted as minimum requirements in the attributes of the players that are for sale.
 			 */
 			for (Sale sale : allSales) {
-				if ( (sale.getPlayer().getAge()<=maxPlAge && sale.getPlayer().getAge()>=minPlAge) 
-						&& sale.getPlayer().getDefense()>=defLev
-						&& sale.getPlayer().getAttack()>=attLev
-						&& sale.getPlayer().getKeeper()>=keepLev
-						&& sale.getPlayer().getPass()>=passLev) {
+				if ( (sale.getPlayer().getAge()<=maxage && sale.getPlayer().getAge()>=minage) 
+						&& sale.getPlayer().getDefense()>=defense
+						&& sale.getPlayer().getAttack()>=attack
+						&& sale.getPlayer().getKeeper()>=keeper
+						&& sale.getPlayer().getPass()>=pass) {
 					filteredSales.add(sale);					
 				}				
 			}
