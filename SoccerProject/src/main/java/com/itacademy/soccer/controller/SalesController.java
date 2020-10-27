@@ -121,11 +121,11 @@ public class SalesController {
 	//}
 	
 	
-	// http://localhost:8181/api/sales/filter?maxage={maxage}&minage={minage}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
+	// http://localhost:8181/api/sales/filter?max-age={max-age}&min-age={min-age}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
 	@GetMapping("/sales/filter")
 	HashMap<String,Object> getFilteredSales(
-			@RequestParam(value="maxage") int maxage, 
-			@RequestParam(value="minage") int minage,
+			@RequestParam(value="max-age") int maxage, 
+			@RequestParam(value="min-age") int minage,
 			@RequestParam(value="defense") int defense, 
 			@RequestParam(value="attack") int attack,
 			@RequestParam(value="keeper") int keeper,
@@ -134,29 +134,12 @@ public class SalesController {
 		HashMap<String,Object> map = new HashMap<>();
 		
 		try {
-			List<Sale> allSales = saleServiceImpl.listAllSales();
-			List<Sale> filteredSales = new ArrayList<>();
-						
-			/*
-			 * I go through the available sales and compare the attributes of the players sent by URL.
-			 * The filter parameters received by URL will be interpreted as minimum requirements in the attributes of the players that are for sale.
-			 */
-			for (Sale sale : allSales) {
-				if ( (sale.getPlayer().getAge()<=maxage && sale.getPlayer().getAge()>=minage) 
-						&& sale.getPlayer().getDefense()>=defense
-						&& sale.getPlayer().getAttack()>=attack
-						&& sale.getPlayer().getKeeper()>=keeper
-						&& sale.getPlayer().getPass()>=pass) {
-					filteredSales.add(sale);					
-				}				
-			}
-			
+			List<Sale> filteredSales = saleServiceImpl.salesFilter(maxage, minage, defense, attack, keeper, pass);			
 			if(!filteredSales.isEmpty()) {
 				map.put("success", true);
 				map.put("message", "get all sales by player skills");
 				map.put("filtered sales", filteredSales);
-			}
-			else {
+			}else {
 				map.put("success", false);
 				map.put("message", "Error getting sales: there is no player with those specifications");				
 			}

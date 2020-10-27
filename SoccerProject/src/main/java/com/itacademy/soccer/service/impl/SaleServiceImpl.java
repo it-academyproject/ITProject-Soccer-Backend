@@ -112,5 +112,28 @@ public class SaleServiceImpl implements ISaleService{
 		return all_sale_closed;		
 	}
 	
+	/*
+	 * I go through the available sales and compare the attributes of the players sent by URL.
+	 * The filter parameters received by URL will be interpreted as minimum requirements in the attributes of the players that are for sale.
+	 */
+	@Override
+	public List<Sale> salesFilter(int maxage, int minage, int defense, int attack, int keeper, int pass){
+		List<Sale> allSales = this.listAllSales();
+		List<Sale> filteredSales = new ArrayList<>();
+		Date Now = new Date();
+		System.out.println(Now);
+		
+		for (Sale sale : allSales) {
+			if ( (sale.getPlayer().getAge()<=maxage && sale.getPlayer().getAge()>=minage) 
+					&& sale.getPlayer().getDefense()>=defense
+					&& sale.getPlayer().getAttack()>=attack
+					&& sale.getPlayer().getKeeper()>=keeper
+					&& sale.getPlayer().getPass()>=pass && sale.getLimitDate().compareTo(Now)>0) {
+				filteredSales.add(sale);					
+			}				
+		}	
+		return filteredSales;
+	}
+	
 
 }

@@ -27,6 +27,8 @@ public interface ISaleService {
 		public List<Sale> saleListFromDates(Date initialDate);
 
 		public List<Sale> listAllSalesClosed();
+		
+		public List<Sale> salesFilter(int maxage, int minage, int defense, int attack, int keeper, int pass);
 
 
 }
