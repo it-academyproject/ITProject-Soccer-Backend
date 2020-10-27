@@ -2,6 +2,7 @@ package com.itacademy.soccer.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,12 +113,34 @@ public class SaleServiceImpl implements ISaleService{
 		return all_sale_closed;		
 	}
 	
+	@Override
+	public HashMap<String,Object> salesFilter(int maxage, int minage, int defense, int attack, int keeper, int pass){
+		
+		HashMap<String,Object> map = new HashMap<>();
+		try {
+			List<Sale> filteredSales = this.salesFilterComparator(maxage, minage, defense, attack, keeper, pass);			
+			if(!filteredSales.isEmpty()) {
+				map.put("success", true);
+				map.put("message", "get all sales by player skills");
+				map.put("filtered sales", filteredSales);
+			}else {
+				map.put("success", false);
+				map.put("message", "Error getting sales: there is no player with those specifications at the moment");				
+			}
+		}
+		catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
+		return map;
+	}
+	
 	/*
 	 * I go through the available sales and compare the attributes of the players sent by URL.
 	 * The filter parameters received by URL will be interpreted as minimum requirements in the attributes of the players that are for sale.
 	 */
 	@Override
-	public List<Sale> salesFilter(int maxage, int minage, int defense, int attack, int keeper, int pass){
+	public List<Sale> salesFilterComparator(int maxage, int minage, int defense, int attack, int keeper, int pass){
 		List<Sale> allSales = this.listAllSales();
 		List<Sale> filteredSales = new ArrayList<>();
 		Date Now = new Date();
