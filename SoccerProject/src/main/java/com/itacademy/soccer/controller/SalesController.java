@@ -131,25 +131,6 @@ public class SalesController {
 			@RequestParam(value="keeper", defaultValue="1") int keeper,
 			@RequestParam(value="pass", defaultValue="1") int pass) {
 		
-//		HashMap<String,Object> map = new HashMap<>();
-//		
-//		
-//		
-//		try {
-//			List<Sale> filteredSales = saleServiceImpl.salesFilter2(maxage, minage, defense, attack, keeper, pass);			
-//			if(!filteredSales.isEmpty()) {
-//				map.put("success", true);
-//				map.put("message", "get all sales by player skills");
-//				map.put("filtered sales", filteredSales);
-//			}else {
-//				map.put("success", false);
-//				map.put("message", "Error getting sales: there is no player with those specifications at the moment");				
-//			}
-//		}
-//		catch (Exception e) {
-//			map.put("success", false);
-//			map.put("message", "something went wrong: " + e.getMessage());
-//		}
 		return saleServiceImpl.salesFilter(maxage, minage, defense, attack, keeper, pass);
 	}
 	
