@@ -35,26 +35,22 @@ public class TeamServiceImpl implements ITeamService {
 
 	@Autowired
 	IPlayerDAO iPlayerDAO;
+	
 	@Autowired
 	ITeamDAO iTeamsDao;
+
 	@Override
-	public void createTeamInitial(TeamServiceImpl teamService){
-		List<Team> teamsToShow = teamService.getAllTeams();
-		if ( teamsToShow.size() == 0){
-			Team team1 = new Team();
-
-			team1.setName("Free market");
-			team1.setFoundation_date(new Date());
-			team1.setBadge("x");
-			team1.setBudget(0F);
-			team1.setWins(0);
-			team1.setLosses(0);
-			team1.setDraws(0);
-
-			teamService.createTeam(team1);
-		}
+	public Team createTeamInitial(String name) { // Creates initial team with name provided
+		Team team = new Team(); 
+		team.setName(name);
+		team.setFoundation_date(new Date()); // Set foundation date as creation in the system
+		team.setBadge(null);
+		team.setBudget(300000F); // Set initial budget as 300.000
+		team.setWins(0);
+		team.setLosses(0);
+		team.setDraws(0);
+		return team;
 	}
-
 
 	@Override
 	public Team createTeam(Team team) {

@@ -18,7 +18,8 @@ import com.itacademy.soccer.service.impl.TeamServiceImpl;
  */
 public interface ITeamService {
 
-	void createTeamInitial(TeamServiceImpl teamService);
+	public Team createTeamInitial(String name);
+	
 	public Team createTeam(Team team);
 
 	public List<Team> getAllTeams();

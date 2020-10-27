@@ -150,19 +150,11 @@ public class UserController {
 				iUserService.saveNewUser(user); // Creates User as Manager
 
 				// Create Team 
-				Team team = new Team(); // Creates new Team from userJson
-				// TODO create team with controller
-				team.setName(userJson.getTeam_name()); // Adds team name from userJson
-				team.setFoundation_date(new Date());
-				team.setBadge(null);
-				team.setBudget(300000F);
-				team.setWins(0);
-				team.setLosses(0);
-				team.setDraws(0);
-
+				Team team = new Team(); 
+				team = iTeamService.createTeamInitial(userJson.getTeam_name()); // Create team with name provided and initial values
+				team = iTeamService.createTeam(team); //
 				user.setTeam(team); // Add team created to User
-				iTeamService.createTeam(team); // Create team and adds it to User
-
+				
 				// Add Players
 				String[] playersStringList = userJson.getPlayers().split(","); // Split Json String with list of players												
 				Long[] playersIds = new Long[playersStringList.length];// List to store player ids
@@ -194,7 +186,7 @@ public class UserController {
 				// JSON Response
 				map.put("message", userJson.getEmail() + " Manager created!");
 				map.put("success", true);
-				map.put("list of players added", teamPlayers); // show list of players added
+				map.put("list of players added to "+ team.getName(), teamPlayers); // show list of players added to team
 			}
 		}
 
