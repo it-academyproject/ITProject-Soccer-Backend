@@ -95,11 +95,11 @@ public class UserController {
 			// Check that email and password are given
 			if (user.getEmail() == null) { // Email not given
 				map.put("message", "Email not given");
-				map.put("success:", false);
+				map.put("success", false);
 
 			} else if (user.getPassword() == null) { // Password not given
 				map.put("message", "Password not given");
-				map.put("success:", false);
+				map.put("success", false);
 
 			} else { // Email and password are given
 
@@ -113,16 +113,16 @@ public class UserController {
 
 				if (userMatch) { // Login successful - user matches
 					map.put("message", "Login successful");
-					map.put("email:", user.getEmail());
+					map.put("email", user.getEmail());
 					map.put("type_user:", user.getTypeUser());
 					if(user.getTeam()!=null) { //If user has team then show
-						map.put("team_id:", user.getTeam().getId());
+						map.put("team_id", user.getTeam().getId());
 					}
-					map.put("success:", true);
+					map.put("success", true);
 
 				} else { // Login not successful - email and password do not match
 					map.put("message", "Email or Password not correct");
-					map.put("success:", false);
+					map.put("success", false);
 				}
 			}
 		}
@@ -141,28 +141,9 @@ public class UserController {
 
 		try { // Fields validation first -- Then create user + team + add players
 			
-			if ((userJson.getEmail() == null || userJson.getPassword() == null) || 
-					(userJson.getEmail().equals("") || userJson.getPassword().equals(""))) { // Checks if email or password are null or empty
-				map.put("message", "Please, write an email and password.");
-				map.put("success:", false);
-
-			} else if (!validateEmail(userJson.getEmail())){ // Checks if email is valid with validateEmail()		
-				map.put("message", "Please, write a valid email.");
-				map.put("success:", false);	
+			map =  iUserService.managerValidation(map,userJson); // Check if manager can be created -- Fields validation
 			
-			} else if (!availableEmail(userJson.getEmail())){ // Checks if email is available with availableEmail()		
-				map.put("message", userJson.getEmail()+" email already exists.");
-				map.put("success:", false);	
-			
-			} else if (userJson.getTeam_name() == null || userJson.getTeam_name().equals("")){	// Checks if team name is null or empty
-				map.put("message", "Please, write a name for your team.");
-				map.put("success:", false);
-			
-			} else if (!availableTeamName(userJson.getTeam_name())){ // Checks if team name is available with validateTeamName()
-				map.put("message", userJson.getTeam_name()+" team name already exists.");
-				map.put("success:", false);
-			
-			} else { // Create User + Team + Add players -- After validate fields
+			if (map.containsValue(true)) { // User is valid 
 				
 				// Create User
 				User user = new User(userJson.getEmail(), userJson.getPassword()); // Creates new User from userJson
@@ -170,6 +151,7 @@ public class UserController {
 
 				// Create Team 
 				Team team = new Team(); // Creates new Team from userJson
+				// TODO create team with controller
 				team.setName(userJson.getTeam_name()); // Adds team name from userJson
 				team.setFoundation_date(new Date());
 				team.setBadge(null);
@@ -210,8 +192,8 @@ public class UserController {
 				team.setPlayersList(teamPlayers); // Add players to team
 
 				// JSON Response
-				map.put("message:", userJson.getEmail() + " Manager created!");
-				map.put("success:", true);
+				map.put("message", userJson.getEmail() + " Manager created!");
+				map.put("success", true);
 				map.put("list of players added", teamPlayers); // show list of players added
 			}
 		}
@@ -232,13 +214,13 @@ public class UserController {
             if(user.getEmail() == null || user.getPassword() == null)
             {
                 map.put("message", "Please, write an email and password.");
-                map.put("success:", false);
+                map.put("success", false);
                 //throw new Exception();
             }
             else if(user.getEmail().equals("") || user.getPassword().equals(""))
             {
                 map.put("message", "Please, write an email and password.");
-                map.put("success:", false);
+                map.put("success", false);
                 //throw new Exception();
             }
             else
@@ -249,14 +231,14 @@ public class UserController {
                 if(pat.matcher(user.getEmail()).matches())
                 {
                     iUserService.saveNewAdmin(user);
-                    map.put("message:", "All correct!");
-                    map.put("type User:", user.getTypeUser());
-                    map.put("success:", true);
+                    map.put("message", "All correct!");
+                    map.put("type User", user.getTypeUser());
+                    map.put("success", true);
                 }
                 else
                 {
                     map.put("message", "Please, write a valid email.");
-                    map.put("success:", false);
+                    map.put("success", false);
                 }
             }
         }
@@ -281,15 +263,15 @@ public class UserController {
                 {
                     if(userChecker.getId() == user.getId())
                     {
-                        map.put("success:", true);
-                        map.put("User:", user.getEmail());
-                        map.put("message:", "change successful");
+                        map.put("success", true);
+                        map.put("User", user.getEmail());
+                        map.put("message", "change successful");
                         iUserService.modifyUserPass(id, user);
                     }
                     else
                     {
-                        map.put("success:",false);
-                        map.put("message:", "Wrong email or id.");
+                        map.put("success",false);
+                        map.put("message", "Wrong email or id.");
                     }
                }
             }
@@ -311,18 +293,18 @@ public class UserController {
             {
                 if(userChecker.getEmail().equals(user.getEmail()) && userChecker.getId() == user.getId())
                 {
-                    map.put("Email:", user.getEmail());
-                    map.put("Id:", userChecker.getId());
+                    map.put("Email", user.getEmail());
+                    map.put("Id", userChecker.getId());
                     if(userChecker.getTypeUser().equals(user.getTypeUser()))
                     {
-                        map.put("success:", false);
-                        map.put("message:", "User '" + user.getEmail() + "' have same type actually.");
+                        map.put("success", false);
+                        map.put("message", "User '" + user.getEmail() + "' have same type actually.");
                     }
                     else
                     {
                         iUserService.modifyTypeUser(id, user);
-                        map.put("Now User type:", user.getTypeUser());
-                        map.put("success:", true);
+                        map.put("Now User type", user.getTypeUser());
+                        map.put("success", true);
                     }
                 }
             }
@@ -345,42 +327,8 @@ public class UserController {
     
     
     
-    // Validates email 
-    public boolean validateEmail(String email) {
-    	boolean validEmail = false;
-    	String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z" + "A-Z]{2,7}$";
-    	Pattern pat = Pattern.compile(emailRegex);
-
-    	if (pat.matcher(email).matches()) { // Checks if email is valid
-    		validEmail = true;
-    	}
-    	return validEmail;
-    }
     
-    // Checks if email is available 
-    public boolean availableEmail(String email) {
-    	boolean availableEmail = true;
-    	List<User> usersList =  iUserService.showAllUsers();
-    	for (User user : usersList) {
-    		if(user.getEmail().equalsIgnoreCase(email)) {
-    			availableEmail = false;
-    		};
-    	}
-    	return  availableEmail;
-    }
-    
-    
-    // Checks if Team name is available 
-    public boolean availableTeamName(String teamName) {
-    	boolean availableName = true;
-    	List<Team> teamsList =  iTeamService.getAllTeams();
-    	for (Team team : teamsList) {
-    		if(team.getName().equalsIgnoreCase(teamName)) {
-    			availableName = false;
-    		};
-    	}
-    	return  availableName;
-    }
+ 
     
     
 }
