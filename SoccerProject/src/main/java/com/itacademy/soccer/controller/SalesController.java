@@ -124,12 +124,12 @@ public class SalesController {
 	// http://localhost:8181/api/sales/filter?max-age={max-age}&min-age={min-age}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
 	@GetMapping("/sales/filter")
 	HashMap<String,Object> getFilteredSales(
-			@RequestParam(value="max-age") int maxage, 
-			@RequestParam(value="min-age") int minage,
-			@RequestParam(value="defense") int defense, 
-			@RequestParam(value="attack") int attack,
-			@RequestParam(value="keeper") int keeper,
-			@RequestParam(value="pass") int pass) {
+			@RequestParam(value="max-age", defaultValue="100") int maxage, 
+			@RequestParam(value="min-age", defaultValue="1") int minage,
+			@RequestParam(value="defense", defaultValue="1") int defense, 
+			@RequestParam(value="attack", defaultValue="1") int attack,
+			@RequestParam(value="keeper", defaultValue="1") int keeper,
+			@RequestParam(value="pass", defaultValue="1") int pass) {
 		
 		HashMap<String,Object> map = new HashMap<>();
 		
@@ -141,7 +141,7 @@ public class SalesController {
 				map.put("filtered sales", filteredSales);
 			}else {
 				map.put("success", false);
-				map.put("message", "Error getting sales: there is no player with those specifications");				
+				map.put("message", "Error getting sales: there is no player with those specifications at the moment");				
 			}
 		}
 		catch (Exception e) {
