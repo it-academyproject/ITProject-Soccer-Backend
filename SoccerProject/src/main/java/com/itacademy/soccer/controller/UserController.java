@@ -1,13 +1,21 @@
 package com.itacademy.soccer.controller;
 
+import com.itacademy.soccer.controller.json.UserJson;
+import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.dto.User;
 import com.itacademy.soccer.dto.typeUser.TypeUser;
+import com.itacademy.soccer.service.IPlayerService;
+import com.itacademy.soccer.service.ITeamService;
 import com.itacademy.soccer.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @RestController
@@ -19,6 +27,12 @@ public class UserController {
 
     @Autowired
     IUserService iUserService;
+    
+    @Autowired 
+    ITeamService iTeamService;
+    
+    @Autowired 
+    IPlayerService iPlayerService;
 
 
     @GetMapping("/users") // SHOW ALL USERS FOR ADMIN
@@ -100,7 +114,7 @@ public class UserController {
 				if (userMatch) { // Login successful - user matches
 					map.put("message", "Login successful");
 					map.put("email", user.getEmail());
-					map.put("type_user", user.getTypeUser());
+					map.put("type_user:", user.getTypeUser());
 					if(user.getTeam()!=null) { //If user has team then show
 						map.put("team_id", user.getTeam().getId());
 					}
@@ -120,50 +134,45 @@ public class UserController {
 		return map;
 	}
 
-    @PostMapping("/users/managers") // CREATE USERS/MANAGERS
-    public HashMap <String, Object> createUserManager(@RequestBody User user)
-    {
-       HashMap<String, Object> map = new HashMap<>();
+	@PostMapping("/users/managers") // CREATE USERS/MANAGERS
+	public HashMap<String, Object> createUserManager(@RequestBody UserJson userJson) {
 
-        try
-        {
-            if(user.getEmail() == null || user.getPassword() == null)
-            {
-                map.put("message", "Please, write an email and password.");
-                map.put("success", false);
-                //throw new Exception();
-            }
-            else if(user.getEmail().equals("") || user.getPassword().equals(""))
-            {
-                map.put("message", "Please, write an email and password.");
-                map.put("success", false);
-                //throw new Exception();
-            }
-            else
-            {
-                String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z" + "A-Z]{2,7}$";
-                Pattern pat = Pattern.compile(emailRegex);
+		HashMap<String, Object> map = new HashMap<>();
 
-                if(pat.matcher(user.getEmail()).matches())
-                {
-                    iUserService.saveNewUser(user);
-                    map.put("message", "All correct!");
-                    map.put("type User",user.getTypeUser());
-                    map.put("success", true);
-                }
-                else
-                {
-                    map.put("message", "Please, write a valid email.");
-                    map.put("success", false);
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            map.put("message", "something went wrong! :" + e.getMessage());
-        }
-        return map;
-    }
+		try { // Fields validation first -- Then create user + team + add players
+			
+			map =  iUserService.managerValidation(map,userJson); // Check if manager can be created -- Fields validation
+			
+			if (map.containsValue(true)) { // User is valid 
+				
+				// Create User
+				User user = new User(userJson.getEmail(), userJson.getPassword()); // Creates new User from userJson
+				iUserService.saveNewUser(user); // Creates User as Manager
+
+				// Create Team 
+				Team team = new Team(); 
+				team = iTeamService.createTeamInitial(userJson.getTeam_name()); // Create team with name provided and initial values
+				team = iTeamService.createTeam(team); // Save created team in DB
+				user.setTeam(team); // Add team created to User			
+				
+				// Add Players
+				List<Player> teamPlayers = iPlayerService.getPlayersFromJson(userJson.getPlayers()); // Get list of players from userJson players list
+				teamPlayers = iPlayerService.signFreePlayers(teamPlayers, team); // Sign free players from list -- only players with team_id = null			
+				team.setPlayersList(teamPlayers); // Add players to team
+
+				// JSON Response
+				map.put("message", userJson.getEmail() + " Manager created!");
+				map.put("success", true);
+				map.put("list of players added to "+ team.getName(), teamPlayers); // Show list of players added to team
+			}
+		}
+
+		catch (Exception e) {
+			map.put("message", "something went wrong! :" + e.getMessage());
+		}
+
+		return map;
+	}
 
     @PostMapping("/users/admins") // CREATE USERS/ADMINS
     public HashMap <String, Object> createUserAdmin(@RequestBody User user)
@@ -284,4 +293,6 @@ public class UserController {
     {
         iUserService.deleteUser(id);
     }
+    
+       
 }
