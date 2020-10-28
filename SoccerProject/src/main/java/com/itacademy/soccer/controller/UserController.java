@@ -152,41 +152,18 @@ public class UserController {
 				// Create Team 
 				Team team = new Team(); 
 				team = iTeamService.createTeamInitial(userJson.getTeam_name()); // Create team with name provided and initial values
-				team = iTeamService.createTeam(team); //
-				user.setTeam(team); // Add team created to User
+				team = iTeamService.createTeam(team); // Save created team in DB
+				user.setTeam(team); // Add team created to User			
 				
 				// Add Players
-				String[] playersStringList = userJson.getPlayers().split(","); // Split Json String with list of players												
-				Long[] playersIds = new Long[playersStringList.length];// List to store player ids
-				List<Player> teamPlayers = new ArrayList<Player>(); // List to store players
-
-				for (int i = 0; i < playersStringList.length; i++) { // Get and add players to the list
-					playersStringList[i] = playersStringList[i].replaceAll("\\D+", ""); // Use regex to delete non-digits																							
-					playersIds[i] = Long.parseLong(playersStringList[i]); 
-					
-					Optional<Player> playerOptional = iPlayerService.findById(playersIds[i]); //Find player by id
-					if (playerOptional.isPresent()) { // Player by id found
-						Player player = playerOptional.get();
-
-						if (player.getTeam_id() == null) { // Check if player is free -- team_id is null
-							iPlayerService.changeTeam(player, team); // Change player team
-							teamPlayers.add(player); // Add player to list
-							System.out.println(player.getName() +" with id="+ player.getId() +" has signed with "+ team.getName()); // Info sign player
-
-						} else { // Player belongs to a team
-							System.out.println(player.getName() + " belongs to team " + player.getTeam().getName());
-						}
-					} else { // Player by id not found
-						System.out.println( "player with id="+ playersIds[i] +" not found!");
-					}
-				}
-
+				List<Player> teamPlayers = iPlayerService.getPlayersFromJson(userJson.getPlayers()); // Get list of players from userJson players list
+				teamPlayers = iPlayerService.signFreePlayers(teamPlayers, team); // Sign free players from list -- only players with team_id = null			
 				team.setPlayersList(teamPlayers); // Add players to team
 
 				// JSON Response
 				map.put("message", userJson.getEmail() + " Manager created!");
 				map.put("success", true);
-				map.put("list of players added to "+ team.getName(), teamPlayers); // show list of players added to team
+				map.put("list of players added to "+ team.getName(), teamPlayers); // Show list of players added to team
 			}
 		}
 
@@ -317,10 +294,5 @@ public class UserController {
         iUserService.deleteUser(id);
     }
     
-    
-    
-    
- 
-    
-    
+       
 }

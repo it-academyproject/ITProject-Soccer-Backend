@@ -12,13 +12,17 @@ public interface IPlayerService {
 	public List<Player> playerList();
 	
 	public List<Player> playerListByTeam(Long teamId);
+	
+	public Optional<Player> findById(Long playerId);
 
 	public Player updatePlayer(PlayerJson player);
 
 	Player assignInitialValues(Player player );
+		
+	public void changeTeam (Player player, Team team ); // Change team_id when player signs for a team
 	
-	public Optional<Player> findById(Long playerId); // Created to find players by id at UserController.java to assign players when creating manager
+	public List<Player> getPlayersFromJson(String playersJson); // Get list of players from userJson players list 
 	
-	public void changeTeam (Player player, Team team ); // Created to change team_id when player signs for a team
+	public List<Player> signFreePlayers(List<Player> playersList, Team team); // Sign free players from list given
 
 }
