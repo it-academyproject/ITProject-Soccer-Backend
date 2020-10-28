@@ -122,7 +122,7 @@ public class SalesController {
 	//}
 	
 	
-//  http://localhost:8181/api/sales?max-age={max-age}&min-age={min-age}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
+//  http://localhost:8181/api/sales/filter?max-age={max-age}&min-age={min-age}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
 	@GetMapping("/sales/filter")
 	HashMap<String,Object> getFilteredSales(
 			@RequestParam(required=false, value="max-age", defaultValue="100") int maxage, 
