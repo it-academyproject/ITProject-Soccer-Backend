@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itacademy.soccer.controller.json.SaleJson;
@@ -41,7 +42,6 @@ public class SalesController {
 
 	IPlayerDAO iPlayerDAO;
 
-	
 	@GetMapping("/sales")
 	public HashMap<String,Object> listAllSales(){
 		
@@ -55,7 +55,7 @@ public class SalesController {
 		
 		return map;
 	}
-	
+
 	@GetMapping("/sales/{id}")
 	public HashMap<String,Object> getSalesById(@PathVariable(name="id") Long salesId){
 
@@ -122,17 +122,15 @@ public class SalesController {
 	//}
 	
 	
-	// http://localhost:8181/api/sales/filter?max-age={max-age}&min-age={min-age}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
-//	@GetMapping("/sales")
-	@RequestMapping(value = "/sales", params= {"max-age", "min-age", "defense", "attack", "keeper", "pass"} , method = RequestMethod.GET)
+//  http://localhost:8181/api/sales?max-age={max-age}&min-age={min-age}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
+	@GetMapping("/sales/filter")
 	HashMap<String,Object> getFilteredSales(
-			@RequestParam(value="max-age", defaultValue="100") int maxage, 
-			@RequestParam(value="min-age", defaultValue="1") int minage,
-			@RequestParam(value="defense", defaultValue="1") int defense, 
-			@RequestParam(value="attack", defaultValue="1") int attack,
-			@RequestParam(value="keeper", defaultValue="1") int keeper,
-			@RequestParam(value="pass", defaultValue="1") int pass) {
-		
+			@RequestParam(required=false, value="max-age", defaultValue="100") int maxage, 
+			@RequestParam(required=false, value="min-age", defaultValue="1") int minage,
+			@RequestParam(required=false, value="defense", defaultValue="1") int defense, 
+			@RequestParam(required=false, value="attack", defaultValue="1") int attack,
+			@RequestParam(required=false, value="keeper", defaultValue="1") int keeper,
+			@RequestParam(required=false, value="pass", defaultValue="1") int pass) {
 		return saleServiceImpl.salesFilter(maxage, minage, defense, attack, keeper, pass);
 	}
 	
