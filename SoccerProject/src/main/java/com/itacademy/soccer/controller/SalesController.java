@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itacademy.soccer.controller.json.SaleJson;
@@ -40,7 +42,6 @@ public class SalesController {
 
 	IPlayerDAO iPlayerDAO;
 
-	
 	@GetMapping("/sales")
 	public HashMap<String,Object> listAllSales(){
 		
@@ -54,7 +55,7 @@ public class SalesController {
 		
 		return map;
 	}
-	
+
 	@GetMapping("/sales/{id}")
 	public HashMap<String,Object> getSalesById(@PathVariable(name="id") Long salesId){
 
@@ -121,51 +122,16 @@ public class SalesController {
 	//}
 	
 	
-	// http://localhost:8181/api/sales/filter?maxage={maxage}&minage={minage}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
+//  http://localhost:8181/api/sales/filter?max-age={max-age}&min-age={min-age}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
 	@GetMapping("/sales/filter")
 	HashMap<String,Object> getFilteredSales(
-			@RequestParam(value="maxage") int maxage, 
-			@RequestParam(value="minage") int minage,
-			@RequestParam(value="defense") int defense, 
-			@RequestParam(value="attack") int attack,
-			@RequestParam(value="keeper") int keeper,
-			@RequestParam(value="pass") int pass) {
-		
-		HashMap<String,Object> map = new HashMap<>();
-		
-		try {
-			List<Sale> allSales = saleServiceImpl.listAllSales();
-			List<Sale> filteredSales = new ArrayList<>();
-						
-			/*
-			 * I go through the available sales and compare the attributes of the players sent by URL.
-			 * The filter parameters received by URL will be interpreted as minimum requirements in the attributes of the players that are for sale.
-			 */
-			for (Sale sale : allSales) {
-				if ( (sale.getPlayer().getAge()<=maxage && sale.getPlayer().getAge()>=minage) 
-						&& sale.getPlayer().getDefense()>=defense
-						&& sale.getPlayer().getAttack()>=attack
-						&& sale.getPlayer().getKeeper()>=keeper
-						&& sale.getPlayer().getPass()>=pass) {
-					filteredSales.add(sale);					
-				}				
-			}
-			
-			if(!filteredSales.isEmpty()) {
-				map.put("success", true);
-				map.put("message", "get all sales by player skills");
-				map.put("filtered sales", filteredSales);
-			}
-			else {
-				map.put("success", false);
-				map.put("message", "Error getting sales: there is no player with those specifications");				
-			}
-		}
-		catch (Exception e) {
-			map.put("success", false);
-			map.put("message", "something went wrong: " + e.getMessage());
-		}
-		return map;
+			@RequestParam(required=false, value="max-age", defaultValue="100") int maxage, 
+			@RequestParam(required=false, value="min-age", defaultValue="1") int minage,
+			@RequestParam(required=false, value="defense", defaultValue="1") int defense, 
+			@RequestParam(required=false, value="attack", defaultValue="1") int attack,
+			@RequestParam(required=false, value="keeper", defaultValue="1") int keeper,
+			@RequestParam(required=false, value="pass", defaultValue="1") int pass) {
+		return saleServiceImpl.salesFilter(maxage, minage, defense, attack, keeper, pass);
 	}
 	
 	

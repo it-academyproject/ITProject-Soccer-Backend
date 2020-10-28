@@ -1,6 +1,7 @@
 package com.itacademy.soccer.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import com.itacademy.soccer.dto.Player;
@@ -27,6 +28,8 @@ public interface ISaleService {
 		public List<Sale> saleListFromDates(Date initialDate);
 
 		public List<Sale> listAllSalesClosed();
-
-
+		
+		public HashMap<String,Object> salesFilter(int maxage, int minage, int defense, int attack, int keeper, int pass);
+		
+		public List<Sale> salesFilterComparator(int maxage, int minage, int defense, int attack, int keeper, int pass);
 }
