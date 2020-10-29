@@ -71,7 +71,7 @@ public class Player {
 		
 	}
 	@JsonIgnore
-	public int getNumberOfGoalsByPlayer() {
+	public int getNumberOfGoals() {
 		int sum = 0;
 		for (PlayerActions playerActions : playerActions) {
 				sum = sum + playerActions.getGoals();
@@ -80,7 +80,7 @@ public class Player {
 	}
 
 	@JsonIgnore
-	public int getNumberOfFoulsByPlayer() {
+	public int getNumberOfFouls() {
 		int sum = 0;
 		for (PlayerActions playerActions : playerActions) {
 			sum = sum + playerActions.getFouls();
@@ -89,7 +89,7 @@ public class Player {
 	}
 
 	@JsonIgnore
-	public int getNumberOfAssistsByPlayer() {
+	public int getNumberOfAssists() {
 		int sum = 0;
 		for (PlayerActions playerActions : playerActions) {
 			sum = sum + playerActions.getAssists();
@@ -97,7 +97,7 @@ public class Player {
 		return sum;
 	}
 	@JsonIgnore
-	public int getNumberOfRedCardsByPlayer() {
+	public int getNumberOfRedCards() {
 		int sum = 0;
 		for (PlayerActions playerActions : playerActions) {
 			sum = sum + playerActions.getRedCards();
@@ -105,7 +105,7 @@ public class Player {
 		return sum;
 	}
 	@JsonIgnore
-	public int getNumberOfYellowCardsByPlayer() {
+	public int getNumberOfYellowCards() {
 		int sum = 0;
 		for (PlayerActions playerActions : playerActions) {
 			sum = sum + playerActions.getYellowCards();
@@ -113,15 +113,16 @@ public class Player {
 		return sum;
 	}
 	@JsonIgnore
-	public int getNumberOfSavesByPlayer() {
+	public int getNumberOfSaves() {
 		int sum = 0;
 		for (PlayerActions playerActions : playerActions) {
 			sum = sum + playerActions.getSaves();
 		}
 		return sum;
 	}
-	//getters and setters
 
+
+	//getters and setters
 
 	public Long getTeam_id() {
 		return team_id;

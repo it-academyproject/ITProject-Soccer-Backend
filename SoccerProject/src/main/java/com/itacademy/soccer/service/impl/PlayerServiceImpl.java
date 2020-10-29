@@ -167,11 +167,10 @@ public class PlayerServiceImpl implements IPlayerService{
 	public Optional<Player> getPlayerMoreGoalsTotal() {
 		List<Player> playerList = iPlayerDAO.findAll();
 
-		Comparator<Player> compareByGoalsByPlayer = Comparator.comparing(Player::getNumberOfGoalsByPlayer).reversed();
+		Comparator<Player> compareByGoalsByPlayer = Comparator.comparing(Player::getNumberOfGoals).reversed();
 		Collections.sort(playerList, compareByGoalsByPlayer);
 
 		Long myPlayerId = (playerList.get(0)).getId();
-
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
 		return myPlayer;
@@ -182,11 +181,10 @@ public class PlayerServiceImpl implements IPlayerService{
 	public Optional<Player> getPlayerMoreFoulsTotal() {
 		List<Player> playerList = iPlayerDAO.findAll();
 
-		Comparator<Player> compareByFoulsByPlayer = Comparator.comparing(Player::getNumberOfFoulsByPlayer).reversed();
+		Comparator<Player> compareByFoulsByPlayer = Comparator.comparing(Player::getNumberOfFouls).reversed();
 		Collections.sort(playerList, compareByFoulsByPlayer);
 
 		Long myPlayerId = (playerList.get(0)).getId();
-
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
 		return myPlayer;
@@ -197,11 +195,10 @@ public class PlayerServiceImpl implements IPlayerService{
 	public Optional<Player> getPlayerMoreAssistsTotal() {
 		List<Player> playerList = iPlayerDAO.findAll();
 
-		Comparator<Player> compareByAssistsByPlayer = Comparator.comparing(Player::getNumberOfAssistsByPlayer).reversed();
+		Comparator<Player> compareByAssistsByPlayer = Comparator.comparing(Player::getNumberOfAssists).reversed();
 		Collections.sort(playerList, compareByAssistsByPlayer);
 
 		Long myPlayerId = (playerList.get(0)).getId();
-
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
 		return myPlayer;
@@ -212,11 +209,10 @@ public class PlayerServiceImpl implements IPlayerService{
 	public Optional<Player> getPlayerMoreRedCardsTotal() {
 		List<Player> playerList = iPlayerDAO.findAll();
 
-		Comparator<Player> compareByRedCardsByPlayer = Comparator.comparing(Player::getNumberOfRedCardsByPlayer).reversed();
+		Comparator<Player> compareByRedCardsByPlayer = Comparator.comparing(Player::getNumberOfRedCards).reversed();
 		Collections.sort(playerList, compareByRedCardsByPlayer);
 
 		Long myPlayerId = (playerList.get(0)).getId();
-
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
 		return myPlayer;
@@ -227,11 +223,10 @@ public class PlayerServiceImpl implements IPlayerService{
 	public Optional<Player> getPlayerMoreYellowCardsTotal() {
 		List<Player> playerList = iPlayerDAO.findAll();
 
-		Comparator<Player> compareByYellowCardsByPlayer = Comparator.comparing(Player::getNumberOfYellowCardsByPlayer).reversed();
+		Comparator<Player> compareByYellowCardsByPlayer = Comparator.comparing(Player::getNumberOfYellowCards).reversed();
 		Collections.sort(playerList, compareByYellowCardsByPlayer);
 
 		Long myPlayerId = (playerList.get(0)).getId();
-
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
 		return myPlayer;
@@ -242,11 +237,10 @@ public class PlayerServiceImpl implements IPlayerService{
 	public Optional<Player> getPlayerMoreSavesTotal() {
 		List<Player> playerList = iPlayerDAO.findAll();
 
-		Comparator<Player> compareBySavesByPlayer = Comparator.comparing(Player::getNumberOfSavesByPlayer).reversed();
+		Comparator<Player> compareBySavesByPlayer = Comparator.comparing(Player::getNumberOfSaves).reversed();
 		Collections.sort(playerList, compareBySavesByPlayer);
 
 		Long myPlayerId = (playerList.get(0)).getId();
-
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
 		return myPlayer;

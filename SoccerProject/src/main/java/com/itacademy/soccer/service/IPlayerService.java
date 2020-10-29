@@ -21,38 +21,20 @@ public interface IPlayerService {
 
 	Player assignInitialValues(Player player );
 
-
 	Optional<Player> getPlayerMoreGoals(Long id);
-
 	Optional<Player> getPlayerMoreFouls(Long id);
-
 	Optional<Player> getPlayerMoreAssists(Long id);
-
 	Optional<Player> getPlayerMoreRedCards(Long id);
-
 	Optional<Player> getPlayerMoreYellowCards(Long id);
-
 	Optional<Player> getPlayerMoreSaves(Long id);
 
-
-    Optional<Player> getPlayerMoreGoalsTotal();
-
-	//get player with more Fouls in total
+	Optional<Player> getPlayerMoreGoalsTotal();
 	Optional<Player> getPlayerMoreFoulsTotal();
-
-	//get player with more Assists in total
 	Optional<Player> getPlayerMoreAssistsTotal();
-
-	//get player with more Red Cards in total
 	Optional<Player> getPlayerMoreRedCardsTotal();
-
-	//get player with more Yellow Cards in total
 	Optional<Player> getPlayerMoreYellowCardsTotal();
-
-	//get player with more Saves in total
 	Optional<Player> getPlayerMoreSavesTotal();
 
-		
 	public void changeTeam (Player player, Team team ); // Change team_id when player signs for a team
 	
 	public List<Player> getPlayersFromJson(String playersJson); // Get list of players from userJson players list 
