@@ -5,9 +5,14 @@ import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.dto.User;
 import com.itacademy.soccer.dto.typeUser.TypeUser;
+import com.itacademy.soccer.security.Constants;
 import com.itacademy.soccer.service.IPlayerService;
 import com.itacademy.soccer.service.ITeamService;
 import com.itacademy.soccer.service.IUserService;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -119,6 +124,10 @@ public class UserController {
 						map.put("team_id", user.getTeam().getId());
 					}
 					map.put("success", true);
+					
+					//Generated Token
+					String token = getToken(user.getEmail());
+					map.put("Token: ", token);
 
 				} else { // Login not successful - email and password do not match
 					map.put("message", "Email or Password not correct");
@@ -294,5 +303,19 @@ public class UserController {
         iUserService.deleteUser(id);
     }
     
+//JWT Method
+    
+    String getToken(String username) {    
+    	
+		String token = Jwts
+				.builder()
+				.setIssuedAt(new Date()).setIssuer(Constants.TOKEN_ISSUER)
+				.setSubject(username)		
+				.setExpiration(new Date(System.currentTimeMillis() + Constants.TOKEN_EXPIRATION_TIME))
+				.signWith(SignatureAlgorithm.HS512,
+						Constants.JWT_SECRET).compact();
+
+		return "Bearer " + token;
+	}    
        
 }
