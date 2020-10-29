@@ -28,4 +28,21 @@ public interface IPlayerService {
 	Optional<Player> getPlayerMoreYellowCards(Long id);
 
 	Optional<Player> getPlayerMoreSaves(Long id);
+
+    Optional<Player> getPlayerMoreGoalsTotal();
+
+	//get player with more Fouls in total
+	Optional<Player> getPlayerMoreFoulsTotal();
+
+	//get player with more Assists in total
+	Optional<Player> getPlayerMoreAssistsTotal();
+
+	//get player with more Red Cards in total
+	Optional<Player> getPlayerMoreRedCardsTotal();
+
+	//get player with more Yellow Cards in total
+	Optional<Player> getPlayerMoreYellowCardsTotal();
+
+	//get player with more Saves in total
+	Optional<Player> getPlayerMoreSavesTotal();
 }

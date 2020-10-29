@@ -10,6 +10,8 @@ import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itacademy.soccer.dao.IPlayerActionsDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Entity
@@ -38,13 +40,9 @@ public class Player {
 	
 	@OneToMany
 	@JsonProperty("player_actions")
+	@JsonIgnore
 	List<PlayerActions> playerActions;
 
-
-	//relation with TotalPlayerActions
-	@OneToOne(mappedBy = "player", cascade = CascadeType.ALL)
-	@PrimaryKeyJoinColumn
-	private TotalPlayerActions totalPlayerActions;
 
 	//relation with team
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -57,7 +55,7 @@ public class Player {
 	public Player() {
 	}
 
-	public Player(Long id, @NotEmpty String name, int age, String aka, int keeper, int defense, int pass, int attack, Long team_id, List<PlayerActions> playerActions,TotalPlayerActions totalPlayerActions, Team team) {
+	public Player(Long id, @NotEmpty String name, int age, String aka, int keeper, int defense, int pass, int attack, Long team_id, List<PlayerActions> playerActions, Team team) {
 		this.id = id;
 		this.name = name;
 		this.age = age;
@@ -69,9 +67,60 @@ public class Player {
 		this.team_id = team_id;
 		this.playerActions = playerActions;
 		this.team = team;
-		this.totalPlayerActions = totalPlayerActions;
+
 		
 	}
+	@JsonIgnore
+	public int getNumberOfGoalsByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+				sum = sum + playerActions.getGoals();
+		}
+		return sum;
+	}
+
+	@JsonIgnore
+	public int getNumberOfFoulsByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getFouls();
+		}
+		return sum;
+	}
+
+	@JsonIgnore
+	public int getNumberOfAssistsByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getAssists();
+		}
+		return sum;
+	}
+	@JsonIgnore
+	public int getNumberOfRedCardsByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getRedCards();
+		}
+		return sum;
+	}
+	@JsonIgnore
+	public int getNumberOfYellowCardsByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getYellowCards();
+		}
+		return sum;
+	}
+	@JsonIgnore
+	public int getNumberOfSavesByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getSaves();
+		}
+		return sum;
+	}
+
 	//getters and setters
 
 
@@ -173,13 +222,6 @@ public class Player {
 		this.playerActions = playerActions;
 	}
 
-	public TotalPlayerActions getTotalPlayerActions() {
-		return totalPlayerActions;
-	}
-
-	public void setTotalPlayerActions(TotalPlayerActions totalPlayerActions) {
-		this.totalPlayerActions = totalPlayerActions;
-	}
 
 	@Override
 	public String toString() {

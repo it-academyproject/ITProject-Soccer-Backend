@@ -153,5 +153,93 @@ public class PlayerServiceImpl implements IPlayerService{
 		return myPlayer;
 	}
 
+	//get player with more Goals in total
+	@Override
+	public Optional<Player> getPlayerMoreGoalsTotal() {
+		List<Player> playerList = iPlayerDAO.findAll();
 
+		Comparator<Player> compareByGoalsByPlayer = Comparator.comparing(Player::getNumberOfGoalsByPlayer).reversed();
+		Collections.sort(playerList, compareByGoalsByPlayer);
+
+		Long myPlayerId = (playerList.get(0)).getId();
+
+		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
+
+		return myPlayer;
+	}
+
+	//get player with more Fouls in total
+	@Override
+	public Optional<Player> getPlayerMoreFoulsTotal() {
+		List<Player> playerList = iPlayerDAO.findAll();
+
+		Comparator<Player> compareByFoulsByPlayer = Comparator.comparing(Player::getNumberOfFoulsByPlayer).reversed();
+		Collections.sort(playerList, compareByFoulsByPlayer);
+
+		Long myPlayerId = (playerList.get(0)).getId();
+
+		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
+
+		return myPlayer;
+	}
+
+	//get player with more Assists in total
+	@Override
+	public Optional<Player> getPlayerMoreAssistsTotal() {
+		List<Player> playerList = iPlayerDAO.findAll();
+
+		Comparator<Player> compareByAssistsByPlayer = Comparator.comparing(Player::getNumberOfAssistsByPlayer).reversed();
+		Collections.sort(playerList, compareByAssistsByPlayer);
+
+		Long myPlayerId = (playerList.get(0)).getId();
+
+		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
+
+		return myPlayer;
+	}
+
+	//get player with more Red Cards in total
+	@Override
+	public Optional<Player> getPlayerMoreRedCardsTotal() {
+		List<Player> playerList = iPlayerDAO.findAll();
+
+		Comparator<Player> compareByRedCardsByPlayer = Comparator.comparing(Player::getNumberOfRedCardsByPlayer).reversed();
+		Collections.sort(playerList, compareByRedCardsByPlayer);
+
+		Long myPlayerId = (playerList.get(0)).getId();
+
+		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
+
+		return myPlayer;
+	}
+
+	//get player with more Yellow Cards in total
+	@Override
+	public Optional<Player> getPlayerMoreYellowCardsTotal() {
+		List<Player> playerList = iPlayerDAO.findAll();
+
+		Comparator<Player> compareByYellowCardsByPlayer = Comparator.comparing(Player::getNumberOfYellowCardsByPlayer).reversed();
+		Collections.sort(playerList, compareByYellowCardsByPlayer);
+
+		Long myPlayerId = (playerList.get(0)).getId();
+
+		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
+
+		return myPlayer;
+	}
+
+	//get player with more Saves in total
+	@Override
+	public Optional<Player> getPlayerMoreSavesTotal() {
+		List<Player> playerList = iPlayerDAO.findAll();
+
+		Comparator<Player> compareBySavesByPlayer = Comparator.comparing(Player::getNumberOfSavesByPlayer).reversed();
+		Collections.sort(playerList, compareBySavesByPlayer);
+
+		Long myPlayerId = (playerList.get(0)).getId();
+
+		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
+
+		return myPlayer;
+	}
 }
