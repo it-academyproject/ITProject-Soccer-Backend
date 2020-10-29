@@ -72,6 +72,56 @@ public class Player {
 		this.totalPlayerActions = totalPlayerActions;
 		
 	}
+	@JsonIgnore
+	public int getNumberOfGoalsByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+				sum = sum + playerActions.getGoals();
+		}
+		return sum;
+	}
+
+	@JsonIgnore
+	public int getNumberOfFoulsByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getFouls();
+		}
+		return sum;
+	}
+
+	@JsonIgnore
+	public int getNumberOfAssistsByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getAssists();
+		}
+		return sum;
+	}
+	@JsonIgnore
+	public int getNumberOfRedCardsByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getRedCards();
+		}
+		return sum;
+	}
+	@JsonIgnore
+	public int getNumberOfYellowCardsByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getYellowCards();
+		}
+		return sum;
+	}
+	@JsonIgnore
+	public int getNumberOfSavesByPlayer() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getSaves();
+		}
+		return sum;
+	}
 	//getters and setters
 
 

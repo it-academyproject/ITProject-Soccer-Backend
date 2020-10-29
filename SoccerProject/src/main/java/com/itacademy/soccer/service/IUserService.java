@@ -1,7 +1,9 @@
 package com.itacademy.soccer.service;
 
+import com.itacademy.soccer.controller.json.UserJson;
 import com.itacademy.soccer.dto.User;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface IUserService {
@@ -33,4 +35,10 @@ public interface IUserService {
     public void deleteUser(Long id);
     
     public User showUserByTeam(Long id);
+    
+   
+    // USER VALIDATION
+    
+    public HashMap <String, Object> managerValidation(HashMap <String, Object> map, UserJson userJson);
+
 }

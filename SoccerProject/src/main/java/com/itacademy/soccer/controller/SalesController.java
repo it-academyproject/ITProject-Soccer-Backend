@@ -3,12 +3,6 @@ package com.itacademy.soccer.controller;
 import java.util.*;
 
 import com.itacademy.soccer.dto.Bid;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.service.impl.BidServiceImpl;
@@ -22,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itacademy.soccer.controller.json.SaleJson;
@@ -45,7 +42,6 @@ public class SalesController {
 
 	IPlayerDAO iPlayerDAO;
 
-	
 	@GetMapping("/sales")
 	public HashMap<String,Object> listAllSales(){
 		
@@ -59,7 +55,7 @@ public class SalesController {
 		
 		return map;
 	}
-	
+
 	@GetMapping("/sales/{id}")
 	public HashMap<String,Object> getSalesById(@PathVariable(name="id") Long salesId){
 
@@ -107,7 +103,6 @@ public class SalesController {
 			map.put("success", false);
 			map.put("message", "something went wrong: " + e.getMessage());
 		}
-
 		return map;
 	}
 
@@ -125,6 +120,20 @@ public class SalesController {
 		
 	//	return map;
 	//}
+	
+	
+//  http://localhost:8181/api/sales/filter?max-age={max-age}&min-age={min-age}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
+	@GetMapping("/sales/filter")
+	HashMap<String,Object> getFilteredSales(
+			@RequestParam(required=false, value="max-age", defaultValue="100") int maxage, 
+			@RequestParam(required=false, value="min-age", defaultValue="1") int minage,
+			@RequestParam(required=false, value="defense", defaultValue="1") int defense, 
+			@RequestParam(required=false, value="attack", defaultValue="1") int attack,
+			@RequestParam(required=false, value="keeper", defaultValue="1") int keeper,
+			@RequestParam(required=false, value="pass", defaultValue="1") int pass) {
+		return saleServiceImpl.salesFilter(maxage, minage, defense, attack, keeper, pass);
+	}
+	
 	
 	@PostMapping("/sales") //@RequestBody Sale p_sale
 	public HashMap<String,Object> createSale(@RequestBody SaleJson saleJson){
