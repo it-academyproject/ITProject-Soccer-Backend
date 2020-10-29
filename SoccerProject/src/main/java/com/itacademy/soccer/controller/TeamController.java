@@ -38,13 +38,17 @@ public class TeamController {
 	public HashMap<String, Object> createTeam(@RequestBody Team team) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			Team NewlyCreatedTeam = teamServiceImpl.createTeam(team);
+			Team newTeam = teamServiceImpl.createTeamInitial(team.getName()); // Creates new team with given name
+			newTeam.setBadge(team.getBadge()); // Add given batch to team
+			teamServiceImpl.createTeam(newTeam); // Saves team in DB
+			
 			map.put("success", true);
 			map.put("message", "Team Created");
-			map.put("team", NewlyCreatedTeam);
+			map.put("team", newTeam);
+			
 		} catch (Exception e) {
 			map.put("success", false);
-			map.put("message", "Team NOT Created ! :" + e.getMessage());
+			map.put("message", "Team NOT Created! :" + e.getMessage());
 		}
 		return map;
 	}
