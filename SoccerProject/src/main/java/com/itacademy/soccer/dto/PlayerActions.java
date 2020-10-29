@@ -3,10 +3,13 @@ package com.itacademy.soccer.dto;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dto.lineup.Lineup;
 import com.itacademy.soccer.dto.serializable.PlayerMatchId;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name="player_actions")

@@ -8,13 +8,9 @@ import com.itacademy.soccer.controller.json.PlayerJson;
 import com.itacademy.soccer.dao.IMatchDAO;
 import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dao.IPlayerDAO;
-import com.itacademy.soccer.dto.Match;
 import com.itacademy.soccer.dto.PlayerActions;
-import com.itacademy.soccer.dto.TotalPlayerActions;
 import com.itacademy.soccer.service.impl.MatchServiceImpl;
-import org.dom4j.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.itacademy.soccer.dto.Player;
@@ -198,40 +194,29 @@ public class PlayerController {
 
 	}
 
-	//TODO no funciona
 	//get the player with more goals, the player with more fouls, etc ... GLOBAL/TOTAL STATS
 	@GetMapping("/stats")
 	HashMap<String, Object> getGlobalStats(	) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			List<Player> playerList = iPlayerDAO.findAll();
+			List<PlayerActions> playerActionsListList = iPlayerActionsDAO.findAll();
 
-			for(Player player : playerList){
-				List<PlayerActions> myPlayerActionsList = player.getPlayerActions();
-
-				TotalPlayerActions myTotalPlayerActions = player.getTotalPlayerActions();
-
-				/*
-				for (PlayerActions playerActions : myPlayerActionsList) {
-					myTotalPlayerActions.setGoals(myTotalPlayerActions.getGoals() + playerActions.getGoals());
-					myTotalPlayerActions.setFouls(myTotalPlayerActions.getFouls() + playerActions.getFouls());
-					myTotalPlayerActions.setAssists(myTotalPlayerActions.getAssists() + playerActions.getAssists());
-					myTotalPlayerActions.setYellowCards(myTotalPlayerActions.getYellowCards() + playerActions.getYellowCards());
-					myTotalPlayerActions.setRedCards(myTotalPlayerActions.getRedCards() + playerActions.getRedCards());
-					myTotalPlayerActions.setSaves(myTotalPlayerActions.getSaves() + playerActions.getSaves());
-				}
-				 */
-
-			}
-			//Player 1 para hacer pruebas
-			Optional<Player> player1 = iPlayerDAO.findById(Long.parseLong("1"));
-			player1.get().getTotalPlayerActions();
-
-			TotalPlayerActions myTotalPlayerActions = player1.get().getTotalPlayerActions();
+			Optional<Player> playerMoreGoals = playerServiceImpl.getPlayerMoreGoalsTotal();
+			Optional<Player> playerMoreFouls = playerServiceImpl.getPlayerMoreFoulsTotal();
+			Optional<Player> playerMoreAssists = playerServiceImpl.getPlayerMoreAssistsTotal();
+			Optional<Player> playerMoreRedCards = playerServiceImpl.getPlayerMoreRedCardsTotal();
+			Optional<Player> playerMoreYellowCards = playerServiceImpl.getPlayerMoreYellowCardsTotal();
+			Optional<Player> playerMoreSaves = playerServiceImpl.getPlayerMoreSavesTotal();
 
 
 			map.put("success", true);
-			map.put("stats",player1.get().getTotalPlayerActions());
+			map.put("player with more goals", playerMoreGoals);
+			map.put("player with more assists", playerMoreAssists);
+			map.put("player with more fouls", playerMoreFouls);
+			map.put("player with more red cards", playerMoreRedCards);
+			map.put("player with more yellow cards", playerMoreYellowCards);
+			map.put("player with more saves", playerMoreSaves);
 			map.put("message", "get stats");
 		} catch (Exception e) {
 			map.put("success", false);

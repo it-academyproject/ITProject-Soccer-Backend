@@ -35,7 +35,7 @@ public interface IPlayerService {
 	Optional<Player> getPlayerMoreSaves(Long id);
 
 
-	Optional<Player> getPlayerMoreGoalsTotal();
+    Optional<Player> getPlayerMoreGoalsTotal();
 
 	//get player with more Fouls in total
 	Optional<Player> getPlayerMoreFoulsTotal();
@@ -51,12 +51,12 @@ public interface IPlayerService {
 
 	//get player with more Saves in total
 	Optional<Player> getPlayerMoreSavesTotal();
+
 		
 	public void changeTeam (Player player, Team team ); // Change team_id when player signs for a team
 	
 	public List<Player> getPlayersFromJson(String playersJson); // Get list of players from userJson players list 
 	
 	public List<Player> signFreePlayers(List<Player> playersList, Team team); // Sign free players from list given
-
 
 }
