@@ -31,7 +31,6 @@ public class TeamController {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			Team newTeam = teamServiceImpl.createTeamInitial(team.getName()); // Creates new team with given name
-			newTeam.setBadge(team.getBadge()); // Add given batch to team
 			teamServiceImpl.createTeam(newTeam); // Saves team in DB
 			
 			map.put("success", true);
@@ -67,7 +66,7 @@ public class TeamController {
 		try {
 			Team toShowTeam = teamServiceImpl.getOneTeamById(id);
 			map.put("success", true);
-			map.put("message", "Got one Teams");
+			map.put("message", "Got " + toShowTeam.getName() + " team");
 			map.put("team", toShowTeam);
 		} catch (Exception e) {
 			map.put("success", false);
