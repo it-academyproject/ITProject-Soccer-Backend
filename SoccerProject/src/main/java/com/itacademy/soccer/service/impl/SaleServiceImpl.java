@@ -115,7 +115,7 @@ public class SaleServiceImpl implements ISaleService{
 		return all_sale_closed;		
 	}
 	
-	@Override
+	@Override	
 	public HashMap<String,Object> salesFilter(int maxage, int minage, int defense, int attack, int keeper, int pass){
 		
 		HashMap<String,Object> map = new HashMap<>();
