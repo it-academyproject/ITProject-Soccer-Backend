@@ -8,8 +8,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.itacademy.soccer.controller.json.SalesFilterJson;
 import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dao.ISaleDAO;
+import com.itacademy.soccer.dto.Bid;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Sale;
 import com.itacademy.soccer.service.ISaleService;
@@ -118,7 +120,7 @@ public class SaleServiceImpl implements ISaleService{
 		
 		HashMap<String,Object> map = new HashMap<>();
 		try {
-			List<Sale> filteredSales = this.salesFilterComparator(maxage, minage, defense, attack, keeper, pass);			
+			List<SalesFilterJson> filteredSales = this.salesFilterComparator(maxage, minage, defense, attack, keeper, pass);			
 			if(!filteredSales.isEmpty()) {
 				map.put("success", true);
 				map.put("message", "get all sales by player skills");
@@ -140,22 +142,40 @@ public class SaleServiceImpl implements ISaleService{
 	 * The filter parameters received by URL will be interpreted as minimum requirements in the attributes of the players that are for sale.
 	 */
 	@Override
-	public List<Sale> salesFilterComparator(int maxage, int minage, int defense, int attack, int keeper, int pass){
+	public List<SalesFilterJson> salesFilterComparator(int maxage, int minage, int defense, int attack, int keeper, int pass){
 		List<Sale> allSales = this.listAllSales();
-		List<Sale> filteredSales = new ArrayList<>();
-		Date Now = new Date();
+		List<SalesFilterJson> filteredSalesJson = new ArrayList<SalesFilterJson>();
 		
 		for (Sale sale : allSales) {
+
 			if ( (sale.getPlayer().getAge()<=maxage && sale.getPlayer().getAge()>=minage) 
 					&& sale.getPlayer().getDefense()>=defense
 					&& sale.getPlayer().getAttack()>=attack
 					&& sale.getPlayer().getKeeper()>=keeper
-					&& sale.getPlayer().getPass()>=pass && sale.getLimitDate().compareTo(Now)>0) {
-				filteredSales.add(sale);					
-			}				
+					&& sale.getPlayer().getPass()>=pass /*&& sale.getLimitDate().compareTo(Now)>0*/) {
+				
+				SalesFilterJson filteredSaleJson = new SalesFilterJson();			
+				filteredSaleJson.setId(sale.getId());
+				filteredSaleJson.setLimit_date(sale.getLimitDate());
+				filteredSaleJson.setInitial_price(sale.getInitialPrice());
+				filteredSaleJson.setlast_bid_price(getLastBidPrice(sale.getBids()));
+				filteredSaleJson.setTeam_name(sale.getPlayer().getTeam().getName());
+				filteredSaleJson.setPlayer(sale.getPlayer());
+				filteredSalesJson.add(filteredSaleJson);
+			}
 		}	
-		return filteredSales;
+		return filteredSalesJson;
 	}
 	
+	public float getLastBidPrice(List<Bid> bids) {
+		Bid selectedBid= bids.get(0);
+		
+		for(int i = 0; i < bids.size(); i++) {
+				if(bids.get(i).getOperationDate().after(selectedBid.getOperationDate())) {
+					selectedBid=bids.get(i);
+			}
+		}		
+		return selectedBid.getBid_price();
+	}
 
 }
