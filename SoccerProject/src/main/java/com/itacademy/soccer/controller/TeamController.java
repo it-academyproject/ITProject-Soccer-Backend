@@ -169,10 +169,10 @@ public class TeamController {
 			List<String> bestPasserTop = teamServiceImpl.getNameBestPasserInTeam(id);
 			List<String> bestShooterTop = teamServiceImpl.getNameBestShooterInTeam(id);
 			map.put("success", true);
-			map.put("keeper:", bestKeeperTop);
-			map.put("defender:", bestDefenderTop);
-			map.put("passer:", bestPasserTop);
-			map.put("shooter:", bestShooterTop);
+			map.put("keeper", bestKeeperTop);
+			map.put("defender", bestDefenderTop);
+			map.put("passer", bestPasserTop);
+			map.put("shooter", bestShooterTop);
 		} catch (Exception e) {
 		map.put("success", false);
 		map.put("message", "no result to be shown! :" + e.getMessage());
