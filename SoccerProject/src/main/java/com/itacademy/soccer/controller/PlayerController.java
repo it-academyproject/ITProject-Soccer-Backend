@@ -21,12 +21,12 @@ public class PlayerController {
 
 	@Autowired
 	PlayerServiceImpl playerServiceImpl;
+	
 	@Autowired
 	IPlayerDAO iPlayerDAO;
-
-
-	//get all players
-	@GetMapping()
+	
+	
+	@GetMapping() // GET ALL PLAYERS
 	HashMap<String,Object> getAllPlayers(){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
@@ -49,7 +49,9 @@ public class PlayerController {
 		
 		return map;
 	}
-	@PostMapping()
+	
+	
+	@PostMapping() // CREATE PLAYER
 	public HashMap<String, Object> createPlayer(@RequestBody Player player) {
 		HashMap<String, Object> map = new HashMap<>();
 		player = playerServiceImpl.assignInitialValues(player);
@@ -60,12 +62,12 @@ public class PlayerController {
 			map.put("player", NewlyCreatedPlayer);
 		} catch (Exception e) {
 			map.put("success", false);
-			map.put("message", "Player NOT Created ! :" + e.getMessage());
+			map.put("message", "Player NOT Created! :" + e.getMessage());
 		}
 		return map;
 	}
 	
-	@GetMapping("/teams/{id}")
+	@GetMapping("/teams/{id}") // GET PLAYERS BY TEAM
 	HashMap<String,Object> getPlayersByTeamId(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
@@ -90,14 +92,14 @@ public class PlayerController {
 		return map;
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("/{id}") // GET PLAYER BY ID
 	HashMap<String,Object> getPlayerById(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
 			Optional<Player> player = iPlayerDAO.findById(id);
 			map.put("success", true);
 			map.put("player", player.get());
-			map.put("message", "get one players by id");
+			map.put("message", "get one player by id");
 		}
 		catch (Exception e) {
 			map.put("success", false);
@@ -107,7 +109,7 @@ public class PlayerController {
 		return map;
 	}
 	
-	@GetMapping("/name/{name}")
+	@GetMapping("/name/{name}") // GET PLAYER BY NAME
 	HashMap<String,Object> getPlayersByName(@PathVariable String name){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
@@ -115,10 +117,10 @@ public class PlayerController {
 			if (player != null) {
 				map.put("success", true);
 				map.put("player", player);
-				map.put("message", "get one players by name");
+				map.put("message", "get one player by name");
 			}else {
 				map.put("success", false);
-				map.put("message", "Error getting players with name: " + name);
+				map.put("message", "Error getting player with name: " + name);
 				
 				//throw new Exception();
 			}
@@ -131,8 +133,8 @@ public class PlayerController {
 		return map;
 	}
 	
-	//edit attributes in player
-	@PutMapping
+	
+	@PutMapping // MODIFY PLAYER
 	HashMap<String,Object> putPlayer(@RequestBody PlayerJson player){
 		HashMap<String,Object> map = new HashMap<>();
 		System.out.println("update.....................................   " +  player.getName());
@@ -150,7 +152,7 @@ public class PlayerController {
 				
 		return map;
 	}
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{id}") // DELETE PLAYER
 	public void deleteUser(@PathVariable long id){
 		iPlayerDAO. deleteById(id);
 	}
