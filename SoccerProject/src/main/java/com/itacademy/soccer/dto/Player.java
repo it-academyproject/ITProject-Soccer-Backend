@@ -10,6 +10,8 @@ import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itacademy.soccer.dao.IPlayerActionsDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Entity
@@ -38,9 +40,10 @@ public class Player {
 	
 	@OneToMany
 	@JsonProperty("player_actions")
+	@JsonIgnore
 	List<PlayerActions> playerActions;
 
-	
+
 	//relation with team
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="team_id", insertable = false, updatable = false)
@@ -64,10 +67,62 @@ public class Player {
 		this.team_id = team_id;
 		this.playerActions = playerActions;
 		this.team = team;
+
 		
 	}
-	//getters and setters
+	@JsonIgnore
+	public int getNumberOfGoals() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+				sum = sum + playerActions.getGoals();
+		}
+		return sum;
+	}
 
+	@JsonIgnore
+	public int getNumberOfFouls() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getFouls();
+		}
+		return sum;
+	}
+
+	@JsonIgnore
+	public int getNumberOfAssists() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getAssists();
+		}
+		return sum;
+	}
+	@JsonIgnore
+	public int getNumberOfRedCards() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getRedCards();
+		}
+		return sum;
+	}
+	@JsonIgnore
+	public int getNumberOfYellowCards() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getYellowCards();
+		}
+		return sum;
+	}
+	@JsonIgnore
+	public int getNumberOfSaves() {
+		int sum = 0;
+		for (PlayerActions playerActions : playerActions) {
+			sum = sum + playerActions.getSaves();
+		}
+		return sum;
+	}
+
+
+	//getters and setters
 
 	public Long getTeam_id() {
 		return team_id;
@@ -166,7 +221,7 @@ public class Player {
 	public void setPlayerActions(List<PlayerActions> playerActions) {
 		this.playerActions = playerActions;
 	}
-	
+
 
 	@Override
 	public String toString() {
