@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import com.itacademy.soccer.controller.json.PlayerJson;
+import com.itacademy.soccer.dao.IMatchDAO;
+import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dao.IPlayerDAO;
-import org.dom4j.util.StringUtils;
+import com.itacademy.soccer.dto.PlayerActions;
+import com.itacademy.soccer.service.impl.MatchServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.itacademy.soccer.dto.Player;
@@ -23,10 +25,18 @@ public class PlayerController {
 	PlayerServiceImpl playerServiceImpl;
 	
 	@Autowired
+	MatchServiceImpl matchServiceImpl;
+	@Autowired
 	IPlayerDAO iPlayerDAO;
-	
-	
-	@GetMapping() // GET ALL PLAYERS
+
+	@Autowired
+	IMatchDAO iMatchDAO;
+	@Autowired
+	IPlayerActionsDAO iPlayerActionsDAO;
+
+
+	//get all players
+	@GetMapping()
 	HashMap<String,Object> getAllPlayers(){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
@@ -155,6 +165,70 @@ public class PlayerController {
 	@DeleteMapping("/{id}") // DELETE PLAYER
 	public void deleteUser(@PathVariable long id){
 		iPlayerDAO. deleteById(id);
+	}
+
+
+	//get the player with more goals, the player with more fouls, etc ... all the stats BY MATCH
+	@GetMapping("/stats/matches/{id}")
+	HashMap<String, Object> getStats(@PathVariable String id) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+
+			Optional<Player> playerMoreGoals = playerServiceImpl.getPlayerMoreGoals(Long.parseLong(id));
+			Optional<Player> playerMoreAssists = playerServiceImpl.getPlayerMoreAssists(Long.parseLong(id));
+			Optional<Player> playerMoreFouls = playerServiceImpl.getPlayerMoreFouls(Long.parseLong(id));
+			Optional<Player> playerMoreRedCards = playerServiceImpl.getPlayerMoreRedCards(Long.parseLong(id));
+			Optional<Player> playerMoreYellowCards = playerServiceImpl.getPlayerMoreYellowCards(Long.parseLong(id));
+			Optional<Player> playerMoreSaves = playerServiceImpl.getPlayerMoreSaves(Long.parseLong(id));
+
+			map.put("success", true);
+			map.put("player with more goals", playerMoreGoals);
+			map.put("player with more assists", playerMoreAssists);
+			map.put("player with more fouls", playerMoreFouls);
+			map.put("player with more red cards", playerMoreRedCards);
+			map.put("player with more yellow cards", playerMoreYellowCards);
+			map.put("player with more saves", playerMoreSaves);
+			map.put("message", "get stats");
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
+
+		return map;
+
+	}
+
+	//get the player with more goals, the player with more fouls, etc ... GLOBAL/TOTAL STATS
+	@GetMapping("/stats")
+	HashMap<String, Object> getGlobalStats(	) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			List<Player> playerList = iPlayerDAO.findAll();
+			List<PlayerActions> playerActionsListList = iPlayerActionsDAO.findAll();
+
+			Optional<Player> playerMoreGoals = playerServiceImpl.getPlayerMoreGoalsTotal();
+			Optional<Player> playerMoreFouls = playerServiceImpl.getPlayerMoreFoulsTotal();
+			Optional<Player> playerMoreAssists = playerServiceImpl.getPlayerMoreAssistsTotal();
+			Optional<Player> playerMoreRedCards = playerServiceImpl.getPlayerMoreRedCardsTotal();
+			Optional<Player> playerMoreYellowCards = playerServiceImpl.getPlayerMoreYellowCardsTotal();
+			Optional<Player> playerMoreSaves = playerServiceImpl.getPlayerMoreSavesTotal();
+
+
+			map.put("success", true);
+			map.put("player with more goals", playerMoreGoals);
+			map.put("player with more assists", playerMoreAssists);
+			map.put("player with more fouls", playerMoreFouls);
+			map.put("player with more red cards", playerMoreRedCards);
+			map.put("player with more yellow cards", playerMoreYellowCards);
+			map.put("player with more saves", playerMoreSaves);
+			map.put("message", "get stats");
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("message", "something went wrong: " + e.getMessage());
+		}
+
+		return map;
+
 	}
 
 }

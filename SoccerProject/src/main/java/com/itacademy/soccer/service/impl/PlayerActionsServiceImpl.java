@@ -10,8 +10,7 @@ import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dto.PlayerActions;
 import com.itacademy.soccer.service.IPlayerActionsService;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static com.itacademy.soccer.dto.lineup.Lineup.KEEPER;
 import static com.itacademy.soccer.dto.lineup.Lineup.NOT_ALIGNED;
