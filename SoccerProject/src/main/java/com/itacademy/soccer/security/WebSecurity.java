@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -19,9 +20,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	private UserDetailsService userDetailsService;
+	private BCryptPasswordEncoder bCryptPasswordEncoder;//B-61 Added class for encryption
 
-	public WebSecurity(UserDetailsService userDetailsService) {
+	public WebSecurity(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userDetailsService = userDetailsService;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 	
 	@Override
@@ -30,6 +33,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 			.csrf().disable()
 			.authorizeRequests()
 			.antMatchers("/api/login").permitAll()
+			.antMatchers("/api/users/managers").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.addFilter(new JWTAuthorizationFilter(authenticationManager()))
@@ -39,8 +43,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		// The class that retrieves the users is defined
-		auth.userDetailsService(userDetailsService);
+		//The class that retrieves the users is defined
+		//B-61 added passwordEncoder to collect encrypted password
+		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
 
 	}
 	
