@@ -8,6 +8,7 @@ import com.itacademy.soccer.controller.json.PlayerJson;
 import com.itacademy.soccer.dao.IMatchDAO;
 import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dao.IPlayerDAO;
+import com.itacademy.soccer.dto.PlayerActionResult;
 import com.itacademy.soccer.dto.PlayerActions;
 import com.itacademy.soccer.service.impl.MatchServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,19 +176,30 @@ public class PlayerController {
 		try {
 
 			Optional<Player> playerMoreGoals = playerServiceImpl.getPlayerMoreGoals(Long.parseLong(id));
+			PlayerActionResult playerMoreGoalsResult = new PlayerActionResult(playerMoreGoals.get().getId(), playerMoreGoals.get().getName(), playerMoreGoals.get().getNumberOfGoals());
+
 			Optional<Player> playerMoreAssists = playerServiceImpl.getPlayerMoreAssists(Long.parseLong(id));
+			PlayerActionResult playerMoreAssistsResult = new PlayerActionResult(playerMoreAssists.get().getId(), playerMoreAssists.get().getName(), playerMoreAssists.get().getNumberOfAssists());
+
 			Optional<Player> playerMoreFouls = playerServiceImpl.getPlayerMoreFouls(Long.parseLong(id));
+			PlayerActionResult playerMoreFoulsResult = new PlayerActionResult(playerMoreFouls.get().getId(), playerMoreFouls.get().getName(), playerMoreFouls.get().getNumberOfFouls());
+
 			Optional<Player> playerMoreRedCards = playerServiceImpl.getPlayerMoreRedCards(Long.parseLong(id));
+			PlayerActionResult playerMoreRedCardsResult = new PlayerActionResult(playerMoreRedCards.get().getId(), playerMoreRedCards.get().getName(), playerMoreRedCards.get().getNumberOfRedCards());
+
 			Optional<Player> playerMoreYellowCards = playerServiceImpl.getPlayerMoreYellowCards(Long.parseLong(id));
+			PlayerActionResult playerMoreYellowCardsResult = new PlayerActionResult(playerMoreYellowCards.get().getId(), playerMoreYellowCards.get().getName(), playerMoreYellowCards.get().getNumberOfYellowCards());
+
 			Optional<Player> playerMoreSaves = playerServiceImpl.getPlayerMoreSaves(Long.parseLong(id));
+			PlayerActionResult playerMoreSavesResult = new PlayerActionResult(playerMoreSaves.get().getId(), playerMoreSaves.get().getName(), playerMoreSaves.get().getNumberOfSaves());
 
 			map.put("success", true);
-			map.put("player with more goals", playerMoreGoals);
-			map.put("player with more assists", playerMoreAssists);
-			map.put("player with more fouls", playerMoreFouls);
-			map.put("player with more red cards", playerMoreRedCards);
-			map.put("player with more yellow cards", playerMoreYellowCards);
-			map.put("player with more saves", playerMoreSaves);
+			map.put("player with more goals", playerMoreGoalsResult);
+			map.put("player with more assists", playerMoreAssistsResult);
+			map.put("player with more fouls", playerMoreFoulsResult);
+			map.put("player with more red cards", playerMoreRedCardsResult);
+			map.put("player with more yellow cards", playerMoreYellowCardsResult);
+			map.put("player with more saves", playerMoreSavesResult);
 			map.put("message", "get stats");
 		} catch (Exception e) {
 			map.put("success", false);
@@ -207,20 +219,31 @@ public class PlayerController {
 			List<PlayerActions> playerActionsListList = iPlayerActionsDAO.findAll();
 
 			Optional<Player> playerMoreGoals = playerServiceImpl.getPlayerMoreGoalsTotal();
+			PlayerActionResult playerMoreGoalsResult = new PlayerActionResult(playerMoreGoals.get().getId(), playerMoreGoals.get().getName(), playerMoreGoals.get().getNumberOfGoals());
+
 			Optional<Player> playerMoreFouls = playerServiceImpl.getPlayerMoreFoulsTotal();
+			PlayerActionResult playerMoreFoulsResult = new PlayerActionResult(playerMoreFouls.get().getId(), playerMoreFouls.get().getName(), playerMoreFouls.get().getNumberOfFouls());
+
 			Optional<Player> playerMoreAssists = playerServiceImpl.getPlayerMoreAssistsTotal();
+			PlayerActionResult playerMoreAssistsResult = new PlayerActionResult(playerMoreAssists.get().getId(), playerMoreAssists.get().getName(), playerMoreAssists.get().getNumberOfAssists());
+
 			Optional<Player> playerMoreRedCards = playerServiceImpl.getPlayerMoreRedCardsTotal();
+			PlayerActionResult playerMoreRedCardsResult = new PlayerActionResult(playerMoreRedCards.get().getId(), playerMoreRedCards.get().getName(), playerMoreRedCards.get().getNumberOfRedCards());
+
 			Optional<Player> playerMoreYellowCards = playerServiceImpl.getPlayerMoreYellowCardsTotal();
+			PlayerActionResult playerMoreYellowCardsResult = new PlayerActionResult(playerMoreYellowCards.get().getId(), playerMoreYellowCards.get().getName(), playerMoreYellowCards.get().getNumberOfYellowCards());
+
 			Optional<Player> playerMoreSaves = playerServiceImpl.getPlayerMoreSavesTotal();
+			PlayerActionResult playerMoreSavesResult = new PlayerActionResult(playerMoreSaves.get().getId(), playerMoreSaves.get().getName(), playerMoreSaves.get().getNumberOfSaves());
 
 
 			map.put("success", true);
-			map.put("player with more goals", playerMoreGoals);
-			map.put("player with more assists", playerMoreAssists);
-			map.put("player with more fouls", playerMoreFouls);
-			map.put("player with more red cards", playerMoreRedCards);
-			map.put("player with more yellow cards", playerMoreYellowCards);
-			map.put("player with more saves", playerMoreSaves);
+			map.put("player with more goals", playerMoreGoalsResult);
+			map.put("player with more assists", playerMoreAssistsResult);
+			map.put("player with more fouls", playerMoreFoulsResult);
+			map.put("player with more red cards", playerMoreRedCardsResult);
+			map.put("player with more yellow cards", playerMoreYellowCardsResult);
+			map.put("player with more saves", playerMoreSavesResult);
 			map.put("message", "get stats");
 		} catch (Exception e) {
 			map.put("success", false);
