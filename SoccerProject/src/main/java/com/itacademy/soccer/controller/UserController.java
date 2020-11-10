@@ -14,6 +14,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,6 +29,12 @@ import java.util.regex.Pattern;
 
 public class UserController {
 
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	public UserController(BCryptPasswordEncoder bCryptPasswordEncoder) {
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+	}
+	
 // GETS
 
     @Autowired
@@ -107,12 +114,17 @@ public class UserController {
 				map.put("success", false);
 
 			} else { // Email and password are given
-
+				
 				for (User userChecker : iUserService.showAllUsers()) { // Compare existing users with user and password given
-
-					if (userChecker.getEmail().equals(user.getEmail()) && userChecker.getPassword().equals(user.getPassword())) {
-						user = userChecker; // Update user
-						userMatch = true; // User name and password matches
+					
+					if(userChecker.getEmail().equals(user.getEmail())) {
+							
+						//B-61 compares the login password (unencrypted) with the encrypted password of the database
+						if(bCryptPasswordEncoder.matches(user.getPassword(), userChecker.getPassword())) {
+							user = userChecker; // Update user
+							userMatch = true; // User name and password matches
+						}
+					
 					}
 				}
 
@@ -156,6 +168,10 @@ public class UserController {
 				
 				// Create User
 				User user = new User(userJson.getEmail(), userJson.getPassword()); // Creates new User from userJson
+				
+				// B-61 Create encrypted password
+				user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+				
 				iUserService.saveNewUser(user); // Creates User as Manager
 
 				// Create Team 
@@ -208,6 +224,9 @@ public class UserController {
 
                 if(pat.matcher(user.getEmail()).matches())
                 {
+                	// B-61 Create encrypted password
+    				user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+                	
                     iUserService.saveNewAdmin(user);
                     map.put("message", "All correct!");
                     map.put("type User", user.getTypeUser());
