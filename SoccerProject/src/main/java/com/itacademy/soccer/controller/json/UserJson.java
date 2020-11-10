@@ -1,5 +1,14 @@
 package com.itacademy.soccer.controller.json;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.itacademy.soccer.dto.Team;
+import com.itacademy.soccer.dto.User;
+import com.itacademy.soccer.dto.typeUser.TypeUser;
+
+@JsonIgnoreProperties(value = "password", allowSetters = true)
 public class UserJson {
 
 	private String id;
@@ -34,6 +43,50 @@ public class UserJson {
 		this.team_id = team_id;
 	}
 
+	public User setJsonToObject() {
+		
+		User user = new User();
+
+		user.setId(Long.parseLong(this.id));
+		user.setEmail(this.email);
+		user.setPassword(this.password);
+		user.setTypeUser(TypeUser.valueOf(this.type_user));
+
+		Team team = new Team();
+
+		team.setId(Long.parseLong(this.team_id));
+
+		user.setTeam(team);
+
+		return user;
+	}
+	
+	public static UserJson parseObjectToJson(User user) {
+		
+		UserJson userJson = new UserJson();
+
+		userJson.setId(user.getId().toString());
+		userJson.setEmail(user.getEmail());
+		userJson.setPassword(user.getPassword());
+		userJson.setType_user(user.getTypeUser().toString());
+		
+		if (user.getTeam() != null) {
+			userJson.setTeam_id(user.getTeam().getId().toString());
+			userJson.setTeam_name(user.getTeam().getName());
+			userJson.setPlayers(user.getTeam().getPlayersList().toString());
+		}
+
+		return userJson;
+	}
+	
+	public static List<UserJson> parseListToJson(List<User> userList) {
+		
+		List<UserJson> userJsonList = new ArrayList<>();
+		
+		userList.stream().forEach(user -> userJsonList.add(parseObjectToJson(user)));
+		
+		return userJsonList;
+	}
 	
 	public String getId() {
 		return id;
