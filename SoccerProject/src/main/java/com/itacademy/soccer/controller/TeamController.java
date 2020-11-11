@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,22 +74,30 @@ public class TeamController {
 		return map;
 	}
 
-	//B-44
+	//B-44 -> B-66
 	@PutMapping // MODIFY TEAM
-	public HashMap<String, Object> modifyOneTeamById(@RequestBody TeamJson team) {
+	public HashMap<String, Object> modifyOneTeamById(@RequestBody TeamJson teamJson) {
 		
-		Team teamToUpdate = team.setTeamJsonToObject();
+		Team teamToUpdate = teamJson.toTeam();
 		
 		HashMap<String, Object> map = new HashMap<>();
+		
 		try {
+			
 			Team toShowTeam = teamServiceImpl.modifyOneTeamById(teamToUpdate);
+			
+			if (toShowTeam == null) {throw new Exception();}
+			
 			map.put("success", true);
 			map.put("message", "One team modified");
 			map.put("team", toShowTeam);
+			
 		} catch (Exception e) {
+			
 			map.put("success", false);
 			map.put("message", "no team to be shown! :" + e.getMessage());
 		}
+		
 		return map;
 	}
 

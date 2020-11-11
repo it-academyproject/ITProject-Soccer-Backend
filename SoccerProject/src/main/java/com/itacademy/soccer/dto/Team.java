@@ -32,13 +32,13 @@ public class Team {
 	private Float budget;
 	
 	@Column(name="wins")
-	private int wins;
+	private Integer wins;
 	
 	@Column(name="losses")
-	private int losses;
+	private Integer losses;
 	
 	@Column(name="draws")
-	private int draws;
+	private Integer draws;
 
 	
 	@OneToOne()
@@ -141,42 +141,42 @@ public class Team {
 	/**
 	 * @return the wins
 	 */
-	public int getWins() {
+	public Integer getWins() {
 		return wins;
 	}
 
 	/**
 	 * @param wins the wins to set
 	 */
-	public void setWins(int wins) {
+	public void setWins(Integer wins) {
 		this.wins = wins;
 	}
 
 	/**
 	 * @return the losses
 	 */
-	public int getLosses() {
+	public Integer getLosses() {
 		return losses;
 	}
 
 	/**
 	 * @param losses the losses to set
 	 */
-	public void setLosses(int losses) {
+	public void setLosses(Integer losses) {
 		this.losses = losses;
 	}
 
 	/**
 	 * @return the draws
 	 */
-	public int getDraws() {
+	public Integer getDraws() {
 		return draws;
 	}
 
 	/**
 	 * @param draws the draws to set
 	 */
-	public void setDraws(int draws) {
+	public void setDraws(Integer draws) {
 		this.draws = draws;
 	}
 

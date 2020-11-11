@@ -8,19 +8,15 @@ import java.util.Date;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.TreeMap;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
-import com.itacademy.soccer.controller.json.TeamJson;
 import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dto.Player;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.itacademy.soccer.dao.ITeamDAO;
 import com.itacademy.soccer.dto.Team;
@@ -67,23 +63,62 @@ public class TeamServiceImpl implements ITeamService {
 		return iTeamsDao.findById(id).get();
 	}
 
+	//B-44 -> B-66
 	@Override
 	public Team modifyOneTeamById(Team team) {
-		//B-44
-		Optional<Team> teamLocalized = iTeamsDao.findById(team.getId());
+		
+		Optional<Team> teamLocalized = Optional.empty();
+		
 		try {
-			if(teamLocalized != null) {
-				teamLocalized.get().setName(team.getName());
-				teamLocalized.get().setFoundation_date(team.getFoundation_date());
-				teamLocalized.get().setBadge(team.getBadge());
-				teamLocalized.get().setWins(team.getWins());
-				teamLocalized.get().setLosses(team.getLosses());
-				teamLocalized.get().setDraws(team.getDraws());
-			}
-		}catch (Exception e) {
+			teamLocalized = iTeamsDao.findById(team.getId());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return iTeamsDao.save(teamLocalized.get());
+		
+		boolean hasChange = false;
+		
+		//if there is: check for nullity, emptiness and if it is the same as the database
+		if(teamLocalized.isPresent()) {
+			
+			if (StringUtils.hasLength(team.getName()) && !team.getName().equals(teamLocalized.get().getName())) {
+
+				teamLocalized.get().setName(team.getName());
+				hasChange = true;
+			}
+
+			if (team.getFoundation_date() != null
+					&& !team.getFoundation_date().equals(teamLocalized.get().getFoundation_date())) {
+
+				teamLocalized.get().setFoundation_date(team.getFoundation_date());
+				hasChange = true;
+			}
+
+			if (StringUtils.hasLength(team.getBadge()) && !team.getBadge().equals(teamLocalized.get().getBadge())) {
+
+				teamLocalized.get().setBadge(team.getBadge());
+				hasChange = true;
+			}
+
+			if (team.getWins() != null && team.getWins() != teamLocalized.get().getWins()) {
+
+				teamLocalized.get().setWins(team.getWins());
+				hasChange = true;
+			}
+
+			if (team.getLosses() != null && team.getLosses() != teamLocalized.get().getLosses()) {
+
+				teamLocalized.get().setLosses(team.getLosses());
+				hasChange = true;
+			}
+
+			if (team.getDraws() != null && team.getDraws() != teamLocalized.get().getDraws()) {
+
+				teamLocalized.get().setDraws(team.getDraws());
+				hasChange = true;
+			}
+		}
+		
+		return (hasChange) ? iTeamsDao.save(teamLocalized.get()) : null;
 	}
 
 	@Override
