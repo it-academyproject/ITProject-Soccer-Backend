@@ -32,15 +32,15 @@ public class League {
 	@Column (name= "numberrounds")
 	private int numberrounds;
 	
-	@Column (name= "participants")
-	private int participants;
+	@Column (name= "max_participants")
+	private int max_participants;
 	
 	@Column (name= "division")
 	private Long division;
 	
 	public League() {	}
 	
-	public League(Long id, String name, Date beginDate, Date endingDate, int numberRounds, int participants,
+	public League(Long id, String name, Date beginDate, Date endingDate, int numberRounds, int max_participants,
 			Long division) {
 
 		this.id = id;
@@ -48,7 +48,7 @@ public class League {
 		this.begindate = beginDate;
 		this.endingdate = endingDate;
 		this.numberrounds = numberRounds;
-		this.participants = participants;
+		this.max_participants = max_participants;
 		this.division = division;
 	}
 
@@ -94,12 +94,12 @@ public class League {
 		this.numberrounds = numberRounds;
 	}
 
-	public int getParticipants() {
-		return participants;
+	public int getMaxParticipants() {
+		return max_participants;
 	}
 
-	public void setParticipants(int participants) {
-		this.participants = participants;
+	public void setMaxParticipants(int participants) {
+		this.max_participants = participants;
 	}
 
 	public Long getDivision() {
@@ -114,7 +114,7 @@ public class League {
 	@Override
 	public String toString() {
 		return "League [id=" + id + ", name=" + name + ", beginDate=" + begindate + ", endingDate=" + endingdate
-				+ ", numberRounds=" + numberrounds + ", participants=" + participants + ", division=" + division + "]";
+				+ ", numberRounds=" + numberrounds + ", max_participants=" + max_participants + ", division=" + division + "]";
 	}
 
 }

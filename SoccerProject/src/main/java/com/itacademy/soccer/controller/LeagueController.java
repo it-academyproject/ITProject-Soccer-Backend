@@ -109,7 +109,7 @@ public class LeagueController {
 				leagueSelected.setBeginDate(league.getBeginDate());
 				leagueSelected.setEndingDate(league.getEndingDate());
 				leagueSelected.setNumberRounds(league.getNumberRounds());
-				leagueSelected.setParticipants(league.getParticipants());
+				leagueSelected.setMaxParticipants(league.getMaxParticipants());
 				leagueSelected.setDivision(league.getDivision());				
 				
 				leagueServiceImpl.updateLeague(leagueSelected);
