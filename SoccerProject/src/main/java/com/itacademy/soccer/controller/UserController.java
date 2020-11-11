@@ -50,13 +50,13 @@ public class UserController {
     @GetMapping("/users") // SHOW ALL USERS FOR ADMIN
     public List<UserJson> showAllUsers()
     {
-        return UserJson.parseListToJson(iUserService.showAllUsers());
+        return UserJson.parseListUserToJson(iUserService.showAllUsers());
     }
 
     @GetMapping("/users/managers/{id}") // SHOW USER UNIQUE TO ADMIN
     public UserJson showUserById(@PathVariable Long id)
     {
-        return UserJson.parseObjectToJson(iUserService.showUserById(id));
+        return UserJson.parseUserToJson(iUserService.showUserById(id));
     }
 
 
