@@ -95,16 +95,19 @@ public class LeagueController {
 
 	
     
-	@PutMapping("/leagues/{id}") // MODIFY LEAGUE ONLY BY ADMIN
-	public HashMap<String,Object> modifyLeague(@PathVariable Long id, @RequestBody League league){
+	@PutMapping("/leagues") // MODIFY LEAGUE ONLY BY ADMIN
+	//public HashMap<String,Object> modifyLeague(@PathVariable Long id, @RequestBody League league){
+	public HashMap<String,Object> modifyLeague(@RequestBody League league){
 	
 		HashMap<String,Object> map = new HashMap<>();		
 		League leagueSelected = new League();	
+		int teamsInLeague;
 		
 		try {
-			leagueSelected = leagueServiceImpl.getOneLeagueById(id);		
-			
-			if (leagueSelected != null) {				
+			leagueSelected = leagueServiceImpl.getOneLeagueById(league.getId());
+			teamsInLeague = leagueServiceImpl.showTeamsByLeague(league.getId()).size();
+
+			if (leagueSelected != null && league.getMaxParticipants() >= teamsInLeague) {				
 			
 				leagueSelected.setName(league.getName());
 				leagueSelected.setBeginDate(league.getBeginDate());
@@ -119,6 +122,8 @@ public class LeagueController {
 				map.put("New League Values have been changed: ", leagueSelected);
 				}else {
 				map.put("success", false);
+				map.put("message", "The updated league has max_participants:" +league.getMaxParticipants()+ " and number of teams:" +teamsInLeague+ " The max_participants should be equal or greater than the number of teams");
+
 			}
 		}
 		catch (Exception e) {
