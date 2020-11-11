@@ -73,6 +73,7 @@ public class LeagueController {
 	    		
 	    		League 	league = leagueServiceImpl.getOneLeagueById(id);	
 	    		teamsLeague =leagueServiceImpl.showTeamsByLeague(id); //All teams with the same {id} league 
+	    		
 	    	 		    	 	
 	    		if (teamsLeague !=null && teamsLeague.size() != 0) {
 	    			
@@ -135,14 +136,16 @@ public class LeagueController {
 		Team teamSelected = new Team();
 		League leagueSelected = new League();		
 		HashMap<String,Object> map = new HashMap<>();	
+		int teamsInLeague;
 		
 		try {
 			teamSelected= iTeamService.getOneTeamById(id);	
-			leagueSelected = leagueServiceImpl.getOneLeagueById(league.getId()); 
+			leagueSelected = leagueServiceImpl.getOneLeagueById(league.getId());
+			teamsInLeague = leagueServiceImpl.showTeamsByLeague(league.getId()).size();
 			
-			if (teamSelected != null && leagueSelected != null) { 		
+			if (teamSelected != null && leagueSelected != null && teamsInLeague < leagueSelected.getMaxParticipants()) { 		
 				
-				if (teamSelected.getLeague() == null || teamSelected.getLeague().getId() != leagueSelected.getId()) { 
+				if (teamSelected.getLeague() == null || teamSelected.getLeague().getId() != leagueSelected.getId() ) { 
 						teamSelected.setLeague(leagueSelected);						
 						leagueServiceImpl.insertTeamintoLeague(teamSelected); 
 						map.put("success", true);
@@ -154,6 +157,8 @@ public class LeagueController {
 				
 			}else {	 				
 				map.put("success", false);
+			  	map.put("message","The League:" +leagueSelected.getId()+ " is full");        
+
 			}			
 			
 		} catch (Exception e) {
