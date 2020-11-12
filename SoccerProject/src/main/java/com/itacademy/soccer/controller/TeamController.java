@@ -1,7 +1,3 @@
-/**
- * @author KevHaes
- *
- */
 package com.itacademy.soccer.controller;
 
 import java.util.HashMap;
@@ -23,33 +19,32 @@ import com.itacademy.soccer.controller.json.TeamJson;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.impl.TeamServiceImpl;
 
-/**
- * @author KevHaes
- *
- */
 @RestController
 @RequestMapping(path = "/api/teams")
 public class TeamController {
 
 	@Autowired
 	TeamServiceImpl teamServiceImpl;
-
-	@PostMapping
+ 
+	@PostMapping // CREATE TEAM
 	public HashMap<String, Object> createTeam(@RequestBody Team team) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			Team NewlyCreatedTeam = teamServiceImpl.createTeam(team);
+			Team newTeam = teamServiceImpl.createTeamInitial(team.getName()); // Creates new team with given name
+			teamServiceImpl.createTeam(newTeam); // Saves team in DB
+			
 			map.put("success", true);
 			map.put("message", "Team Created");
-			map.put("team", NewlyCreatedTeam);
+			map.put("team", newTeam);
+			
 		} catch (Exception e) {
 			map.put("success", false);
-			map.put("message", "Team NOT Created ! :" + e.getMessage());
+			map.put("message", "Team NOT Created! :" + e.getMessage());
 		}
 		return map;
 	}
 
-	@GetMapping
+	@GetMapping // GET ALL TEAMS
 	public HashMap<String, Object> getAllTeams() {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
@@ -65,13 +60,13 @@ public class TeamController {
 		return map;
 	}
 
-	@GetMapping(path = "/{id}")
+	@GetMapping(path = "/{id}") // GET TEAM BY ID
 	public HashMap<String, Object> getOneTeamById(@PathVariable Long id) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			Team toShowTeam = teamServiceImpl.getOneTeamById(id);
 			map.put("success", true);
-			map.put("message", "Got one Teams");
+			map.put("message", "Got " + toShowTeam.getName() + " team");
 			map.put("team", toShowTeam);
 		} catch (Exception e) {
 			map.put("success", false);
@@ -81,7 +76,7 @@ public class TeamController {
 	}
 
 	//B-44
-	@PutMapping
+	@PutMapping // MODIFY TEAM
 	public HashMap<String, Object> modifyOneTeamById(@RequestBody TeamJson team) {
 		
 		Team teamToUpdate = team.setTeamJsonToObject();
@@ -99,7 +94,7 @@ public class TeamController {
 		return map;
 	}
 
-	@GetMapping(path = "/{id}/stats")//Change "{id}/result" to "{id}/stats"
+	@GetMapping(path = "/{id}/stats") // GET TEAM STATS
 	public HashMap<String, Object> getOneTeamByIdResults(@PathVariable Long id) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
@@ -118,7 +113,7 @@ public class TeamController {
 	}
 
 	//B-50
-	@DeleteMapping
+	@DeleteMapping // DELETE TEAM 
 	public HashMap<String, Object> deleteOneTeamById(@RequestBody TeamJson team)  {
 				
 		HashMap<String, Object> map = new HashMap<>();
@@ -139,7 +134,7 @@ public class TeamController {
 	}
 
 
-	@GetMapping(path = "/bests")
+	@GetMapping(path = "/best") // GET BEST TEAMS
 	public LinkedHashMap<String, Object> getTeamsByMaxWLD(){
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -158,7 +153,7 @@ public class TeamController {
 		return map;
 	}
 
-	@GetMapping("/{id}/bests")
+	@GetMapping("/{id}/best") // GET BEST PLAYER IN TEAM
 	public LinkedHashMap<String,Object> bestPlayersInTeam(@PathVariable Long id){
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		try{
@@ -174,10 +169,10 @@ public class TeamController {
 			List<String> bestPasserTop = teamServiceImpl.getNameBestPasserInTeam(id);
 			List<String> bestShooterTop = teamServiceImpl.getNameBestShooterInTeam(id);
 			map.put("success", true);
-			map.put("keeper:", bestKeeperTop);
-			map.put("defender:", bestDefenderTop);
-			map.put("passer:", bestPasserTop);
-			map.put("shooter:", bestShooterTop);
+			map.put("keeper", bestKeeperTop);
+			map.put("defender", bestDefenderTop);
+			map.put("passer", bestPasserTop);
+			map.put("shooter", bestShooterTop);
 		} catch (Exception e) {
 		map.put("success", false);
 		map.put("message", "no result to be shown! :" + e.getMessage());

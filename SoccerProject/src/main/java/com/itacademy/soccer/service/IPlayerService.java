@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import com.itacademy.soccer.controller.json.PlayerJson;
 import com.itacademy.soccer.dto.Player;
+
 import com.itacademy.soccer.dto.Team;
+
 
 public interface IPlayerService {
 	
@@ -18,7 +20,21 @@ public interface IPlayerService {
 	public Player updatePlayer(PlayerJson player);
 
 	Player assignInitialValues(Player player );
-		
+
+	Optional<Player> getPlayerMoreGoals(Long id);
+	Optional<Player> getPlayerMoreFouls(Long id);
+	Optional<Player> getPlayerMoreAssists(Long id);
+	Optional<Player> getPlayerMoreRedCards(Long id);
+	Optional<Player> getPlayerMoreYellowCards(Long id);
+	Optional<Player> getPlayerMoreSaves(Long id);
+
+	Optional<Player> getPlayerMoreGoalsTotal();
+	Optional<Player> getPlayerMoreFoulsTotal();
+	Optional<Player> getPlayerMoreAssistsTotal();
+	Optional<Player> getPlayerMoreRedCardsTotal();
+	Optional<Player> getPlayerMoreYellowCardsTotal();
+	Optional<Player> getPlayerMoreSavesTotal();
+
 	public void changeTeam (Player player, Team team ); // Change team_id when player signs for a team
 	
 	public List<Player> getPlayersFromJson(String playersJson); // Get list of players from userJson players list 
