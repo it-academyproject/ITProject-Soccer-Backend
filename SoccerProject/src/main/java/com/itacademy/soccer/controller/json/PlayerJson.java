@@ -1,5 +1,9 @@
 package com.itacademy.soccer.controller.json;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.itacademy.soccer.dto.Player;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlayerJson {
 
     private String id;
@@ -11,6 +15,12 @@ public class PlayerJson {
     private String defense;
     private String pass;
     private String attack;
+    private Integer numberOfAssists;
+    private Integer numberOfFouls;
+    private Integer numberOfGoals;
+    private Integer numberOfRedCards;
+    private Integer numberOfSaves;
+    private Integer numberOfYellowCards;
 
     public PlayerJson() {
     }
@@ -100,4 +110,89 @@ public class PlayerJson {
     public void setAttack(String attack) {
         this.attack = attack;
     }
+
+    public Integer getNumberOfAssists() {
+        return numberOfAssists;
+    }
+
+    public void setNumberOfAssists(Integer numberOfAssists) {
+        this.numberOfAssists = numberOfAssists;
+    }
+
+    public Integer getNumberOfFouls() {
+        return numberOfFouls;
+    }
+
+    public void setNumberOfFouls(Integer numberOfFouls) {
+        this.numberOfFouls = numberOfFouls;
+    }
+
+    public Integer getNumberOfGoals() {
+        return numberOfGoals;
+    }
+
+    public void setNumberOfGoals(Integer numberOfGoals) {
+        this.numberOfGoals = numberOfGoals;
+    }
+
+    public Integer getNumberOfRedCards() {
+        return numberOfRedCards;
+    }
+
+    public void setNumberOfRedCards(Integer numberOfRedCards) {
+        this.numberOfRedCards = numberOfRedCards;
+    }
+
+    public Integer getNumberOfSaves() {
+        return numberOfSaves;
+    }
+
+    public void setNumberOfSaves(Integer numberOfSaves) {
+        this.numberOfSaves = numberOfSaves;
+    }
+
+    public Integer getNumberOfYellowCards() {
+        return numberOfYellowCards;
+    }
+
+    public void setNumberOfYellowCards(Integer numberOfYellowCards) {
+        this.numberOfYellowCards = numberOfYellowCards;
+    }
+
+    public Player toPlayer() {
+        Player player = new Player();
+        player.setId(Long.parseLong(this.getId()));
+        player.setName(this.getName());
+        player.setAge(Integer.parseInt(this.getAge()));
+        player.setAka(this.getAka());
+        player.setTeam_id(Long.parseLong(this.getTeam_id()));
+        player.setKeeper(Integer.parseInt(this.getKeeper()));
+        player.setDefense(Integer.parseInt(this.getDefense()));
+        player.setPass(Integer.parseInt(this.getPass()));
+        player.setAttack(Integer.parseInt(this.getAttack()));
+        return player;
+    }
+
+    public static PlayerJson parsePlayerToJson(Player player) {
+        return new PlayerJson() {
+            {
+                setId(player.getId().toString());
+                setName(player.getName());
+                setAge(String.valueOf(player.getAge()));
+                setAka(player.getAka());
+                setTeam_id(player.getTeam_id().toString());
+                setKeeper(String.valueOf(player.getKeeper()));
+                setDefense(String.valueOf(player.getDefense()));
+                setPass(String.valueOf(player.getPass()));
+                setAttack(String.valueOf(player.getAttack()));
+                setNumberOfAssists(player.getNumberOfAssists());
+                setNumberOfFouls(player.getNumberOfFouls());
+                setNumberOfGoals(player.getNumberOfGoals());
+                setNumberOfRedCards(player.getNumberOfRedCards());
+                setNumberOfSaves(player.getNumberOfSaves());
+                setNumberOfYellowCards(player.getNumberOfYellowCards());
+            }
+        };
+    }
+
 }
