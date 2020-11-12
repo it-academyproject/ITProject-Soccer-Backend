@@ -107,6 +107,9 @@ public class LeagueController {
 			leagueSelected = leagueServiceImpl.getOneLeagueById(league.getId());
 			teamsInLeague = leagueServiceImpl.showTeamsByLeague(league.getId()).size();
 
+			//El !=null de este if, si se cumple, arrojan un error 400 BAD REQUEST y no hace entrar en el else que había. Por eso la
+			// única manera de entrar en el else, será que quieras updatear la liga con menos max_participantes de los que ya hay
+			// por eso he puesto el mensaje de error en ese else
 			if (leagueSelected != null && league.getMaxParticipants() >= teamsInLeague) {				
 			
 				leagueSelected.setName(league.getName());
@@ -148,6 +151,10 @@ public class LeagueController {
 			leagueSelected = leagueServiceImpl.getOneLeagueById(league.getId());
 			teamsInLeague = leagueServiceImpl.showTeamsByLeague(league.getId()).size();
 			
+			
+			//Los !=null de este if, si se cumplen, arrojan un error 400 BAD REQUEST y no hacen entrar en el else que había. Por eso la
+			// única manera de entrar en el else, será que la liga esté llena y no puedas sobrepasar el max_participantes
+			// por eso he puesto el mensaje de "la liga está llena" en el esle
 			if (teamSelected != null && leagueSelected != null && teamsInLeague < leagueSelected.getMaxParticipants()) { 		
 				
 				if (teamSelected.getLeague() == null || teamSelected.getLeague().getId() != leagueSelected.getId() ) { 
@@ -156,7 +163,7 @@ public class LeagueController {
 						map.put("success", true);
 						map.put("The Team called " + teamSelected.getName() + " with id :" + teamSelected.getId() + " has signed up for league ", leagueSelected);						
 					}else {  
-						map.put("success", true);
+						map.put("success", false);
 						map.put("The Team called " + teamSelected.getName() + " is already in the league ", teamSelected.getLeague().getId());		
 					}	
 				
