@@ -16,11 +16,11 @@ import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dto.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.itacademy.soccer.dao.ITeamDAO;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.ITeamService;
+import com.itacademy.soccer.util.Verify;
 
 /**
  * @author KevHaes
@@ -39,7 +39,7 @@ public class TeamServiceImpl implements ITeamService {
 	public Team createTeamInitial(String name) { // Creates initial team with name provided
 		Team team = new Team(); 
 		team.setName(name);
-		team.setFoundation_date(new Date()); // Set foundation date as creation in the system
+		team.setFoundationDate(new Date()); // Set foundation date as creation in the system
 		team.setBadge(null);
 		team.setBudget(300000F); // Set initial budget as 300.000
 		team.setWins(0);
@@ -60,65 +60,56 @@ public class TeamServiceImpl implements ITeamService {
 
 	@Override
 	public Team getOneTeamById(Long id) {
-		return iTeamsDao.findById(id).get();
+		Optional<Team> team = iTeamsDao.findById(id); 
+		return (team.isPresent()) ? team.get() : null;
 	}
 
 	//B-44 -> B-66
 	@Override
-	public Team modifyOneTeamById(Team team) {
-		
-		Optional<Team> teamLocalized = Optional.empty();
-		
-		try {
-			teamLocalized = iTeamsDao.findById(team.getId());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		boolean hasChange = false;
-		
-		//if there is: check for nullity, emptiness and if it is the same as the database
-		if(teamLocalized.isPresent()) {
-			
-			if (StringUtils.hasLength(team.getName()) && !team.getName().equals(teamLocalized.get().getName())) {
+	public Team modifyOneTeamById(Team newTeam) {
 
-				teamLocalized.get().setName(team.getName());
-				hasChange = true;
+		Optional<Team> oldTeam = Optional.empty();
+
+		Team toUpdateTeam = null;
+
+		oldTeam = iTeamsDao.findById(newTeam.getId());
+
+		if (oldTeam.isPresent()) {
+
+			toUpdateTeam = oldTeam.get().clone();
+
+			if (Verify.isNotNullEmptyEquals(newTeam.getName(), toUpdateTeam.getName())) {
+
+				toUpdateTeam.setName(newTeam.getName());
 			}
 
-			if (team.getFoundation_date() != null
-					&& !team.getFoundation_date().equals(teamLocalized.get().getFoundation_date())) {
+			if (Verify.isNotNullEmptyEquals(newTeam.getFoundationDate(), toUpdateTeam.getFoundationDate())) {
 
-				teamLocalized.get().setFoundation_date(team.getFoundation_date());
-				hasChange = true;
+				toUpdateTeam.setFoundationDate(newTeam.getFoundationDate());
 			}
 
-			if (StringUtils.hasLength(team.getBadge()) && !team.getBadge().equals(teamLocalized.get().getBadge())) {
+			if (Verify.isNotNullEmptyEquals(newTeam.getBadge(), toUpdateTeam.getBadge())) {
 
-				teamLocalized.get().setBadge(team.getBadge());
-				hasChange = true;
+				toUpdateTeam.setBadge(newTeam.getBadge());
 			}
 
-			if (team.getWins() != null && team.getWins() != teamLocalized.get().getWins()) {
+			if (Verify.isNotNullEmptyEquals(newTeam.getWins(), toUpdateTeam.getWins())) {
 
-				teamLocalized.get().setWins(team.getWins());
-				hasChange = true;
+				toUpdateTeam.setWins(newTeam.getWins());
 			}
 
-			if (team.getLosses() != null && team.getLosses() != teamLocalized.get().getLosses()) {
+			if (Verify.isNotNullEmptyEquals(newTeam.getLosses(), toUpdateTeam.getLosses())) {
 
-				teamLocalized.get().setLosses(team.getLosses());
-				hasChange = true;
+				toUpdateTeam.setLosses(newTeam.getLosses());
 			}
 
-			if (team.getDraws() != null && team.getDraws() != teamLocalized.get().getDraws()) {
+			if (Verify.isNotNullEmptyEquals(newTeam.getDraws(), toUpdateTeam.getDraws())) {
 
-				teamLocalized.get().setDraws(team.getDraws());
-				hasChange = true;
+				toUpdateTeam.setDraws(newTeam.getDraws());
 			}
 		}
-		
-		return (hasChange) ? iTeamsDao.save(teamLocalized.get()) : null;
+
+		return (Verify.isNullEmptyEquals(toUpdateTeam, oldTeam.get())) ? null : iTeamsDao.save(toUpdateTeam);
 	}
 
 	@Override

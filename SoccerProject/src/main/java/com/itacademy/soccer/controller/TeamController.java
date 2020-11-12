@@ -78,24 +78,24 @@ public class TeamController {
 	@PutMapping // MODIFY TEAM
 	public HashMap<String, Object> modifyOneTeamById(@RequestBody TeamJson teamJson) {
 		
-		Team teamToUpdate = teamJson.toTeam();
-		
 		HashMap<String, Object> map = new HashMap<>();
 		
 		try {
 			
-			Team toShowTeam = teamServiceImpl.modifyOneTeamById(teamToUpdate);
+			Team newTeam = teamJson.toTeam();
 			
-			if (toShowTeam == null) {throw new Exception();}
+			Team oldTeam = teamServiceImpl.modifyOneTeamById(newTeam);
+			
+			if (oldTeam == null) {throw new Exception();}
 			
 			map.put("success", true);
 			map.put("message", "One team modified");
-			map.put("team", toShowTeam);
+			map.put("team", oldTeam);
 			
 		} catch (Exception e) {
 			
 			map.put("success", false);
-			map.put("message", "no team to be shown! :" + e.getMessage());
+			map.put("message", "Missing, incorrect or same data has been sent! : " + e.getMessage());
 		}
 		
 		return map;
