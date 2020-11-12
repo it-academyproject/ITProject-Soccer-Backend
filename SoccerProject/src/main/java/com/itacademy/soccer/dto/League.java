@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 
 @Entity
@@ -23,32 +25,36 @@ public class League {
 	@Column (name= "name")
 	private String name;
 	
-	@Column(name = "begindate")
-	private Date begindate;
+	@Column(name = "begin_date")
+	@JsonProperty("begin_date")
+	private Date beginDate;
 	
-	@Column (name= "endingdate")
-	private Date endingdate;
+	@Column (name= "ending_date")
+	@JsonProperty("ending_date")
+	private Date endingDate;
 	
-	@Column (name= "numberrounds")
-	private int numberrounds;
+	@Column (name= "number_rounds")
+	@JsonProperty ("number_rounds")
+	private int numberRounds;
 	
 	@Column (name= "max_participants")
-	private int max_participants;
+	@JsonProperty ("max_participants")
+	private int maxParticipants;
 	
 	@Column (name= "division")
 	private Long division;
 	
 	public League() {	}
 	
-	public League(Long id, String name, Date beginDate, Date endingDate, int numberRounds, int max_participants,
+	public League(Long id, String name, Date beginDate, Date endingDate, int numberRounds, int maxParticipants,
 			Long division) {
 
 		this.id = id;
 		this.name = name;
-		this.begindate = beginDate;
-		this.endingdate = endingDate;
-		this.numberrounds = numberRounds;
-		this.max_participants = max_participants;
+		this.beginDate = beginDate;
+		this.endingDate = endingDate;
+		this.numberRounds = numberRounds;
+		this.maxParticipants = maxParticipants;
 		this.division = division;
 	}
 
@@ -71,35 +77,35 @@ public class League {
 	}
 
 	public Date getBeginDate() {
-		return begindate;
+		return beginDate;
 	}
 
 	public void setBeginDate(Date beginDate) {
-		this.begindate = beginDate;
+		this.beginDate = beginDate;
 	}
 
 	public Date getEndingDate() {
-		return endingdate;
+		return endingDate;
 	}
 
 	public void setEndingDate(Date endingDate) {
-		this.endingdate = endingDate;
+		this.endingDate = endingDate;
 	}
 
 	public int getNumberRounds() {
-		return numberrounds;
+		return numberRounds;
 	}
 
 	public void setNumberRounds(int numberRounds) {
-		this.numberrounds = numberRounds;
+		this.numberRounds = numberRounds;
 	}
 
 	public int getMaxParticipants() {
-		return max_participants;
+		return maxParticipants;
 	}
 
 	public void setMaxParticipants(int participants) {
-		this.max_participants = participants;
+		this.maxParticipants = participants;
 	}
 
 	public Long getDivision() {
@@ -113,8 +119,8 @@ public class League {
 	
 	@Override
 	public String toString() {
-		return "League [id=" + id + ", name=" + name + ", beginDate=" + begindate + ", endingDate=" + endingdate
-				+ ", numberRounds=" + numberrounds + ", max_participants=" + max_participants + ", division=" + division + "]";
+		return "League [id=" + id + ", name=" + name + ", beginDate=" + beginDate + ", endingDate=" + endingDate
+				+ ", numberRounds=" + numberRounds + ", max_participants=" + maxParticipants + ", division=" + division + "]";
 	}
 
 }
