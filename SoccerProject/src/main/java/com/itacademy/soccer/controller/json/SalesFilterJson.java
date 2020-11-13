@@ -1,8 +1,11 @@
 package com.itacademy.soccer.controller.json;
 
+import java.util.Comparator;
 import java.util.Date;
 
+import com.itacademy.soccer.dto.Bid;
 import com.itacademy.soccer.dto.Player;
+import com.itacademy.soccer.dto.Sale;
 
 public class SalesFilterJson {
 
@@ -19,6 +22,23 @@ public class SalesFilterJson {
 	private Player player;
 
 	public SalesFilterJson() {
+	}
+	
+	public static SalesFilterJson parseSaleToJson(Sale sale) {
+		return new SalesFilterJson() {
+			{
+				setId(sale.getId());
+				setLimitDate(sale.getLimitDate());
+				setInitialPrice(sale.getInitialPrice());
+				setLastBidPrice((sale.getBids().isEmpty()) 
+						? sale.getInitialPrice()
+						: sale.getBids().stream()
+								.sorted(Comparator.comparing(Bid::getOperationDate).reversed())
+								.findFirst().get().getBidPrice());
+				setTeamName(sale.getPlayer().getTeam().getName());
+				setPlayer(sale.getPlayer());
+			}
+		};
 	}
 
 	public Long getId() {
