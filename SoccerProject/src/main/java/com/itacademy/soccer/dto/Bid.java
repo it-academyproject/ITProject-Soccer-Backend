@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,11 +24,11 @@ public class Bid {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	
-	private Long team_id;
+	@Column(name = "team_id")
+	private Long teamId;
 
 	@Column(name = "bid_price")
-	private float bid_price;
+	private float bidPrice;
 
 	@Column(name = "operation_date")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -50,10 +49,10 @@ public class Bid {
 	}
 
 	
-	public Bid(Long id, Long team_id, float bid_price, Date operationDate, Sale sale, Team team) {
+	public Bid(Long id, Long teamId, float bidPrice, Date operationDate, Sale sale, Team team) {
 		this.id = id;
-		this.team_id = team_id;
-		this.bid_price = bid_price;
+		this.teamId = teamId;
+		this.bidPrice = bidPrice;
 		this.operationDate = operationDate;
 		this.sale = sale;
 		this.team = team;
@@ -61,7 +60,7 @@ public class Bid {
 
 	public Bid(Long id, float bidPrice, Date operationDate) {
 		this.id = id;
-		this.bid_price = bid_price;
+		this.bidPrice = bidPrice;
 		this.operationDate = operationDate;
 	}
 
@@ -74,13 +73,13 @@ public class Bid {
 	}
 
 	
-	public float getBid_price() {
-		return bid_price;
+	public float getBidPrice() {
+		return bidPrice;
 	}
 
 
-	public void setBid_price(float bid_price) {
-		this.bid_price = bid_price;
+	public void setBidPrice(float bidPrice) {
+		this.bidPrice = bidPrice;
 	}
 
 
@@ -111,12 +110,12 @@ public class Bid {
 	}
 
 
-	public Long getTeam_id() {
-		return team_id;
+	public Long getTeamId() {
+		return teamId;
 	}
 
-	public void setTeam_id(Long team_id) {
-		this.team_id = team_id;
+	public void setTeamId(Long teamId) {
+		this.teamId = teamId;
 	}
 
 }

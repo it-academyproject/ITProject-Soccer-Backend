@@ -5,28 +5,21 @@ import java.util.Date;
 import com.itacademy.soccer.dto.Player;
 
 public class SalesFilterJson {
-	
-	private Long id;
-	
-	private Date limit_date;
-	
-	private float initial_price;
-	
-	private float last_bid_price;
-	
-	private String team_name;
-	
-	private Player player;
-	
-	
-	public SalesFilterJson(){}
 
-//	public SalesFilterJson(Long id, Date limit_date, float initial_price, Player player) {
-//	this.id = id;
-//	this.limit_date = limit_date;
-//	this.initial_price = initial_price;
-//	this.player = player;
-//	}
+	private Long id;
+
+	private Date limitDate;
+
+	private Float initialPrice;
+
+	private Float lastBidPrice;
+
+	private String teamName;
+
+	private Player player;
+
+	public SalesFilterJson() {
+	}
 
 	public Long getId() {
 		return id;
@@ -36,36 +29,36 @@ public class SalesFilterJson {
 		this.id = id;
 	}
 
-	public Date getLimit_date() {
-		return limit_date;
+	public Date getLimitDate() {
+		return limitDate;
 	}
 
-	public void setLimit_date(Date limit_date) {
-		this.limit_date = limit_date;
+	public void setLimitDate(Date limitDate) {
+		this.limitDate = limitDate;
 	}
 
-	public float getInitial_price() {
-		return initial_price;
+	public Float getInitialPrice() {
+		return initialPrice;
 	}
 
-	public void setInitial_price(float initial_price) {
-		this.initial_price = initial_price;
+	public void setInitialPrice(Float initialPrice) {
+		this.initialPrice = initialPrice;
 	}
 
-	public float getlast_bid_price() {
-		return last_bid_price;
+	public Float getLastBidPrice() {
+		return lastBidPrice;
 	}
 
-	public void setlast_bid_price(float last_bid_price) {
-		this.last_bid_price = last_bid_price;
+	public void setLastBidPrice(Float lastBidPrice) {
+		this.lastBidPrice = lastBidPrice;
 	}
 
-	public String getTeam_name() {
-		return team_name;
+	public String getTeamName() {
+		return teamName;
 	}
 
-	public void setTeam_name(String team_name) {
-		this.team_name = team_name;
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
 	}
 
 	public Player getPlayer() {
@@ -76,5 +69,4 @@ public class SalesFilterJson {
 		this.player = player;
 	}
 
-	
 }

@@ -2,7 +2,6 @@ package com.itacademy.soccer.controller;
 
 import java.util.*;
 
-import com.itacademy.soccer.dto.Bid;
 import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.service.impl.BidServiceImpl;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itacademy.soccer.controller.json.SaleJson;
@@ -46,7 +43,7 @@ public class SalesController {
 	public HashMap<String,Object> listAllSales(){
 		
 		List<Sale> salesList = saleServiceImpl.listAllSales();
-		List<SaleJson> jsonList = SaleJson.parseListToJson(salesList);
+		List<SaleJson> jsonList = SaleJson.parseListSaleToJson(salesList);
 		
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("sales", jsonList);
@@ -63,7 +60,7 @@ public class SalesController {
 		
 		try {
 			Sale sale = saleServiceImpl.getSaleById(salesId);
-			SaleJson json = SaleJson.parseObjectToJson(sale);
+			SaleJson json = SaleJson.parseSaleToJson(sale);
 
 			map.put("sale", json);
 			map.put("success", true);
@@ -105,28 +102,12 @@ public class SalesController {
 		}
 		return map;
 	}
-
-
-	//public HashMap<String,Object> getSalesByPlayer(@PathVariable(name="id") Long playerId){
-	//
-	//	List<Sale> listSales = saleServiceImpl.getSalesByPlayer(playerId);
-	//	List<SaleJson> jsonList = SaleJson.parseListToJson(listSales);
-		
-	//	HashMap<String,Object> map = new HashMap<>();
-	//	map.put("playerId", playerId);
-	//	map.put("sales", jsonList);
-	//	map.put("success", true);
-	//	map.put("message", "Pendiente de implementar por evitar conflicto con codigo Player");
-		
-	//	return map;
-	//}
 	
-	
-//  http://localhost:8181/api/sales/filter?max-age={max-age}&min-age={min-age}&defense={defense}&attack={attack}&keeper={keeper}&pass={pass} 
+
 	@GetMapping("/sales/filter")
 	HashMap<String,Object> getFilteredSales(
-			@RequestParam(required=false, value="max-age", defaultValue="100") int maxage, 
-			@RequestParam(required=false, value="min-age", defaultValue="1") int minage,
+			@RequestParam(required=false, value="maxAge", defaultValue="100") int maxage, 
+			@RequestParam(required=false, value="minAge", defaultValue="1") int minage,
 			@RequestParam(required=false, value="defense", defaultValue="1") int defense, 
 			@RequestParam(required=false, value="attack", defaultValue="1") int attack,
 			@RequestParam(required=false, value="keeper", defaultValue="1") int keeper,
@@ -138,10 +119,10 @@ public class SalesController {
 	@PostMapping("/sales") //@RequestBody Sale p_sale
 	public HashMap<String,Object> createSale(@RequestBody SaleJson saleJson){
 		
-		Sale p_sale = saleJson.setJsonToObject();
+		Sale pSale = saleJson.toSale();
 		
-		Sale sale = saleServiceImpl.createSale(p_sale);
-		SaleJson json = SaleJson.parseObjectToJson(sale);
+		Sale sale = saleServiceImpl.createSale(pSale);
+		SaleJson json = SaleJson.parseSaleToJson(sale);
 		
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("sale", json);
@@ -154,15 +135,15 @@ public class SalesController {
 	@PutMapping("/sales") 
 	public HashMap<String,Object> updateSale(@RequestBody SaleJson saleJson){
 		
-		Sale p_sale = saleJson.setJsonToObject();
+		Sale pSale = saleJson.toSale();
 		
 		Sale updatedSale = null;
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("saleId", saleJson.getId());
 
 		try {
-			updatedSale = saleServiceImpl.updateSale(saleJson.getId(), p_sale);
-			SaleJson json = SaleJson.parseObjectToJson(updatedSale);
+			updatedSale = saleServiceImpl.updateSale(saleJson.getId(), pSale);
+			SaleJson json = SaleJson.parseSaleToJson(updatedSale);
 			
 			map.put("sale", json);
 			map.put("success", true);

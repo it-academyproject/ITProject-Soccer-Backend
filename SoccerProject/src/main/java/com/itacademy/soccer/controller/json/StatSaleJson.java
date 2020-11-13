@@ -1,26 +1,24 @@
 package com.itacademy.soccer.controller.json;
 
+public class StatSaleJson {
 
-public class StatSaleJson {	
+	private Integer totalBids;
+	private SaleJson sale;
 
-	private int total_bids;	
-	private SaleJson sale;	
-	
-	public StatSaleJson() {			
+	public StatSaleJson() {
 	}
-	
-	public StatSaleJson(SaleJson sale,int total_bids) {
+
+	public StatSaleJson(SaleJson sale, Integer totalBids) {
 		this.sale = sale;
-		this.total_bids = total_bids;	
-	}
-	
-
-	public int getTotal_bids() {
-		return total_bids;
+		this.totalBids = totalBids;
 	}
 
-	public void setTotal_bids(int total_bids) {
-		this.total_bids = total_bids;
+	public Integer getTotalBids() {
+		return totalBids;
+	}
+
+	public void setTotalBids(Integer totalBids) {
+		this.totalBids = totalBids;
 	}
 
 	public SaleJson getSale() {
@@ -30,5 +28,5 @@ public class StatSaleJson {
 	public void setSale(SaleJson sale) {
 		this.sale = sale;
 	}
-	
+
 }

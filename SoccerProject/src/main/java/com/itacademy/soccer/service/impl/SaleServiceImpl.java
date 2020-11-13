@@ -89,30 +89,30 @@ public class SaleServiceImpl implements ISaleService{
 	
 	@Override
 	public List<Sale> saleListFromDates(Date initialDate) {
-		List <Sale> all_sales = listAllSales();
-		List<Sale> sale_from_date = new ArrayList<>();
+		List <Sale> allSales = listAllSales();
+		List<Sale> saleFromDate = new ArrayList<>();
 		
-		for (Sale sale : all_sales) {
+		for (Sale sale : allSales) {
 			
 			if (sale.getLimitDate().after(initialDate)) {
-				sale_from_date.add(sale);
+				saleFromDate.add(sale);
 			}		
 		}
-		return sale_from_date;	
+		return saleFromDate;	
 	}
 	
 	@Override
 	public List<Sale> listAllSalesClosed() {
 		Date now = new Date();
-		List <Sale> all_sales = listAllSales();			
-		List<Sale> all_sale_closed = new ArrayList<>();
+		List <Sale> allSales = listAllSales();			
+		List<Sale> allSaleClosed = new ArrayList<>();
 		
-		for (Sale sale : all_sales) {					
+		for (Sale sale : allSales) {					
 			if (sale.getLimitDate().before(now)) {	
-				all_sale_closed.add(sale);
+				allSaleClosed.add(sale);
 			}
 		}		
-		return all_sale_closed;		
+		return allSaleClosed;		
 	}
 	
 	@Override	
@@ -123,11 +123,11 @@ public class SaleServiceImpl implements ISaleService{
 			List<SalesFilterJson> filteredSales = this.salesFilterComparator(maxage, minage, defense, attack, keeper, pass);			
 			if(!filteredSales.isEmpty()) {
 				map.put("success", true);
-				map.put("message", "get all sales by player skills");
+				map.put("message", "get all sales by player characteristics");
 				map.put("filtered sales", filteredSales);
 			}else {
 				map.put("success", false);
-				map.put("message", "Error getting sales: there is no player with those specifications at the moment");				
+				map.put("message", "There is no player with those characteristics at the moment");				
 			}
 		}
 		catch (Exception e) {
@@ -142,13 +142,13 @@ public class SaleServiceImpl implements ISaleService{
 	 * The filter parameters received by URL will be interpreted as minimum requirements in the attributes of the players that are for sale.
 	 */
 	@Override
-	public List<SalesFilterJson> salesFilterComparator(int maxage, int minage, int defense, int attack, int keeper, int pass){
+	public List<SalesFilterJson> salesFilterComparator(int maxAge, int minAge, int defense, int attack, int keeper, int pass){
 		List<Sale> allSales = this.listAllSales();
 		List<SalesFilterJson> filteredSalesJson = new ArrayList<SalesFilterJson>();
 		
 		for (Sale sale : allSales) {
 
-			if ( (sale.getPlayer().getAge()<=maxage && sale.getPlayer().getAge()>=minage) 
+			if ( (sale.getPlayer().getAge()<=maxAge && sale.getPlayer().getAge()>=minAge) 
 					&& sale.getPlayer().getDefense()>=defense
 					&& sale.getPlayer().getAttack()>=attack
 					&& sale.getPlayer().getKeeper()>=keeper
@@ -156,10 +156,10 @@ public class SaleServiceImpl implements ISaleService{
 				
 				SalesFilterJson filteredSaleJson = new SalesFilterJson();			
 				filteredSaleJson.setId(sale.getId());
-				filteredSaleJson.setLimit_date(sale.getLimitDate());
-				filteredSaleJson.setInitial_price(sale.getInitialPrice());
-				filteredSaleJson.setlast_bid_price(getLastBidPrice(sale.getBids()));
-				filteredSaleJson.setTeam_name(sale.getPlayer().getTeam().getName());
+				filteredSaleJson.setLimitDate(sale.getLimitDate());
+				filteredSaleJson.setInitialPrice(sale.getInitialPrice());
+				filteredSaleJson.setLastBidPrice(getLastBidPrice(sale.getBids()));
+				filteredSaleJson.setTeamName(sale.getPlayer().getTeam().getName());
 				filteredSaleJson.setPlayer(sale.getPlayer());
 				filteredSalesJson.add(filteredSaleJson);
 			}
@@ -175,7 +175,7 @@ public class SaleServiceImpl implements ISaleService{
 					selectedBid=bids.get(i);
 			}
 		}		
-		return selectedBid.getBid_price();
+		return selectedBid.getBidPrice();
 	}
 
 }
