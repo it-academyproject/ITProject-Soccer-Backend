@@ -19,5 +19,5 @@ public interface ILeagueService {
 	
 	public List<Team> showTeamsByLeague(Long id);
 	
-	public Team insertTeamintoLeague(Team teamSelected);
+	public Team insertTeamintoLeague(Long leagueId, Team teamSelected);
 }

@@ -102,13 +102,41 @@ public class LeagueServiceImpl implements ILeagueService {
     	return teamsByLeague;		
 	}
 
+	
 	@Override
-	public Team insertTeamintoLeague(Team teamSelected) {
-		return iTeamsDao.save(teamSelected);
-		 
+	public Team insertTeamintoLeague(Long leagueId, Team teamSelected) {
+		
+		Optional<League> leagueToInsert;
+
+		try{
+			leagueToInsert=iLeagueDAO.findById(leagueId);
+			
+			if( spaceInLeague(leagueToInsert.get()) ) {
+				
+				if(teamSelected.getLeague() == null || teamSelected.getLeague().getId() != leagueId) {			
+					teamSelected.setLeague(leagueToInsert.get());
+					return iTeamsDao.save(teamSelected);
+	
+				}else {
+					System.out.println("The team " +teamSelected.getName()+ " is already in the league " +teamSelected.getLeague().getName()+ " (id: " +teamSelected.getLeague().getId()+ ")");
+					return null;
+				}
+				
+			}else {		
+				System.out.println("The league is full");
+				return null;
+			}
+			
+		}catch (Exception e){
+			e.printStackTrace();
+		}	
+		
+		return null;
+		
 	}
 	
 	
+	//UTILITIES METHODS
 	
     // Validates name of a league already exists 
     public boolean leagueNameAvailable(long id, String name) {
@@ -124,16 +152,29 @@ public class LeagueServiceImpl implements ILeagueService {
     }
     
     
-    
-    public boolean validMaxParticipants (League leagueToUpdate, int newMaxParticipants) {
+    // Validate if a new max_participants is ok for a league
+    public boolean validMaxParticipants (League league, int maxParticipants) {
     	
     	boolean validMaxParticpants = true;
     	    	
-    	int teamsInLeague = iTeamsDao.findByleagueId(leagueToUpdate.getId()).size();
+    	int teamsInLeague = iTeamsDao.findByleagueId(league.getId()).size();
     	
-    	if (newMaxParticipants < teamsInLeague) { validMaxParticpants = false; }
+    	if (maxParticipants < teamsInLeague) { validMaxParticpants = false; }
 
     	return validMaxParticpants;
+
+    }
+    
+    // Validate if there is space in a league to insert a new team
+    public boolean spaceInLeague (League league) {
+    	
+    	boolean spaceInLeague = true;
+    	    	
+    	int teamsInLeague = iTeamsDao.findByleagueId(league.getId()).size();
+    	
+    	if (league.getMaxParticipants() <= teamsInLeague) { spaceInLeague = false; }
+
+    	return spaceInLeague;
 
     }
 }
