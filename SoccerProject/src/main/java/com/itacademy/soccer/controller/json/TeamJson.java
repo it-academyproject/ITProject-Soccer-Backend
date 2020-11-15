@@ -10,20 +10,20 @@ public class TeamJson {
 	
 	private Long id;	
 	private String name;
-	private Date foundation_date;		
+	private Date foundationDate;		
 	private String badge;	
 	private Float budget;	
-	private int wins;	
-	private int losses;	
-	private int draws;
+	private Integer wins;	
+	private Integer losses;	
+	private Integer draws;
 	
 	
-	public TeamJson(Long id, String name, Date foundation_date, String badge, Float budget, int wins, int losses,
-			int draws) {
+	public TeamJson(Long id, String name, Date foundationDate, String badge, Float budget, Integer wins, Integer losses,
+			Integer draws) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.foundation_date = foundation_date;
+		this.foundationDate = foundationDate;
 		this.badge = badge;
 		this.budget = budget;
 		this.wins = wins;
@@ -49,11 +49,11 @@ public class TeamJson {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Date getFoundation_date() {
-		return foundation_date;
+	public Date getFoundationDate() {
+		return foundationDate;
 	}
-	public void setFoundation_date(Date foundation_date) {
-		this.foundation_date = foundation_date;
+	public void setFoundationDate(Date foundationDate) {
+		this.foundationDate = foundationDate;
 	}
 	public String getBadge() {
 		return badge;
@@ -67,33 +67,33 @@ public class TeamJson {
 	public void setBudget(Float budget) {
 		this.budget = budget;
 	}
-	public int getWins() {
+	public Integer getWins() {
 		return wins;
 	}
-	public void setWins(int wins) {
+	public void setWins(Integer wins) {
 		this.wins = wins;
 	}
-	public int getLosses() {
+	public Integer getLosses() {
 		return losses;
 	}
-	public void setLosses(int losses) {
+	public void setLosses(Integer losses) {
 		this.losses = losses;
 	}
-	public int getDraws() {
+	public Integer getDraws() {
 		return draws;
 	}
-	public void setDraws(int draws) {
+	public void setDraws(Integer draws) {
 		this.draws = draws;
 	}
-	
-	//B-44
-	public Team setTeamJsonToObject() {
+
+	//B-44 -> B-66
+	public Team toTeam() {
 		
 		Team team = new Team();
 		
 		team.setId(this.id);
 		team.setName(this.name);
-		team.setFoundation_date(this.foundation_date);
+		team.setFoundationDate(this.foundationDate);
 		team.setBadge(this.badge);
 		team.setBudget(this.budget);
 		team.setWins(this.wins);
@@ -101,6 +101,36 @@ public class TeamJson {
 		team.setDraws(this.draws);
 		
 		return team;
+	}
+	
+	public static Team parseJsonToTeam(TeamJson teamJson) {
+		return new Team() {
+			{
+				setId(teamJson.getId());
+				setName(teamJson.getName());
+				setFoundationDate(teamJson.getFoundationDate());
+				setBadge(teamJson.getBadge());
+				setBudget(teamJson.getBudget());
+				setWins(teamJson.getWins());
+				setLosses(teamJson.getLosses());
+				setDraws(teamJson.getDraws());
+			}
+		};
+	}
+	
+	public static TeamJson parseTeamToJson(Team team) {
+		return new TeamJson() {
+			{
+				setId(team.getId());
+				setName(team.getName());
+				setFoundationDate(team.getFoundationDate());
+				setBadge(team.getBadge());
+				setBudget(team.getBudget());
+				setWins(team.getWins());
+				setLosses(team.getLosses());
+				setDraws(team.getDraws());
+			}
+		};
 	}
 
 
