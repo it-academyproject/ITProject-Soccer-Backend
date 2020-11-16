@@ -3,6 +3,7 @@ package com.itacademy.soccer.dto;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.*;
 
@@ -23,7 +24,7 @@ public class Team {
 	private String name;
 	
 	@Column(name="foundation_date")	
-	private Date foundation_date;
+	private Date foundationDate;
 	
 	@Column(name="badge")
 	private String badge;
@@ -32,13 +33,13 @@ public class Team {
 	private Float budget;
 	
 	@Column(name="wins")
-	private int wins;
+	private Integer wins;
 	
 	@Column(name="losses")
-	private int losses;
+	private Integer losses;
 	
 	@Column(name="draws")
-	private int draws;
+	private Integer draws;
 
 	
 	@OneToOne()
@@ -66,6 +67,22 @@ public class Team {
 
 	public Team() {
 	}
+
+	public Team(Long id, String name, Date foundationDate, String badge, Float budget, Integer wins, Integer losses,
+			Integer draws, League league, List<Player> playersList, List<Match> matches) {
+		this.id = id;
+		this.name = name;
+		this.foundationDate = foundationDate;
+		this.badge = badge;
+		this.budget = budget;
+		this.wins = wins;
+		this.losses = losses;
+		this.draws = draws;
+		this.league = league;
+		this.playersList = playersList;
+		this.matches = matches;
+	}
+
 
 	/////////////// GETTERS & SETTERS ///////////////
 	/**
@@ -99,15 +116,15 @@ public class Team {
 	/**
 	 * @return the foundation_date
 	 */
-	public Date getFoundation_date() {
-		return foundation_date;
+	public Date getFoundationDate() {
+		return foundationDate;
 	}
 
 	/**
-	 * @param foundation_date the foundation_date to set
+	 * @param foundationDate the foundation_date to set
 	 */
-	public void setFoundation_date(Date foundation_date) {
-		this.foundation_date = foundation_date;
+	public void setFoundationDate(Date foundationDate) {
+		this.foundationDate = foundationDate;
 	}
 
 	/**
@@ -141,42 +158,42 @@ public class Team {
 	/**
 	 * @return the wins
 	 */
-	public int getWins() {
+	public Integer getWins() {
 		return wins;
 	}
 
 	/**
 	 * @param wins the wins to set
 	 */
-	public void setWins(int wins) {
+	public void setWins(Integer wins) {
 		this.wins = wins;
 	}
 
 	/**
 	 * @return the losses
 	 */
-	public int getLosses() {
+	public Integer getLosses() {
 		return losses;
 	}
 
 	/**
 	 * @param losses the losses to set
 	 */
-	public void setLosses(int losses) {
+	public void setLosses(Integer losses) {
 		this.losses = losses;
 	}
 
 	/**
 	 * @return the draws
 	 */
-	public int getDraws() {
+	public Integer getDraws() {
 		return draws;
 	}
 
 	/**
 	 * @param draws the draws to set
 	 */
-	public void setDraws(int draws) {
+	public void setDraws(Integer draws) {
 		this.draws = draws;
 	}
 
@@ -217,8 +234,31 @@ public class Team {
 	/////////////// TOSTRING ///////////////
 	@Override
 	public String toString() {
-		return "Team [id=" + id + ", name=" + name + ", foundation_date=" + foundation_date + ", badge=" + badge
+		return "Team [id=" + id + ", name=" + name + ", foundation_date=" + foundationDate + ", badge=" + badge
 				+ ", budget=" + budget + ", wins=" + wins + ", losses=" + losses + ", draws=" + draws + ",league=" + league + "]";
 	}
+	
+	public Team clone() {
+		return new Team(this.id, this.name, this.foundationDate, this.badge, this.budget, this.wins, this.losses, this.draws, this.league, this.playersList, this.matches);
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(badge, budget, draws, foundationDate, id, losses, name, wins);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Team other = (Team) obj;
+		return Objects.equals(badge, other.badge) && Objects.equals(budget, other.budget)
+				&& Objects.equals(draws, other.draws) && Objects.equals(foundationDate, other.foundationDate)
+				&& Objects.equals(id, other.id) && Objects.equals(losses, other.losses)
+				&& Objects.equals(name, other.name) && Objects.equals(wins, other.wins);
+	}
 }

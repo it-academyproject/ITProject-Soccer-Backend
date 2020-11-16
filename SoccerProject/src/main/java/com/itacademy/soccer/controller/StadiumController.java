@@ -37,7 +37,7 @@ public class StadiumController {
             map.put("message", "get all stadiums");
         }else {
             map.put("success", false);
-            map.put("message", "there are no stadiums in bbdd");
+            map.put("message", "there are no stadiums in the database");
         }
         return map;
     }
