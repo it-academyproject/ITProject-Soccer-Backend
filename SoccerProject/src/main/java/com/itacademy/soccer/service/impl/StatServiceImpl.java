@@ -220,7 +220,7 @@ public class StatServiceImpl implements IStatService {
 
 			teamJson.setId(team.getId());
 			teamJson.setName(team.getName());
-			teamJson.setFoundation_date(team.getFoundation_date());
+			teamJson.setFoundationDate(team.getFoundationDate());
 			teamJson.setBadge(team.getBadge());
 			teamJson.setBudget(team.getBudget());
 			teamJson.setWins(team.getWins());
