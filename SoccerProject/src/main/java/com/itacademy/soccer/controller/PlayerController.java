@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.itacademy.soccer.controller.json.PlayerActionsResultJson;
 import com.itacademy.soccer.controller.json.PlayerJson;
 import com.itacademy.soccer.dao.IMatchDAO;
 import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dao.IPlayerDAO;
-import com.itacademy.soccer.dto.PlayerActions;
 import com.itacademy.soccer.service.impl.MatchServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class PlayerController {
 
 	@Autowired
 	PlayerServiceImpl playerServiceImpl;
-	
+
 	@Autowired
 	MatchServiceImpl matchServiceImpl;
 	@Autowired
@@ -41,7 +41,7 @@ public class PlayerController {
 		HashMap<String,Object> map = new HashMap<>();
 		try {
 			List<Player> allPlayers = playerServiceImpl.playerList();
-			
+
 			if(allPlayers.size() > 0) {
 				map.put("success", true);
 				map.put("all players", allPlayers);
@@ -56,11 +56,11 @@ public class PlayerController {
 			map.put("success", false);
 			map.put("message", "something went wrong: " + e.getMessage());
 		}
-		
+
 		return map;
 	}
-	
-	
+
+
 	@PostMapping() // CREATE PLAYER
 	public HashMap<String, Object> createPlayer(@RequestBody Player player) {
 		HashMap<String, Object> map = new HashMap<>();
@@ -76,13 +76,13 @@ public class PlayerController {
 		}
 		return map;
 	}
-	
+
 	@GetMapping("/teams/{id}") // GET PLAYERS BY TEAM
 	HashMap<String,Object> getPlayersByTeamId(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
 		try {
 			List<Player> allPlayersByTeamId = playerServiceImpl.playerListByTeam(id);
-			
+
 			if(allPlayersByTeamId.size() > 0) {
 				map.put("success", true);
 				map.put("all players by team id", allPlayersByTeamId);
@@ -92,16 +92,16 @@ public class PlayerController {
 				map.put("message", "Error getting all players");
 				//throw new Exception();
 			}
-			
+
 		}
 		catch (Exception e) {
 			map.put("success", false);
 			map.put("message", "something went wrong: " + e.getMessage());
 		}
-		
+
 		return map;
 	}
-	
+
 	@GetMapping("/{id}") // GET PLAYER BY ID
 	HashMap<String,Object> getPlayerById(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
@@ -115,10 +115,10 @@ public class PlayerController {
 			map.put("success", false);
 			map.put("message", "something went wrong: " + e.getMessage());
 		}
-		
+
 		return map;
 	}
-	
+
 	@GetMapping("/name/{name}") // GET PLAYER BY NAME
 	HashMap<String,Object> getPlayersByName(@PathVariable String name){
 		HashMap<String,Object> map = new HashMap<>();
@@ -131,10 +131,10 @@ public class PlayerController {
 			}else {
 				map.put("success", false);
 				map.put("message", "Error getting player with name: " + name);
-				
+
 				//throw new Exception();
 			}
-			
+
 		}
 		catch (Exception e) {
 			map.put("success", false);
@@ -142,8 +142,8 @@ public class PlayerController {
 		}
 		return map;
 	}
-	
-	
+
+
 	@PutMapping // MODIFY PLAYER
 	HashMap<String,Object> putPlayer(@RequestBody PlayerJson player){
 		HashMap<String,Object> map = new HashMap<>();
@@ -159,7 +159,7 @@ public class PlayerController {
 			map.put("success", false);
 			map.put("message", "something went wrong: It seems Player with Id "+player.getId() +" does not exist");
 		}
-				
+
 		return map;
 	}
 	@DeleteMapping("/{id}") // DELETE PLAYER
@@ -170,25 +170,33 @@ public class PlayerController {
 
 	//get the player with more goals, the player with more fouls, etc ... all the stats BY MATCH
 	@GetMapping("/stats/matches/{id}")
-	HashMap<String, Object> getStats(@PathVariable String id) {
+	public HashMap<String, Object> getStats(@PathVariable Long id) {
+
 		HashMap<String, Object> map = new HashMap<>();
+
 		try {
 
-			Optional<Player> playerMoreGoals = playerServiceImpl.getPlayerMoreGoals(Long.parseLong(id));
-			Optional<Player> playerMoreAssists = playerServiceImpl.getPlayerMoreAssists(Long.parseLong(id));
-			Optional<Player> playerMoreFouls = playerServiceImpl.getPlayerMoreFouls(Long.parseLong(id));
-			Optional<Player> playerMoreRedCards = playerServiceImpl.getPlayerMoreRedCards(Long.parseLong(id));
-			Optional<Player> playerMoreYellowCards = playerServiceImpl.getPlayerMoreYellowCards(Long.parseLong(id));
-			Optional<Player> playerMoreSaves = playerServiceImpl.getPlayerMoreSaves(Long.parseLong(id));
-
 			map.put("success", true);
-			map.put("player with more goals", playerMoreGoals);
-			map.put("player with more assists", playerMoreAssists);
-			map.put("player with more fouls", playerMoreFouls);
-			map.put("player with more red cards", playerMoreRedCards);
-			map.put("player with more yellow cards", playerMoreYellowCards);
-			map.put("player with more saves", playerMoreSaves);
+
+			playersMore(id).entrySet().stream()
+					.forEach(x -> {
+						if (x.getKey().contains("assists")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "assists"));
+						} else if (x.getKey().contains("fouls")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "fouls"));
+						} else if (x.getKey().contains("goals")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "goals"));
+						} else if (x.getKey().contains("saves")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "saves"));
+						} else if (x.getKey().contains("red")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "red"));
+						} else if (x.getKey().contains("yellow")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "yellow"));
+						}
+					});
+
 			map.put("message", "get stats");
+
 		} catch (Exception e) {
 			map.put("success", false);
 			map.put("message", "something went wrong: " + e.getMessage());
@@ -200,28 +208,32 @@ public class PlayerController {
 
 	//get the player with more goals, the player with more fouls, etc ... GLOBAL/TOTAL STATS
 	@GetMapping("/stats")
-	HashMap<String, Object> getGlobalStats(	) {
+	public HashMap<String, Object> getGlobalStats() {
+
 		HashMap<String, Object> map = new HashMap<>();
+
 		try {
-			List<Player> playerList = iPlayerDAO.findAll();
-			List<PlayerActions> playerActionsListList = iPlayerActionsDAO.findAll();
-
-			Optional<Player> playerMoreGoals = playerServiceImpl.getPlayerMoreGoalsTotal();
-			Optional<Player> playerMoreFouls = playerServiceImpl.getPlayerMoreFoulsTotal();
-			Optional<Player> playerMoreAssists = playerServiceImpl.getPlayerMoreAssistsTotal();
-			Optional<Player> playerMoreRedCards = playerServiceImpl.getPlayerMoreRedCardsTotal();
-			Optional<Player> playerMoreYellowCards = playerServiceImpl.getPlayerMoreYellowCardsTotal();
-			Optional<Player> playerMoreSaves = playerServiceImpl.getPlayerMoreSavesTotal();
-
-
 			map.put("success", true);
-			map.put("player with more goals", playerMoreGoals);
-			map.put("player with more assists", playerMoreAssists);
-			map.put("player with more fouls", playerMoreFouls);
-			map.put("player with more red cards", playerMoreRedCards);
-			map.put("player with more yellow cards", playerMoreYellowCards);
-			map.put("player with more saves", playerMoreSaves);
+
+			playersMore(null).entrySet().stream()
+					.forEach(x -> {
+						if (x.getKey().contains("assists")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "assists"));
+						} else if (x.getKey().contains("fouls")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "fouls"));
+						} else if (x.getKey().contains("goals")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "goals"));
+						} else if (x.getKey().contains("saves")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "saves"));
+						} else if (x.getKey().contains("red")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "red"));
+						} else if (x.getKey().contains("yellow")) {
+							map.put(x.getKey(), PlayerActionsResultJson.parsePlayerToJson(x.getValue(), "yellow"));
+						}
+					});
+
 			map.put("message", "get stats");
+
 		} catch (Exception e) {
 			map.put("success", false);
 			map.put("message", "something went wrong: " + e.getMessage());
@@ -231,4 +243,29 @@ public class PlayerController {
 
 	}
 
+	@SuppressWarnings("serial")
+	private HashMap<String, Player> playersMore(Long id) {
+		return new HashMap<String, Player>() {
+			{
+				put("assists", (id == null) ? playerServiceImpl.getPlayerMoreAssistsTotal().get()
+						: playerServiceImpl.getPlayerMoreAssists(id).get());
+
+				put("fouls", (id == null) ? playerServiceImpl.getPlayerMoreFoulsTotal().get()
+						: playerServiceImpl.getPlayerMoreFouls(id).get());
+
+				put("goals", (id == null) ? playerServiceImpl.getPlayerMoreGoalsTotal().get()
+						: playerServiceImpl.getPlayerMoreGoals(id).get());
+
+				put("saves", (id == null) ? playerServiceImpl.getPlayerMoreSavesTotal().get()
+						: playerServiceImpl.getPlayerMoreSaves(id).get());
+
+				put("red_cards", (id == null) ? playerServiceImpl.getPlayerMoreRedCardsTotal().get()
+						: playerServiceImpl.getPlayerMoreRedCards(id).get());
+
+				put("yellow_cards", (id == null) ? playerServiceImpl.getPlayerMoreYellowCardsTotal().get()
+						: playerServiceImpl.getPlayerMoreYellowCards(id).get());
+
+			}
+		};
+	}
 }
