@@ -34,8 +34,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers("/api/login").permitAll()
 			.antMatchers("/api/users/managers").permitAll()
+			.antMatchers("/api/users/admins").permitAll()
 			.anyRequest().authenticated()
 			.and()
+			.addFilter(new JWTAuthenticationFilter(authenticationManager()))
 			.addFilter(new JWTAuthorizationFilter(authenticationManager()))
 			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
