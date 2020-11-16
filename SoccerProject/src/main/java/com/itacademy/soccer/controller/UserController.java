@@ -137,10 +137,6 @@ public class UserController {
 					}
 					map.put("success", true);
 					
-					//Generated Token
-					String token = getToken(user.getEmail());
-					map.put("Token: ", token);
-
 				} else { // Login not successful - email and password do not match
 					map.put("message", "Email or Password not correct");
 					map.put("success", false);
@@ -320,21 +316,6 @@ public class UserController {
     public void deleteUsers(@PathVariable Long id)
     {
         iUserService.deleteUser(id);
-    }
-    
-//JWT Method
-    
-    String getToken(String username) {    
-    	
-		String token = Jwts
-				.builder()
-				.setIssuedAt(new Date()).setIssuer(Constants.TOKEN_ISSUER)
-				.setSubject(username)		
-				.setExpiration(new Date(System.currentTimeMillis() + Constants.TOKEN_EXPIRATION_TIME))
-				.signWith(SignatureAlgorithm.HS512,
-						Constants.JWT_SECRET).compact();
-
-		return "Bearer " + token;
-	}    
+    } 
        
 }
