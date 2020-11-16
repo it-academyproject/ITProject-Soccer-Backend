@@ -16,7 +16,6 @@ public class PlayerJson {
     private String defense;
     private String pass;
     private String attack;
-    
     @JsonProperty("number_assists")
     private Integer numberOfAssists;
     @JsonProperty("number_fouls")
