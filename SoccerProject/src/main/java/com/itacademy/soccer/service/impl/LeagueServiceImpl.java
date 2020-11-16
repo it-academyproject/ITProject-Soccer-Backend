@@ -3,7 +3,6 @@ package com.itacademy.soccer.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.itacademy.soccer.dao.ILeagueDAO;
 import com.itacademy.soccer.dao.ITeamDAO;
 import com.itacademy.soccer.dto.League;
-import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.service.ILeagueService;
 
@@ -42,7 +40,7 @@ public class LeagueServiceImpl implements ILeagueService {
 		
 		try {
 		
-			if(leagueToUpdate.isPresent() && leagueNameAvailable(league.getId(), league.getName())==true) {
+			if(leagueToUpdate.isPresent() && leagueNameAvailableUpdate(league.getId(), league.getName())==true) {
 				
 				if(validMaxParticipants(leagueToUpdate.get(), league.getMaxParticipants()) == true) {
 				
@@ -77,7 +75,17 @@ public class LeagueServiceImpl implements ILeagueService {
 	
 	@Override
 	public League createLeague(League league) {		
-		return iLeagueDAO.save(league);
+		
+		if(leagueNameAvailableCreate(league.getName()) == true) {
+
+			return iLeagueDAO.save(league);			
+		
+		}else {
+			
+			System.out.println("The name of the league is repeated");
+			return null;
+		}
+		
 	}
 
 	@Override
@@ -138,8 +146,21 @@ public class LeagueServiceImpl implements ILeagueService {
 	
 	//UTILITIES METHODS
 	
-    // Validates name of a league already exists 
-    public boolean leagueNameAvailable(long id, String name) {
+	// Validates name of a league already exists in order to create a new league
+    public boolean leagueNameAvailableCreate(String name) {
+    	
+    	boolean leagueNameAvailable = true;
+    		
+		League leagueToSeach = iLeagueDAO.findByName(name);
+
+		if(leagueToSeach != null) { leagueNameAvailable= false; }
+
+    	return leagueNameAvailable;
+    }
+    
+    
+	// Validates name of a league already exists in order to update a new league
+    public boolean leagueNameAvailableUpdate(long id, String name) {
     	
     	boolean leagueNameAvailable = true;
     

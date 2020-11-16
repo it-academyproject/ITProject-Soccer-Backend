@@ -165,14 +165,22 @@ public class LeagueController {
 	public HashMap<String,Object> createLeague(@RequestBody League league){
 	
 		HashMap<String,Object> map = new HashMap<>();	
-		League newLeague = new League();
+		League newLeague;
 		
 		try {
+			
 			newLeague = leagueServiceImpl.createLeague(league);
-			map.put("success", true);
-			map.put("New League has been create: ", newLeague);
-	
-		
+			
+			if(newLeague != null) {
+				
+				map.put("success", true);
+				map.put("New League has been create: ", newLeague);
+			
+			}else {
+				map.put("success", false);
+				map.put("message", "Check the name of the league, it cannot be repeated ");	
+			}
+			
 		}
 		catch (Exception e) {
 			map.put("success", false);
