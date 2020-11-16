@@ -247,22 +247,22 @@ public class PlayerController {
 	private HashMap<String, Player> playersMore(Long id) {
 		return new HashMap<String, Player>() {
 			{
-				put("player with more assists", (id == null) ? playerServiceImpl.getPlayerMoreAssistsTotal().get()
+				put("assists", (id == null) ? playerServiceImpl.getPlayerMoreAssistsTotal().get()
 						: playerServiceImpl.getPlayerMoreAssists(id).get());
 
-				put("player with more fouls", (id == null) ? playerServiceImpl.getPlayerMoreFoulsTotal().get()
+				put("fouls", (id == null) ? playerServiceImpl.getPlayerMoreFoulsTotal().get()
 						: playerServiceImpl.getPlayerMoreFouls(id).get());
 
-				put("player with more goals", (id == null) ? playerServiceImpl.getPlayerMoreGoalsTotal().get()
+				put("goals", (id == null) ? playerServiceImpl.getPlayerMoreGoalsTotal().get()
 						: playerServiceImpl.getPlayerMoreGoals(id).get());
 
-				put("player with more saves", (id == null) ? playerServiceImpl.getPlayerMoreSavesTotal().get()
+				put("saves", (id == null) ? playerServiceImpl.getPlayerMoreSavesTotal().get()
 						: playerServiceImpl.getPlayerMoreSaves(id).get());
 
-				put("player with more red cards", (id == null) ? playerServiceImpl.getPlayerMoreRedCardsTotal().get()
+				put("red_cards", (id == null) ? playerServiceImpl.getPlayerMoreRedCardsTotal().get()
 						: playerServiceImpl.getPlayerMoreRedCards(id).get());
 
-				put("player with more yellow cards", (id == null) ? playerServiceImpl.getPlayerMoreYellowCardsTotal().get()
+				put("yellow_cards", (id == null) ? playerServiceImpl.getPlayerMoreYellowCardsTotal().get()
 						: playerServiceImpl.getPlayerMoreYellowCards(id).get());
 
 			}

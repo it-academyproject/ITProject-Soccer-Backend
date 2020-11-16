@@ -1,6 +1,7 @@
 package com.itacademy.soccer.controller.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itacademy.soccer.dto.Player;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -15,11 +16,17 @@ public class PlayerJson {
     private String defense;
     private String pass;
     private String attack;
+    @JsonProperty("number_assists")
     private Integer numberOfAssists;
+    @JsonProperty("number_fouls")
     private Integer numberOfFouls;
+    @JsonProperty("number_goals")
     private Integer numberOfGoals;
+    @JsonProperty("number_red_cards")
     private Integer numberOfRedCards;
+    @JsonProperty("number_saves")
     private Integer numberOfSaves;
+    @JsonProperty("number_yellow_cards")
     private Integer numberOfYellowCards;
 
     public PlayerJson() {
