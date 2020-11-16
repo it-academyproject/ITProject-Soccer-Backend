@@ -1,5 +1,9 @@
 package com.itacademy.soccer.security;
 
+import static com.itacademy.soccer.security.Constants.TOKEN_HEADER;
+import static com.itacademy.soccer.security.Constants.JWT_SECRET;
+import static com.itacademy.soccer.security.Constants.TOKEN_PREFIX;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -25,26 +29,26 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws IOException, ServletException {
-    	UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
     	
-        if (authentication == null) {
+    	String header = request.getHeader(TOKEN_HEADER);
+        if (header == null|| !header.startsWith(TOKEN_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
         }
-
+    	UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
     	//Obtain token from header
-    	String token = request.getHeader("Authorization");
+    	String token = request.getHeader(TOKEN_HEADER);
     					    	
     	//If the token is null, validate
     	if(token != null) {
     		String user = Jwts.parser()
-    						.setSigningKey(Constants.JWT_SECRET)
-    						.parseClaimsJws(token.replace(Constants.TOKEN_PREFIX, ""))
+    						.setSigningKey(JWT_SECRET)
+    						.parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
     						.getBody()
     						.getSubject();
     						
