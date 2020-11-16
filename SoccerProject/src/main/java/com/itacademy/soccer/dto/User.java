@@ -2,7 +2,16 @@ package com.itacademy.soccer.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itacademy.soccer.dto.typeUser.TypeUser;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import javax.persistence.*;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name="user") // Tab User
