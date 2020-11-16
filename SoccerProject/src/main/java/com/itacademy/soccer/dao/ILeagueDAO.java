@@ -5,4 +5,6 @@ import com.itacademy.soccer.dto.League;
 
 public interface ILeagueDAO extends JpaRepository<League, Long>{
 
+	League findByName(String name);
+
 }
