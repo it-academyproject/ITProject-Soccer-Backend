@@ -26,22 +26,22 @@ public class PlayerServiceImpl implements IPlayerService{
 	IPlayerDAO iPlayerDAO;
 	@Autowired
 	IPlayerActionsDAO iPlayerActionsDAO;
-	
+
 	@Override
 	public List<Player> playerList(){
 		return iPlayerDAO.findAll();
 	}
-	
+
 	@Override
 	public List<Player> playerListByTeam(Long teamId){
 		return iPlayerDAO.findByteamId(teamId);
 	}
 
 	@Override
-	public Optional<Player> findById(Long playerId) { 
-	 return iPlayerDAO.findById(playerId);	
+	public Optional<Player> findById(Long playerId) {
+		return iPlayerDAO.findById(playerId);
 	}
-		
+
 	@Override
 	public Player updatePlayer(PlayerJson player) {
 
@@ -72,6 +72,7 @@ public class PlayerServiceImpl implements IPlayerService{
 		return player;
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	//get player with more GOALS on a certain match(id)
 	public Optional<Player> getPlayerMoreGoals(Long id) {
@@ -84,9 +85,12 @@ public class PlayerServiceImpl implements IPlayerService{
 
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
+		myPlayer.get().setPlayerActions(new ArrayList<PlayerActions>() {{add(playerActionsList.get(0));}});
+
 		return myPlayer;
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	//get player with more FOULS on a certain match(id)
 	public Optional<Player> getPlayerMoreFouls(Long id) {
@@ -99,9 +103,13 @@ public class PlayerServiceImpl implements IPlayerService{
 
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
+		myPlayer.get().setPlayerActions(new ArrayList<PlayerActions>() {{add(playerActionsList.get(0));}});
+
 		return myPlayer;
 	}
 
+
+	@SuppressWarnings("serial")
 	@Override
 	//get player with more ASSISTS on a certain match(id)
 	public Optional<Player> getPlayerMoreAssists(Long id) {
@@ -114,9 +122,12 @@ public class PlayerServiceImpl implements IPlayerService{
 
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
+		myPlayer.get().setPlayerActions(new ArrayList<PlayerActions>() {{add(playerActionsList.get(0));}});
+
 		return myPlayer;
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	//get player with more RED CARDS on a certain match(id)
 	public Optional<Player> getPlayerMoreRedCards(Long id) {
@@ -129,9 +140,12 @@ public class PlayerServiceImpl implements IPlayerService{
 
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
+		myPlayer.get().setPlayerActions(new ArrayList<PlayerActions>() {{add(playerActionsList.get(0));}});
+
 		return myPlayer;
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	//get player with more YELLOW CARDS on a certain match(id)
 	public Optional<Player> getPlayerMoreYellowCards(Long id) {
@@ -144,9 +158,12 @@ public class PlayerServiceImpl implements IPlayerService{
 
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
 
+		myPlayer.get().setPlayerActions(new ArrayList<PlayerActions>() {{add(playerActionsList.get(0));}});
+
 		return myPlayer;
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	//get player with more Saves on a certain match(id)
 	public Optional<Player> getPlayerMoreSaves(Long id) {
@@ -158,6 +175,8 @@ public class PlayerServiceImpl implements IPlayerService{
 		Long myPlayerId = (playerActionsList.get(0)).getId().getPlayerId();
 
 		Optional<Player> myPlayer = iPlayerDAO.findById(myPlayerId);
+
+		myPlayer.get().setPlayerActions(new ArrayList<PlayerActions>() {{add(playerActionsList.get(0));}});
 
 		return myPlayer;
 	}
@@ -247,23 +266,23 @@ public class PlayerServiceImpl implements IPlayerService{
 	}
 
 	// Change player team_id when player signs for a team
-	@Override 
-	public void changeTeam (Player player, Team team) { 
+	@Override
+	public void changeTeam (Player player, Team team) {
 		player.setTeam_id(team.getId()); // Update team id in Player
 		iPlayerDAO.save(player); // Update player
 	}
-	
-	// Get list of players from userJson players list 
+
+	// Get list of players from userJson players list
 	@Override
-	public List<Player> getPlayersFromJson(String playersJson){ 
-		String[] playersStringList = playersJson.split(","); // Split Json String with list of players												
+	public List<Player> getPlayersFromJson(String playersJson){
+		String[] playersStringList = playersJson.split(","); // Split Json String with list of players
 		Long[] playersIds = new Long[playersStringList.length]; // List to store player ids
 		List<Player> playersList = new ArrayList<Player>(); // List to store players
 
 		for (int i = 0; i < playersStringList.length; i++) { // Get and add players to the list
-			playersStringList[i] = playersStringList[i].replaceAll("\\D+", ""); // Use regex to delete non-digits																							
-			playersIds[i] = Long.parseLong(playersStringList[i]); 
-			
+			playersStringList[i] = playersStringList[i].replaceAll("\\D+", ""); // Use regex to delete non-digits
+			playersIds[i] = Long.parseLong(playersStringList[i]);
+
 			Optional<Player> playerOptional = findById(playersIds[i]); // Find player by id
 			if (playerOptional.isPresent()) { // Player by id found
 				Player player = playerOptional.get();
@@ -274,8 +293,8 @@ public class PlayerServiceImpl implements IPlayerService{
 			}
 		}
 		return playersList;
-	}   
-	
+	}
+
 	// Sign free players from list given
 	@Override
 	public List<Player> signFreePlayers(List<Player> playersList, Team team) {
@@ -293,7 +312,7 @@ public class PlayerServiceImpl implements IPlayerService{
 		}
 		return teamPlayers;
 	}
-	
+
 
 
 }

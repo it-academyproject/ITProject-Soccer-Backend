@@ -4,11 +4,9 @@ package com.itacademy.soccer.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.itacademy.soccer.dto.League;
-import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Team;
-import com.itacademy.soccer.dto.User;
-import com.itacademy.soccer.service.ILeagueService;
 import com.itacademy.soccer.service.ITeamService;
 import com.itacademy.soccer.service.impl.LeagueServiceImpl;
 
@@ -73,6 +71,7 @@ public class LeagueController {
 	    		
 	    		League 	league = leagueServiceImpl.getOneLeagueById(id);	
 	    		teamsLeague =leagueServiceImpl.showTeamsByLeague(id); //All teams with the same {id} league 
+	    		
 	    	 		    	 	
 	    		if (teamsLeague !=null && teamsLeague.size() != 0) {
 	    			
@@ -94,31 +93,26 @@ public class LeagueController {
 
 	
     
-	@PutMapping("/leagues/{id}") // MODIFY LEAGUE ONLY BY ADMIN
-	public HashMap<String,Object> modifyLeague(@PathVariable Long id, @RequestBody League league){
+	@PutMapping("/leagues") // MODIFY LEAGUE ONLY BY ADMIN
+	public HashMap<String,Object> modifyLeague(@RequestBody League league){
 	
 		HashMap<String,Object> map = new HashMap<>();		
-		League leagueSelected = new League();	
+		League updatedLeague;
 		
-		try {
-			leagueSelected = leagueServiceImpl.getOneLeagueById(id);		
+		try {			
 			
-			if (leagueSelected != null) {				
+			updatedLeague = leagueServiceImpl.updateLeague(league);
 			
-				leagueSelected.setName(league.getName());
-				leagueSelected.setBeginDate(league.getBeginDate());
-				leagueSelected.setEndingDate(league.getEndingDate());
-				leagueSelected.setNumberRounds(league.getNumberRounds());
-				leagueSelected.setParticipants(league.getParticipants());
-				leagueSelected.setDivision(league.getDivision());				
-				
-				leagueServiceImpl.updateLeague(leagueSelected);
-				
+			if(updatedLeague != null) {
+			
 				map.put("success", true);
-				map.put("New League Values have been changed: ", leagueSelected);
-				}else {
+				map.put("New League Values have been changed: ", league);
+
+			}else {
 				map.put("success", false);
+				map.put("message ", "Check the name or max_particpants of the league. The name has to be unique and max_participants greater than the teams that the league already has");
 			}
+			
 		}
 		catch (Exception e) {
 			map.put("success", false);
@@ -129,36 +123,39 @@ public class LeagueController {
 	}
 	
 	
-	@PutMapping("/leagues/teams/{id}") // INSERT ONE TEAM IN ONE LEAGUE ONLY BY ADMIN	
-	public HashMap<String,Object> insertTeamintoLeague(@PathVariable Long id, @RequestBody League league){
+	@PutMapping("/leagues/teams") // INSERT ONE TEAM IN ONE LEAGUE ONLY BY ADMIN	
+	public HashMap<String,Object> insertTeamintoLeague(@RequestBody ObjectNode objectNode){
 		
-		Team teamSelected = new Team();
-		League leagueSelected = new League();		
-		HashMap<String,Object> map = new HashMap<>();	
+		HashMap<String,Object> map = new HashMap<>();
+		Team teamToInsert;
+		League league;
+		
+		Long team_id = 0L;
+		Long league_id = 0L;
 		
 		try {
-			teamSelected= iTeamService.getOneTeamById(id);	
-			leagueSelected = leagueServiceImpl.getOneLeagueById(league.getId()); 
+
+			team_id = objectNode.get("team_id").asLong();
+			league_id = objectNode.get("league_id").asLong();
 			
-			if (teamSelected != null && leagueSelected != null) { 		
+			league = leagueServiceImpl.getOneLeagueById(league_id);
+			teamToInsert= leagueServiceImpl.insertTeamintoLeague(league_id, iTeamService.getOneTeamById(team_id)); 
+		
+			if(teamToInsert != null) {
 				
-				if (teamSelected.getLeague() == null || teamSelected.getLeague().getId() != leagueSelected.getId()) { 
-						teamSelected.setLeague(leagueSelected);						
-						leagueServiceImpl.insertTeamintoLeague(teamSelected); 
-						map.put("success", true);
-						map.put("The Team called " + teamSelected.getName() + " with id :" + teamSelected.getId() + " has signed up for league ", leagueSelected);						
-					}else {  
-						map.put("success", true);
-						map.put("The Team called " + teamSelected.getName() + " is already in the league ", teamSelected.getLeague().getId());		
-					}	
+				map.put("success", true);
+				map.put("The Team called " + teamToInsert.getName() + " with id :" + teamToInsert.getId() + " has signed up for league ", league);
 				
-			}else {	 				
+			}else{
+				
 				map.put("success", false);
+				map.put("message", "Check if the team you want to insert is already in the league or the league is full");		
 			}			
 			
 		} catch (Exception e) {
 			map.put("success", false);
-		  	map.put("message","Make sure The Team "+ id + " exists or the league "+ league.getId() +" exists");        
+		  	map.put("message","Either the body json request is not valid or the team or league id doesn't exist");         
+
 		}
 		
 		return map;
@@ -168,14 +165,22 @@ public class LeagueController {
 	public HashMap<String,Object> createLeague(@RequestBody League league){
 	
 		HashMap<String,Object> map = new HashMap<>();	
-		League newLeague = new League();
+		League newLeague;
 		
 		try {
+			
 			newLeague = leagueServiceImpl.createLeague(league);
-			map.put("success", true);
-			map.put("New League has been create: ", newLeague);
-	
-		
+			
+			if(newLeague != null) {
+				
+				map.put("success", true);
+				map.put("New League has been create: ", newLeague);
+			
+			}else {
+				map.put("success", false);
+				map.put("message", "Check the name of the league, it cannot be repeated ");	
+			}
+			
 		}
 		catch (Exception e) {
 			map.put("success", false);
