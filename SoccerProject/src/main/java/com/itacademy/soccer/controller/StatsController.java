@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +24,10 @@ import com.itacademy.soccer.service.impl.SaleServiceImpl;
 import com.itacademy.soccer.service.impl.StatServiceImpl;
 import com.itacademy.soccer.service.impl.TeamServiceImpl;
 
-@RequestMapping("/api/stats")
+
 @RestController
+@PreAuthorize("authenticated")
+@RequestMapping("/api/stats")
 public class StatsController {
 
 	@Autowired

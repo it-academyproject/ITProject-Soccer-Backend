@@ -65,16 +65,16 @@
 			
 			
 			<!-- JSON WEB TOKEN -->
-			<!-- 
+			 
 			<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
-			<version>0.9.0</version>
+				<groupId>io.jsonwebtoken</groupId>
+				<artifactId>jjwt</artifactId>
+				<version>0.9.0</version>
 			</dependency>
-			-->
+			
 			
 			<!--  JSON WEB TOKEN Alternative libraries -->
-			<dependency>
+			<!-- <dependency>
     			<groupId>io.jsonwebtoken</groupId>
     			<artifactId>jjwt-api</artifactId>
     			<version>0.10.5</version>
@@ -90,7 +90,7 @@
     			<artifactId>jjwt-jackson</artifactId>
     			<version>0.10.5</version>
     			<scope>runtime</scope>
-			</dependency>
+			</dependency> -->
 			
 		<!-- dependency for com.itacademy.soccer.mail.MailService.java -->
 		<dependency>

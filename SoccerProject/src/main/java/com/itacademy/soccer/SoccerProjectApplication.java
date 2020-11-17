@@ -8,19 +8,12 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableScheduling  //GAME ENGINE - Annotation required for scheduling matches
 @SpringBootApplication
 public class SoccerProjectApplication {
 	
-	//B-61 Bean for encryption to work
-	@Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
 	public static void main(String[] args) {
 

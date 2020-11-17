@@ -8,6 +8,7 @@ import com.itacademy.soccer.service.impl.BidServiceImpl;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import com.itacademy.soccer.dto.Sale;
 import com.itacademy.soccer.service.impl.SaleServiceImpl;
 
 @RestController
+@PreAuthorize("authenticated")
 @RequestMapping("/api")
 public class SalesController {
 

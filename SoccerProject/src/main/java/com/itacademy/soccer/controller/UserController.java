@@ -5,28 +5,22 @@ import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Team;
 import com.itacademy.soccer.dto.User;
 import com.itacademy.soccer.dto.typeUser.TypeUser;
-import com.itacademy.soccer.security.Constants;
 import com.itacademy.soccer.service.IPlayerService;
 import com.itacademy.soccer.service.ITeamService;
 import com.itacademy.soccer.service.IUserService;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api")
-
+@PreAuthorize("hasRole('ADMIN') OR hasRole('MANAGER')")
 public class UserController {
 
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -46,13 +40,14 @@ public class UserController {
     @Autowired 
     IPlayerService iPlayerService;
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users") // SHOW ALL USERS FOR ADMIN
     public List<UserJson> showAllUsers()
     {
         return UserJson.parseListUserToJson(iUserService.showAllUsers());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/managers/{id}") // SHOW USER UNIQUE TO ADMIN
     public UserJson showUserById(@PathVariable Long id)
     {
@@ -61,7 +56,6 @@ public class UserController {
 
 
     @GetMapping("/users/teams/{id}") // SHOW USER BY TEAM (MANAGER OF THIS TEAM {ID})
-    
     public HashMap <String, Object>  showUserByTeam(@PathVariable Long id) {
     	
     	HashMap<String, Object> map = new HashMap<>();    	    
@@ -96,7 +90,7 @@ public class UserController {
     
     
 // POSTS
-    
+    /* All logins are configured via {@code WebSecurity}
 	@PostMapping("/login") // LOGIN USERS (MANAGERS/ADMINS)
 	public HashMap<String, Object> loginUser(@RequestBody User user) {
 		HashMap<String, Object> map = new HashMap();
@@ -137,10 +131,6 @@ public class UserController {
 					}
 					map.put("success", true);
 					
-					//Generated Token
-					String token = getToken(user.getEmail());
-					map.put("Token: ", token);
-
 				} else { // Login not successful - email and password do not match
 					map.put("message", "Email or Password not correct");
 					map.put("success", false);
@@ -154,7 +144,7 @@ public class UserController {
 
 		return map;
 	}
-
+*/
 	@PostMapping("/users/managers") // CREATE USERS/MANAGERS
 	public HashMap<String, Object> createUserManager(@RequestBody UserJson userJson) {
 
@@ -199,6 +189,7 @@ public class UserController {
 		return map;
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users/admins") // CREATE USERS/ADMINS
     public HashMap <String, Object> createUserAdmin(@RequestBody User user)
     {
@@ -316,25 +307,11 @@ public class UserController {
 // DELETE
 
   //  @DeleteMapping("/users/managers/{id}") // DELETE USERS ADMIN  -- Modificada la url del ENDPOINT USER
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/users/{id}") // DELETE USERS ADMIN
     public void deleteUsers(@PathVariable Long id)
     {
         iUserService.deleteUser(id);
-    }
-    
-//JWT Method
-    
-    String getToken(String username) {    
-    	
-		String token = Jwts
-				.builder()
-				.setIssuedAt(new Date()).setIssuer(Constants.TOKEN_ISSUER)
-				.setSubject(username)		
-				.setExpiration(new Date(System.currentTimeMillis() + Constants.TOKEN_EXPIRATION_TIME))
-				.signWith(SignatureAlgorithm.HS512,
-						Constants.JWT_SECRET).compact();
-
-		return "Bearer " + token;
-	}    
+    } 
        
 }

@@ -15,11 +15,13 @@ import com.itacademy.soccer.service.IPlayerActionsService;
 import com.itacademy.soccer.service.impl.PlayerActionsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.itacademy.soccer.dto.PlayerActions;
 
 @RestController
+@PreAuthorize("authenticated")
 @RequestMapping("/api/playeractions")
 public class PlayerActionsController {
 

@@ -8,14 +8,21 @@ import com.itacademy.soccer.dto.typeUser.TypeUser;
 import com.itacademy.soccer.service.ITeamService;
 import com.itacademy.soccer.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements UserDetailsService, IUserService {
 
     @Autowired
     private IUserDAO iUserDAO;
@@ -157,6 +164,29 @@ public class UserServiceImpl implements IUserService {
     	}
     	return  availableName;
     }
+
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+		User user;
+
+		try {
+			
+			user = iUserDAO.findUserByEmail(email);
+			
+		} catch (Exception e) {
+			
+			System.out.println("Player Not Founded!!! " + e.getMessage());
+			throw new UsernameNotFoundException(email);
+			
+		}
+
+		List<GrantedAuthority> authorities = Arrays.asList(user.getTypeUser().toString().split(" "))
+				.stream().map(x -> new SimpleGrantedAuthority("ROLE_" + x)).collect(Collectors.toList());
+
+		return new org.springframework.security.core.userdetails.User
+				(user.getEmail(), user.getPassword(), authorities);
+	}
     
     
     

@@ -11,12 +11,14 @@ import com.itacademy.soccer.dao.IPlayerActionsDAO;
 import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.service.impl.MatchServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 
 @RestController
+@PreAuthorize("authenticated")
 @RequestMapping("/api/players")
 
 public class PlayerController {
@@ -36,6 +38,7 @@ public class PlayerController {
 
 
 	//get all players
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping()
 	HashMap<String,Object> getAllPlayers(){
 		HashMap<String,Object> map = new HashMap<>();
@@ -76,7 +79,8 @@ public class PlayerController {
 		}
 		return map;
 	}
-
+	
+	
 	@GetMapping("/teams/{id}") // GET PLAYERS BY TEAM
 	HashMap<String,Object> getPlayersByTeamId(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();
