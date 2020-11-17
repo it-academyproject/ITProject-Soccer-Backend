@@ -14,6 +14,11 @@ public class JwtService {
 	public static boolean isOurToken(String token) {
 		return token != null && token.startsWith(TOKEN_PREFIX) && token.split("\\.").length == 3;
 	}
+	
+	public static boolean hasNonExpired(String token) {
+		return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+				.getBody().getExpiration().before(new Date());
+	}
 
 	public static String createToken(String user, List<String> roles) {
 		return Jwts.builder().setIssuedAt(new Date()).setIssuer(TOKEN_ISSUER)
@@ -35,6 +40,10 @@ public class JwtService {
 		
 		if (!isOurToken(token)) {
 			throw new JwtException("This is not Our Type of Token");
+		}
+		
+		if (hasNonExpired(token)) {
+			throw new JwtException("This credential is expired.");
 		}
 		
 		try {

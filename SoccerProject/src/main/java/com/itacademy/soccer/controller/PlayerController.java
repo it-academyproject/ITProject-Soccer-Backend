@@ -18,7 +18,7 @@ import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 
 @RestController
-@PreAuthorize("hasRole('MANAGER')")
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/players")
 
 public class PlayerController {

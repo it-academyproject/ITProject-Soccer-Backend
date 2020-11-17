@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api")
-@PreAuthorize("authenticated")
+@PreAuthorize("hasRole('ADMIN') OR hasRole('MANAGER')")
 public class UserController {
 
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -40,14 +40,14 @@ public class UserController {
     @Autowired 
     IPlayerService iPlayerService;
 
-    @PreAuthorize("hasRole('ADMIN') OR hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users") // SHOW ALL USERS FOR ADMIN
     public List<UserJson> showAllUsers()
     {
         return UserJson.parseListUserToJson(iUserService.showAllUsers());
     }
 
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/managers/{id}") // SHOW USER UNIQUE TO ADMIN
     public UserJson showUserById(@PathVariable Long id)
     {
@@ -189,6 +189,7 @@ public class UserController {
 		return map;
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users/admins") // CREATE USERS/ADMINS
     public HashMap <String, Object> createUserAdmin(@RequestBody User user)
     {
@@ -306,6 +307,7 @@ public class UserController {
 // DELETE
 
   //  @DeleteMapping("/users/managers/{id}") // DELETE USERS ADMIN  -- Modificada la url del ENDPOINT USER
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/users/{id}") // DELETE USERS ADMIN
     public void deleteUsers(@PathVariable Long id)
     {
