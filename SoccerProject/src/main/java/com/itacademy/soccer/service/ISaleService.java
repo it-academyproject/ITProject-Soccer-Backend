@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.itacademy.soccer.controller.json.SalesFilterJson;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Sale;
 
@@ -31,5 +32,5 @@ public interface ISaleService {
 		
 		public HashMap<String,Object> salesFilter(int maxage, int minage, int defense, int attack, int keeper, int pass);
 		
-		public List<Sale> salesFilterComparator(int maxage, int minage, int defense, int attack, int keeper, int pass);
+		public List<SalesFilterJson> salesFilterComparator(int maxage, int minage, int defense, int attack, int keeper, int pass);
 }
