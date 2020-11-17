@@ -10,63 +10,62 @@ import com.itacademy.soccer.dto.Sale;
 public class SaleJson {
 
 	private Long id;
-	
-	private Date limit_date;
-	
-	private float initial_price;
-	
-	private Long player_id;
-	
-	public SaleJson(){
-		
-	}
-	
-	public SaleJson(Long id, Date limit_date, float initial_price, Long player_id) {
-		this.id = id;
-		this.limit_date = limit_date;
-		this.initial_price = initial_price;
-		this.player_id = player_id;
+
+	private Date limitDate;
+
+	private Float initialPrice;
+
+	private Long playerId;
+
+	public SaleJson() {
+
 	}
 
-	public Sale setJsonToObject() {
-		
+	public SaleJson(Long id, Date limitDate, Float initialPrice, Long playerId) {
+		this.id = id;
+		this.limitDate = limitDate;
+		this.initialPrice = initialPrice;
+		this.playerId = playerId;
+	}
+
+	public Sale toSale() {
+
 		Sale sale = new Sale();
-		
+
 		sale.setId(this.id);
-		sale.setLimitDate(this.limit_date);
-		sale.setInitialPrice(this.initial_price);
-		
+		sale.setLimitDate(this.limitDate);
+		sale.setInitialPrice(this.initialPrice);
+
 		Player player = new Player();
-		player.setId(this.player_id);
+		player.setId(this.playerId);
 		sale.setPlayer(player);
-		
+
 		return sale;
 	}
-	
-	public static SaleJson parseObjectToJson(Sale sale) {
-		
-		SaleJson json = new SaleJson();
-		
-		json.setId(sale.getId());
-		json.setInitial_price(sale.getInitialPrice());
-		json.setLimit_date(sale.getLimitDate());
-		json.setPlayer_id(sale.getPlayer().getId());
-		
-		return json;
+
+	public static SaleJson parseSaleToJson(Sale sale) {
+
+		return new SaleJson() {
+			{
+				setId(sale.getId());
+				setInitialPrice(sale.getInitialPrice());
+				setLimitDate(sale.getLimitDate());
+				setPlayerId(sale.getPlayer().getId());
+			}
+		};
 	}
-	
-	public static List<SaleJson> parseListToJson(List<Sale> salesList) {
-		
-		List<SaleJson> jsonList = new ArrayList<>();
-		
-		for (Sale s : salesList) {
-			SaleJson json = parseObjectToJson(s);
-			jsonList.add(json);
-		}
-		
-		return jsonList;
+
+	public static List<SaleJson> parseListSaleToJson(List<Sale> salesList) {
+
+		return new ArrayList<SaleJson>() {
+			private static final long serialVersionUID = 1135630209871998513L;
+
+			{
+				salesList.stream().forEach(sale -> this.add(parseSaleToJson(sale)));
+			}
+		};
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -75,28 +74,28 @@ public class SaleJson {
 		this.id = id;
 	}
 
-	public Date getLimit_date() {
-		return limit_date;
+	public Date getLimitDate() {
+		return limitDate;
 	}
 
-	public void setLimit_date(Date limit_date) {
-		this.limit_date = limit_date;
+	public void setLimitDate(Date limitDate) {
+		this.limitDate = limitDate;
 	}
 
-	public float getInitial_price() {
-		return initial_price;
+	public Float getInitialPrice() {
+		return initialPrice;
 	}
 
-	public void setInitial_price(float initial_price) {
-		this.initial_price = initial_price;
+	public void setInitialPrice(Float initialPrice) {
+		this.initialPrice = initialPrice;
 	}
 
-	public Long getPlayer_id() {
-		return player_id;
+	public Long getPlayerId() {
+		return playerId;
 	}
 
-	public void setPlayer_id(Long player_id) {
-		this.player_id = player_id;
+	public void setPlayerId(Long playerId) {
+		this.playerId = playerId;
 	}
-	
+
 }
