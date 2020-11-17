@@ -2,7 +2,7 @@ package com.itacademy.soccer.security;
 
 public class Constants {
 
-public static final String AUTH_LOGIN_URL = "/api/login";
+public static final String AUTH_LOGIN_URL = "/login";
 	
 	// Signing key for HS512 algorithm
 	public static final String JWT_SECRET = "sohogowenonwsofnwopngsdnokdsnovsdnofnsepongpsngpSNGNXVLNSDOGNWESPNGPSNPGrnegponqepngpernqgpqnrgpqegbpqebgpebgpeugbrpe";	
