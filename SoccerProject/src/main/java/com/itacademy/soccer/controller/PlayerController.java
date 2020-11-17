@@ -18,7 +18,7 @@ import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.service.impl.PlayerServiceImpl;
 
 @RestController
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("authenticated")
 @RequestMapping("/api/players")
 
 public class PlayerController {
@@ -38,6 +38,7 @@ public class PlayerController {
 
 
 	//get all players
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping()
 	HashMap<String,Object> getAllPlayers(){
 		HashMap<String,Object> map = new HashMap<>();
@@ -79,7 +80,7 @@ public class PlayerController {
 		return map;
 	}
 	
-	@PreAuthorize("hasRole('ADMIN')")
+	
 	@GetMapping("/teams/{id}") // GET PLAYERS BY TEAM
 	HashMap<String,Object> getPlayersByTeamId(@PathVariable Long id){
 		HashMap<String,Object> map = new HashMap<>();

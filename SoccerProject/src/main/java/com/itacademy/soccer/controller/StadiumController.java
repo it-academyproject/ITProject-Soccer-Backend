@@ -9,12 +9,14 @@ import com.itacademy.soccer.service.impl.MatchServiceImpl;
 import com.itacademy.soccer.service.impl.StadiumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 
 @RestController
+@PreAuthorize("authenticated")
 @RequestMapping("/api/stadiums")
 public class StadiumController {
 

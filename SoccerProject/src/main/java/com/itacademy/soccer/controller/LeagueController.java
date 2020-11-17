@@ -2,6 +2,7 @@ package com.itacademy.soccer.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -16,8 +17,8 @@ import java.util.List;
 
 
 @RestController
+@PreAuthorize("authenticated")
 @RequestMapping("/api")
-
 public class LeagueController {
 
     @Autowired
