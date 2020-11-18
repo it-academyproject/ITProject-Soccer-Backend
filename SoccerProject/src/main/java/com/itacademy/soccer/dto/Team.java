@@ -47,7 +47,10 @@ public class Team {
 	@JsonIgnore
 	private League league;  //Team Relation One to One with a League
 
-
+	@OneToOne()
+    @JoinColumn(name="tournament_id")  
+	@JsonIgnore
+	private Tournament tournament;  //Team Relation One to One with a Tournament
 
 	// SOLUTION FOR GAME ENGINE - SCHEDULING MATCHES
 	// - When trying to generate kickoff team and querying players from this team, the next exception 
@@ -230,6 +233,14 @@ public class Team {
 		this.league = league;
 	}
 	
+	
+	public Tournament getTournament() {
+		return tournament;
+	}
+
+	public void setTournament(Tournament tournament) {
+		this.tournament = tournament;
+	}
 		
 	/////////////// TOSTRING ///////////////
 	@Override
