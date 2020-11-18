@@ -16,10 +16,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="sale")
+@JsonIgnoreProperties(value = "bids", allowSetters = true)
 public class Sale {
 	
 	
@@ -27,9 +28,13 @@ public class Sale {
 	@GeneratedValue( strategy=GenerationType.IDENTITY )
 	private Long id;
 	
-	@Column(name="limit_date")
+	@Column(name="limit_date", updatable = false, nullable = false)
 	@Temporal(TemporalType.TIMESTAMP) 
 	private Date limitDate;
+	
+	@Column(name="realization_date")
+	@Temporal(TemporalType.TIMESTAMP) 
+	private Date realizationDate;
 	
 	@Column(name="initial_price")
 	private float initialPrice;
@@ -38,7 +43,7 @@ public class Sale {
 	@JoinColumn(name="player_id")	
 	private Player player;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name="sale_id")
 	private List<Bid> bids;
 	public Sale() {
@@ -67,6 +72,14 @@ public class Sale {
 		this.limitDate = limitDate;
 	}
 
+	public Date getRealizationDate() {
+		return realizationDate;
+	}
+
+	public void setRealizationDate(Date realizationDate) {
+		this.realizationDate = realizationDate;
+	}
+
 	public float getInitialPrice() {
 		return initialPrice;
 	}
@@ -83,8 +96,6 @@ public class Sale {
 		this.player = player;
 	}
 
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY)
 	public List<Bid> getBids() {
 		return bids;
 	}
