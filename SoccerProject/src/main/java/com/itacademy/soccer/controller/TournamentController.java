@@ -34,7 +34,7 @@ public class TournamentController {
     		List<Tournament> allTournaments = tournamentServiceImpl.showAllTournaments();
 			map.put("success", true);
 			map.put("message", "Got all Tournaments");
-			map.put("Tournaments", allTournaments);
+			map.put("tournaments", allTournaments);
 			
 		} catch (Exception e) {
 			map.put("success", false);
@@ -52,7 +52,7 @@ public class TournamentController {
 			Tournament tournament = tournamentServiceImpl.getOneTournamentById(id);
 			map.put("success", true);
 			map.put("message", "Got one Tournament");
-			map.put("Tournament", tournament);
+			map.put("tournament", tournament);
 		} catch (Exception e) {
 			map.put("success", false);
 			map.put("message", "no Tournament to be shown! :" + e.getMessage());
@@ -107,7 +107,8 @@ public class TournamentController {
 			if(updatedTournament != null) {
 			
 				map.put("success", true);
-				map.put("New Tournament Values have been changed: ", tournament);
+				map.put("message", "New Tournament Values have been changed");
+				map.put("tournament", tournament);
 
 			}else {
 				map.put("success", false);
@@ -175,7 +176,8 @@ public class TournamentController {
 			if(newTournament != null) {
 				
 				map.put("success", true);
-				map.put("New Tournament has been create: ", newTournament);
+				map.put("message", "New Tournament has been created");
+				map.put("tournament:", newTournament);
 			
 			}else {
 				map.put("success", false);
