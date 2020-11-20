@@ -21,6 +21,8 @@ public class Match {
 	/////////////// ATRIBUTES ///////////////
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@JsonIgnore
+	//@OneToOne (mappedBy="match", fetch = FetchType.LAZY)
 	private Long id;
 	
 	@Temporal(TemporalType.TIMESTAMP)
