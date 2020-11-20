@@ -44,7 +44,11 @@ public class League {
 	@Column (name= "division")
 	private Long division;
 	
-	public League() {	}
+	@Column (name= "created")
+	private boolean created = false;
+	
+	public League() {	
+	}
 	
 	public League(Long id, String name, Date beginDate, Date endingDate, int numberRounds, int maxParticipants,
 			Long division) {
@@ -117,6 +121,16 @@ public class League {
 	}
 	
 	
+	
+	
+	public boolean isCreated() {
+		return created;
+	}
+
+	public void setCreated(boolean created) {
+		this.created = created;
+	}
+
 	@Override
 	public String toString() {
 		return "League [id=" + id + ", name=" + name + ", beginDate=" + beginDate + ", endingDate=" + endingDate
