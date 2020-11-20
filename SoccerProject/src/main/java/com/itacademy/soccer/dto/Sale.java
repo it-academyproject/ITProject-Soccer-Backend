@@ -28,13 +28,13 @@ public class Sale {
 	@GeneratedValue( strategy=GenerationType.IDENTITY )
 	private Long id;
 	
-	@Column(name="limit_date", updatable = false, nullable = false)
+	@Column(name="limit_date", updatable = true, nullable = false)
 	@Temporal(TemporalType.TIMESTAMP) 
 	private Date limitDate;
 	
-	@Column(name="realization_date")
+	@Column(name="first_limit_date", updatable = false, nullable = true)
 	@Temporal(TemporalType.TIMESTAMP) 
-	private Date realizationDate;
+	private Date firstLimitDate;
 	
 	@Column(name="initial_price")
 	private float initialPrice;
@@ -72,12 +72,12 @@ public class Sale {
 		this.limitDate = limitDate;
 	}
 
-	public Date getRealizationDate() {
-		return realizationDate;
+	public Date getFirstLimitDate() {
+		return firstLimitDate;
 	}
 
-	public void setRealizationDate(Date realizationDate) {
-		this.realizationDate = realizationDate;
+	public void setFirstLimitDate(Date firstLimitDate) {
+		this.firstLimitDate = firstLimitDate;
 	}
 
 	public float getInitialPrice() {
@@ -106,10 +106,8 @@ public class Sale {
 
 	@Override
 	public String toString() {
-		return "Sale [id=" + id + ", limitDate=" + limitDate + ", initialPrice=" + initialPrice + ", player=" + player
-				+ ", bids=" + bids + "]";
+		return "Sale [id=" + id + ", limitDate=" + limitDate + ", firstLimitDate=" + firstLimitDate + ", initialPrice="
+				+ initialPrice + ", player=" + player + ", bids=" + bids + "]";
 	}
-	
-	
 
 }

@@ -146,7 +146,7 @@ public class StatServiceImpl implements IStatService {
 			saleJson.setId(sale.getId());
 			saleJson.setLimitDate(sale.getLimitDate());
 			saleJson.setInitialPrice(sale.getInitialPrice());
-			saleJson.setPlayerId(sale.getPlayer().getId());
+			saleJson.setPlayer(sale.getPlayer());
 
 			if (bidsSale.size() < 0 && iTotalBids != 0) {
 				statsJson = new StatSaleJson(saleJson, 0);
