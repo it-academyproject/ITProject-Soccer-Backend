@@ -83,9 +83,10 @@ public class MatchController {
 		Long localTeamId = jsonMatch.getLocal_team();
 		Long visitorTeamId = jsonMatch.getVisitor_team();
 		Date scheduleDate = jsonMatch.getDate();
+		Long stadiumId = jsonMatch.getStadium_id();
 		
 		try {
-			Match createdMatch = matchServiceImpl.createMatch( localTeamId, visitorTeamId,scheduleDate);
+			Match createdMatch = matchServiceImpl.createMatch( localTeamId, visitorTeamId,scheduleDate, stadiumId);
 			gameEngine.scheduleMatch(createdMatch.getId()); // SCHEDULE ENGINE
 			map.put("success", true);
 			map.put("message", "createdMatch");
