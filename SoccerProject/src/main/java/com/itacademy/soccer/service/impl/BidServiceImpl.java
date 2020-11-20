@@ -1,8 +1,10 @@
 package com.itacademy.soccer.service.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,14 +53,20 @@ public class BidServiceImpl implements IBidService {
 		return iBidDAO.save(bid);
 	}
 
+	public Bid createBid(Bid bid) {
+
+		return iBidDAO.save(bid);
+	}
+	
+	public Optional<Bid> getBidById(Long id) {
+		
+		return iBidDAO.findById(id);
+	}
+
 	@Override
-	public Bid updateBid(Long bidId, Bid bid) { // modifica solo el precio de la bid con id bidId
+	public Bid updateBid(Bid bid) {
 
-		Bid updatedBid = iBidDAO.findById(bidId).get();
-
-		updatedBid.setBidPrice(bid.getBidPrice());
-
-		return iBidDAO.save(updatedBid);
+		return iBidDAO.save(bid);
 	}
 
 	@Override
@@ -95,6 +103,12 @@ public class BidServiceImpl implements IBidService {
 	@Override
 	public Bid save(Bid bid) {
 		return iBidDAO.save(bid);
+	}
+
+	public Optional<Bid> getLastBidBySaleId(Long id) {
+		return iBidDAO.findBySaleId(id).stream()
+				.sorted(Comparator.comparing(Bid::getOperationDate).reversed())
+				.findFirst();
 	}
 
 	@Override
