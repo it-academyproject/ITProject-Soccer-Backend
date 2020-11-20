@@ -7,7 +7,6 @@ package com.itacademy.soccer.controller;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -96,6 +95,65 @@ public class MatchController {
 		}
 		return map;
 	}
+	
+	
+	@PostMapping(path = "/matches/tournaments/{tournament_id}")
+	public HashMap<String, Object> createInitialMatchesTournament(@PathVariable Long tournament_id) {
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			
+			List<Match> tournamentMatches = matchServiceImpl.createInitialMatchesTournament(tournament_id);
+		
+			if(tournamentMatches != null) {
+
+				map.put("success", true);
+				map.put("message", "first matches of the tournament have been created");
+				map.put("matches", tournamentMatches);
+		
+			}else {
+				map.put("success", false);
+				map.put("message", "Check if the tournament exist and has the exact number of teams it needs");
+				
+			}
+		} catch (Exception e) {
+			
+			map.put("success", false);
+			map.put("message", "ERROR: " + e.getMessage());
+		}
+		return map;
+	}
+	
+	
+	
+	// ENDPOINT JUST TO TRY THE BEHAVIOUR OF CREATING NEW ROUNDS OF A TOURNAMENT
+	@PostMapping(path = "/matches/tournaments/{tournament_id}/{round_num}")
+	public HashMap<String, Object> createInitialMatchesTournament(@PathVariable Long tournament_id, @PathVariable int round_num) {
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			
+			List<Match> tournamentMatches = matchServiceImpl.createRoundMatchesTournament(tournament_id, round_num);
+		
+			if(tournamentMatches != null) {
+
+				map.put("success", true);
+				map.put("message", "round " +round_num+ " matches of the tournament have been created");
+				map.put("matches", tournamentMatches);
+		
+			}else {
+				map.put("success", false);
+				map.put("message", "Check if the round is not valid");
+				
+			}
+		} catch (Exception e) {
+			
+			map.put("success", false);
+			map.put("message", "ERROR: " + e.getMessage());
+		}
+		return map;
+	}
+	
 
 	// TO DO: Only allow acces to ADMIN users
 	// In case match should have been generated but it is not

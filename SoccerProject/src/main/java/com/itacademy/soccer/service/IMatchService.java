@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.itacademy.soccer.dto.Match;
-import com.itacademy.soccer.dto.Player;
 
 public interface IMatchService {
 	
@@ -13,6 +12,10 @@ public interface IMatchService {
 	public List<Match> showAllMatches();
 	
 	public Match createMatch( Long localTeamId, Long visitorTeamId, Date date);
+	
+	public List<Match> createInitialMatchesTournament(Long tournamentId);
+
+	public List<Match> createRoundMatchesTournament(Long tournamentId, int roundNumber);
 
 
 }

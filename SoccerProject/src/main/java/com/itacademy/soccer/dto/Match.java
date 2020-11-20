@@ -21,8 +21,6 @@ public class Match {
 	/////////////// ATRIBUTES ///////////////
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	//@JsonIgnore
-	//@OneToOne (mappedBy="match", fetch = FetchType.LAZY)
 	private Long id;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -56,6 +54,11 @@ public class Match {
 //	@OneToMany
 //	@JoinColumn(name="match_id")
 //	private List<PlayerActions> playeractions;
+	
+	//Join with MatchTournamentDetail
+	@JsonIgnore
+	@OneToOne(mappedBy="match", fetch = FetchType.LAZY)
+	private MatchTournamentDetail matchTournamentDetail;
 
 	/////////////// CONSTRUCTORS ///////////////
 	public Match(Long id, Date date, int local_goals, int visitor_goals, Stadium stadiumMany) {
@@ -167,6 +170,16 @@ public class Match {
 		this.match_actions = match_actions;
 	}
 
+	
+	
+	public MatchTournamentDetail getMatchTournamentDetail() {
+		return matchTournamentDetail;
+	}
+
+	public void setMatchTournamentDetail(MatchTournamentDetail matchTournamentDetail) {
+		this.matchTournamentDetail = matchTournamentDetail;
+	}
+	
 	/**
 	 * @return the playeractions
 	 */
