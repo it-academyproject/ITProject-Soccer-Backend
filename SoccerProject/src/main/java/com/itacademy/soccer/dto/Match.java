@@ -51,17 +51,19 @@ public class Match {
 	@OneToOne(mappedBy="match", fetch = FetchType.LAZY) //fetch = FetchType.LAZY resolves error
 	private MatchActions match_actions;     //Hibernate: More than one row with the given identifier was found error
 
+	private String weather;
 //	@OneToMany
 //	@JoinColumn(name="match_id")
 //	private List<PlayerActions> playeractions;
 
 	/////////////// CONSTRUCTORS ///////////////
-	public Match(Long id, Date date, int local_goals, int visitor_goals, Stadium stadiumMany) {
+	public Match(Long id, Date date, int local_goals, int visitor_goals, Stadium stadiumMany, String weather) {
 		this.id = id;
 		this.date = date;
 		this.local_goals = local_goals;
 		this.visitor_goals = visitor_goals;
 		this.stadiumMany = stadiumMany;
+		this.weather = weather;
 	}
 
 	public Match() {
@@ -165,6 +167,22 @@ public class Match {
 		this.match_actions = match_actions;
 	}
 
+	public Stadium getStadiumMany() {
+		return stadiumMany;
+	}
+
+	public void setStadiumMany(Stadium stadiumMany) {
+		this.stadiumMany = stadiumMany;
+	}
+
+	public String getWeather() {
+		return weather;
+	}
+
+	public void setWeather(String weather) {
+		this.weather = weather;
+	}
+
 	/**
 	 * @return the playeractions
 	 */
@@ -180,6 +198,8 @@ public class Match {
 //	public void setPlayeractions(List<PlayerActions> playeractions) {
 //		this.playeractions = playeractions;
 //	}
+
+
 
 	/////////////// TOSTRING ///////////////
 	@Override

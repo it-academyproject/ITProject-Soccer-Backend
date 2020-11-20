@@ -14,6 +14,8 @@ public class MatchJson {
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Europe/Madrid")
 	private Date date;
 
+	private Long stadium_id;
+
 	public Long getLocal_team() {
 		return local_team;
 	}
@@ -38,7 +40,11 @@ public class MatchJson {
 		this.date = date;
 	}
 
+	public Long getStadium_id() {
+		return stadium_id;
+	}
 
-	
-	
+	public void setStadium_id(Long stadium_id) {
+		this.stadium_id = stadium_id;
+	}
 }

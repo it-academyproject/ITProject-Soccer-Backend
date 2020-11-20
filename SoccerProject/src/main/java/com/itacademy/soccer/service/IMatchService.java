@@ -12,7 +12,7 @@ public interface IMatchService {
 	
 	public List<Match> showAllMatches();
 	
-	public Match createMatch( Long localTeamId, Long visitorTeamId, Date date);
+	public Match createMatch( Long localTeamId, Long visitorTeamId, Date date, Long stadiumId);
 
 
 }
