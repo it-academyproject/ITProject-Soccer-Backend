@@ -14,5 +14,6 @@ public interface IMatchService {
 	
 	public Match createMatch( Long localTeamId, Long visitorTeamId, Date date);
 
+	public List<Match> createLeague( Long leagueId);
 
 }
