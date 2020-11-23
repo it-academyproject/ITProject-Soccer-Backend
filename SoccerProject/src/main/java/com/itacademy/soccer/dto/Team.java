@@ -90,6 +90,10 @@ public class Team {
 		this.playersList = playersList;
 		this.matches = matches;
 	}
+	
+	public Team(String name) {
+		this.name = name;
+	}
 
 
 	/////////////// GETTERS & SETTERS ///////////////
