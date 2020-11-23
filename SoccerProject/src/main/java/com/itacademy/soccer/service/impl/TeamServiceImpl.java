@@ -63,6 +63,10 @@ public class TeamServiceImpl implements ITeamService {
 		Optional<Team> team = iTeamsDao.findById(id); 
 		return (team.isPresent()) ? team.get() : null;
 	}
+	
+	public Optional<Team> getOptionalTeam(Long id) {
+		return iTeamsDao.findById(id);
+	}
 
 	//B-44 -> B-66
 	@Override
@@ -78,32 +82,32 @@ public class TeamServiceImpl implements ITeamService {
 
 			toUpdateTeam = oldTeam.get().clone();
 
-			if (Verify.isNotNullEmptyEquals(newTeam.getName(), toUpdateTeam.getName())) {
+			if (Verify.notNullEmptyEquals(newTeam.getName(), toUpdateTeam.getName())) {
 
 				toUpdateTeam.setName(newTeam.getName());
 			}
 
-			if (Verify.isNotNullEmptyEquals(newTeam.getFoundationDate(), toUpdateTeam.getFoundationDate())) {
+			if (Verify.notNullEquals(newTeam.getFoundationDate(), toUpdateTeam.getFoundationDate())) {
 
 				toUpdateTeam.setFoundationDate(newTeam.getFoundationDate());
 			}
 
-			if (Verify.isNotNullEmptyEquals(newTeam.getBadge(), toUpdateTeam.getBadge())) {
+			if (Verify.notNullEmptyEquals(newTeam.getBadge(), toUpdateTeam.getBadge())) {
 
 				toUpdateTeam.setBadge(newTeam.getBadge());
 			}
 
-			if (Verify.isNotNullEmptyEquals(newTeam.getWins(), toUpdateTeam.getWins())) {
+			if (Verify.notLessEqZeroEquals(newTeam.getWins(), toUpdateTeam.getWins())) {
 
 				toUpdateTeam.setWins(newTeam.getWins());
 			}
 
-			if (Verify.isNotNullEmptyEquals(newTeam.getLosses(), toUpdateTeam.getLosses())) {
+			if (Verify.notLessEqZeroEquals(newTeam.getLosses(), toUpdateTeam.getLosses())) {
 
 				toUpdateTeam.setLosses(newTeam.getLosses());
 			}
 
-			if (Verify.isNotNullEmptyEquals(newTeam.getDraws(), toUpdateTeam.getDraws())) {
+			if (Verify.notLessEqZeroEquals(newTeam.getDraws(), toUpdateTeam.getDraws())) {
 
 				toUpdateTeam.setDraws(newTeam.getDraws());
 			}

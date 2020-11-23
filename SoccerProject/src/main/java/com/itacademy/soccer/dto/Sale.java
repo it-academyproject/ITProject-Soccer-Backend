@@ -16,10 +16,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="sale")
+@JsonIgnoreProperties(value = "bids", allowSetters = true)
 public class Sale {
 	
 	
@@ -27,9 +28,13 @@ public class Sale {
 	@GeneratedValue( strategy=GenerationType.IDENTITY )
 	private Long id;
 	
-	@Column(name="limit_date")
+	@Column(name="limit_date", updatable = true, nullable = false)
 	@Temporal(TemporalType.TIMESTAMP) 
 	private Date limitDate;
+	
+	@Column(name="first_limit_date", updatable = false, nullable = true)
+	@Temporal(TemporalType.TIMESTAMP) 
+	private Date firstLimitDate;
 	
 	@Column(name="initial_price")
 	private float initialPrice;
@@ -38,7 +43,7 @@ public class Sale {
 	@JoinColumn(name="player_id")	
 	private Player player;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name="sale_id")
 	private List<Bid> bids;
 	public Sale() {
@@ -67,6 +72,14 @@ public class Sale {
 		this.limitDate = limitDate;
 	}
 
+	public Date getFirstLimitDate() {
+		return firstLimitDate;
+	}
+
+	public void setFirstLimitDate(Date firstLimitDate) {
+		this.firstLimitDate = firstLimitDate;
+	}
+
 	public float getInitialPrice() {
 		return initialPrice;
 	}
@@ -83,8 +96,6 @@ public class Sale {
 		this.player = player;
 	}
 
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY)
 	public List<Bid> getBids() {
 		return bids;
 	}
@@ -95,10 +106,8 @@ public class Sale {
 
 	@Override
 	public String toString() {
-		return "Sale [id=" + id + ", limitDate=" + limitDate + ", initialPrice=" + initialPrice + ", player=" + player
-				+ ", bids=" + bids + "]";
+		return "Sale [id=" + id + ", limitDate=" + limitDate + ", firstLimitDate=" + firstLimitDate + ", initialPrice="
+				+ initialPrice + ", player=" + player + ", bids=" + bids + "]";
 	}
-	
-	
 
 }

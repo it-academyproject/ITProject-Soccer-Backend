@@ -38,10 +38,7 @@ public class BidJson {
 		bid.setId(this.id);
 		bid.setOperationDate(this.operationDate);
 		bid.setBidPrice(this.bidPrice);
-
-		Team team = new Team();
-		team.setId(this.teamId);
-		bid.setTeam(team);
+		bid.setTeam(new Team(this.teamId));
 
 		return bid;
 	}
