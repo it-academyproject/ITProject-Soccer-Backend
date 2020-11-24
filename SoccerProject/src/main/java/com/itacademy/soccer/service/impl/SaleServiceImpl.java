@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.itacademy.soccer.controller.json.SalesFilterJson;
+import com.itacademy.soccer.controller.json.SaleJson;
 import com.itacademy.soccer.dao.IPlayerDAO;
 import com.itacademy.soccer.dao.ISaleDAO;
 import com.itacademy.soccer.dto.Player;
 import com.itacademy.soccer.dto.Sale;
 import com.itacademy.soccer.service.ISaleService;
+import com.itacademy.soccer.util.Verify;
 
 @Service
 public class SaleServiceImpl implements ISaleService {
@@ -26,11 +29,6 @@ public class SaleServiceImpl implements ISaleService {
 
 	@Override
 	public Sale createSale(Sale sale) {
-
-		Player playerIn = sale.getPlayer();
-		Long playerId = playerIn.getId();
-		Player player = iPlayerDAO.findById(playerId).get();
-		sale.setPlayer(player);
 
 		return iSaleDAO.save(sale);
 	}
@@ -56,23 +54,20 @@ public class SaleServiceImpl implements ISaleService {
 	// @Override
 	public List<Sale> getSalesByPlayer(Long playerId) {
 
-//		Player player = iPlayerDAO.findById(playerId).get();
-//		List<Sale> salesList = player.getSales();
-//		return salesList;
+		Player player = iPlayerDAO.findById(playerId).get();
 
-		return new ArrayList<Sale>();
+		return iSaleDAO.findSalesByPlayer(player);
 	}
 
-	// Modify the limit date of the sale with id passed by parameter and saves it
-	// into the repository
 	@Override
-	public Sale updateSale(Long idSale, Sale p_sale) {
-
-		Sale sale = iSaleDAO.findById(idSale).get();
-
-		sale.setLimitDate(p_sale.getLimitDate());
+	public Sale updateSale(Sale sale) {
 
 		return iSaleDAO.save(sale);
+	}
+	
+	public Optional<Sale> getOptionalSale(Long id) {
+		
+		return iSaleDAO.findById(id);
 	}
 
 	@Override
@@ -116,56 +111,34 @@ public class SaleServiceImpl implements ISaleService {
 	}
 
 	@Override
-	public HashMap<String, Object> salesFilter(int maxage, int minage, int defense, int attack, int keeper, int pass) {
+	public HashMap<String, Object> salesFilter(int maxAge, int minAge, int defense, int attack, int keeper, int pass) {
 
 		HashMap<String, Object> map = new HashMap<>();
+		
 		try {
-			List<SalesFilterJson> filteredSales = this.salesFilterComparator(maxage, minage, defense, attack, keeper,
-					pass);
-			if (!filteredSales.isEmpty()) {
+			
+			List<SaleJson> filteredSales = listAllSales().parallelStream()
+					.filter(sale -> sale.getPlayer().getAge() <= maxAge && sale.getPlayer().getAge() >= minAge
+							&& sale.getPlayer().getDefense() >= defense && sale.getPlayer().getAttack() >= attack
+							&& sale.getPlayer().getKeeper() >= keeper && sale.getPlayer().getPass() >= pass)
+					.map(sale -> SaleJson.parseSaleToJson(sale)).collect(Collectors.toList());
+			
+			if (!Verify.isNullEmpty(filteredSales)) {
 				map.put("success", true);
 				map.put("message", "get all sales by player characteristics");
 				map.put("filtered sales", filteredSales);
+				
 			} else {
 				map.put("success", false);
 				map.put("message", "There is no player with those characteristics at the moment");
 			}
+			
 		} catch (Exception e) {
 			map.put("success", false);
 			map.put("message", "something went wrong: " + e.getMessage());
 		}
+		
 		return map;
 	}
-
-	/*
-	 * I go through the available sales and compare the attributes of the players
-	 * sent by URL. The filter parameters received by URL will be interpreted as
-	 * minimum requirements in the attributes of the players that are for sale.
-	 */
-	@Override
-	public List<SalesFilterJson> salesFilterComparator(int maxAge, int minAge, int defense, 
-														int attack, int keeper, int pass) {
-		return new ArrayList<SalesFilterJson>() {
-			
-			private static final long serialVersionUID = 4242716978088962945L;
-
-			{
-				listAllSales().stream().forEach(sale -> {
-					
-					if ((sale.getPlayer().getAge() <= maxAge 
-							&& sale.getPlayer().getAge() >= minAge)
-							&& sale.getPlayer().getDefense() >= defense 
-							&& sale.getPlayer().getAttack() >= attack
-							&& sale.getPlayer().getKeeper() >= keeper 
-							&& sale.getPlayer().getPass() >= pass) {
-						
-						this.add(SalesFilterJson.parseSaleToJson(sale));
-						
-					}} // end if && forEach
-				); // end stream
-			} // end inner class
-		}; // end return
-
-	} // end function salesFilterComparator
 
 }

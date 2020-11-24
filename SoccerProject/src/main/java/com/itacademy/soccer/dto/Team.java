@@ -70,6 +70,11 @@ public class Team {
 
 	public Team() {
 	}
+	
+	//For {@code BidJson} convert in {@code Bid} 
+	public Team(Long id) {
+		this.id = id;
+	}
 
 	public Team(Long id, String name, Date foundationDate, String badge, Float budget, Integer wins, Integer losses,
 			Integer draws, League league, List<Player> playersList, List<Match> matches) {
@@ -84,6 +89,10 @@ public class Team {
 		this.league = league;
 		this.playersList = playersList;
 		this.matches = matches;
+	}
+	
+	public Team(String name) {
+		this.name = name;
 	}
 
 

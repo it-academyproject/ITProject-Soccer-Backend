@@ -33,6 +33,12 @@ public class Match {
 	
 	@Column(name="visitor_goals")
 	private int visitor_goals;
+	
+	@Column(name="match_day")
+	private int matchday;
+	
+	@Column(name="round")
+	private int round;
 
 	@ManyToOne
 	@JoinColumn(name="team_local_id")
@@ -170,8 +176,6 @@ public class Match {
 		this.match_actions = match_actions;
 	}
 
-	
-	
 	public MatchTournamentDetail getMatchTournamentDetail() {
 		return matchTournamentDetail;
 	}
@@ -180,6 +184,23 @@ public class Match {
 		this.matchTournamentDetail = matchTournamentDetail;
 	}
 	
+
+	public int getMatchday() {
+		return matchday;
+	}
+
+	public void setMatchday(int matchday) {
+		this.matchday = matchday;
+	}
+
+	public int getRound() {
+		return round;
+	}
+
+	public void setRound(int round) {
+		this.round = round;
+	}
+
 	/**
 	 * @return the playeractions
 	 */

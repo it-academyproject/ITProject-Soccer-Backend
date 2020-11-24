@@ -14,10 +14,12 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+//import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="bid")
+@JsonIgnoreProperties(value = {"sale", "team"}, allowSetters = true)
 public class Bid {
 
 	@Id
@@ -34,14 +36,12 @@ public class Bid {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date operationDate;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sale_id")
-	@JsonIgnore
 	private Sale sale;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "team_id", insertable = false, updatable = false)
-	@JsonIgnore
+	@JoinColumn(name = "team_id", insertable = false, updatable = false) //
 	private Team team;
 
 	public Bid() {
@@ -91,8 +91,6 @@ public class Bid {
 		this.operationDate = operationDate;
 	}
 
-	//@JsonIgnore
-	//@ManyToOne(fetch = FetchType.LAZY) //TODO FALTA COMPROBAR
 	public Sale getSale() {
 		return sale;
 	}
@@ -116,6 +114,12 @@ public class Bid {
 
 	public void setTeamId(Long teamId) {
 		this.teamId = teamId;
+	}
+
+	@Override
+	public String toString() {
+		return "Bid [id=" + id + ", teamId=" + teamId + ", bidPrice=" + bidPrice + ", operationDate=" + operationDate
+				+ ", sale=" + sale + ", team=" + team + "]";
 	}
 
 }

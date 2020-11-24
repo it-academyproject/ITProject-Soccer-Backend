@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itacademy.soccer.controller.json.MatchJson;
+import com.itacademy.soccer.dto.League;
 import com.itacademy.soccer.dto.Match;
 import com.itacademy.soccer.gameEngine.GameEngine;
+import com.itacademy.soccer.service.impl.LeagueServiceImpl;
 import com.itacademy.soccer.service.impl.MatchServiceImpl;
 
 /**
@@ -37,6 +39,9 @@ public class MatchController {
 	
 	@Autowired
 	MatchServiceImpl matchServiceImpl;
+	
+	@Autowired
+	LeagueServiceImpl leagueServiceImpl;
 
 	// A list of all matches of 1 team by id
 	@GetMapping(path = "/teams/{id}/matches")
@@ -157,6 +162,44 @@ public class MatchController {
 
 	// TO DO: Only allow acces to ADMIN users
 	// In case match should have been generated but it is not
+	
+	//B-70 Create matches to a league
+	@PostMapping(path = "/matches/leagues/{league_id}")
+	public HashMap<String, Object> createLeague(@PathVariable("league_id") Long leagueId){
+		
+		HashMap<String, Object> map = new HashMap<>();
+
+		try {
+			
+			List<League> leagueList = leagueServiceImpl.showAllLeagues();
+			int count=0;
+			for(League leagueChecker: leagueList) {
+				
+				if(leagueChecker.getId() == leagueId) {
+					
+					matchServiceImpl.createLeague(leagueId);
+					map.put("success", true);
+					map.put("message", "created matches to league with id "+leagueId+".");
+					
+				}else {
+					count++;
+				}
+				
+				if(count == leagueList.size()) {
+					map.put("success", false);
+					map.put("message", "League id = " + leagueId + " not exist, create first a league with this id.");
+				}
+
+			}
+			
+		}catch (Exception e) {
+			map.put("succes", false);
+			map.put("message", "League (Exception: " + e.getMessage() + ").");
+		}
+		
+		return map;
+		
+	}
 	
 	// Play generation of match 
 	@PutMapping(path = "/matches/play/{id}")

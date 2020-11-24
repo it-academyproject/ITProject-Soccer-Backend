@@ -17,5 +17,8 @@ public interface IMatchService {
 
 	public List<Match> createRoundMatchesTournament(Long tournamentId, int roundNumber);
 
+	//public List<Match> createLeague( Long leagueId);
+	
+	public String createLeague(Long leagueId);
 
 }
